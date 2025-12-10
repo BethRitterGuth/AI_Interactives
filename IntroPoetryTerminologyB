@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poetry Quest: An Interactive Journey</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            text-align: center;
+        }
+
+        h2 {
+            color: #764ba2;
+            margin: 20px 0 15px;
+            font-size: 1.8em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+            font-weight: bold;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .choice-container {
+            display: grid;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .choice-btn {
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+            padding: 15px;
+            text-align: left;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+
+        .choice-btn:hover:not(:disabled) {
+            background: #667eea;
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .choice-btn.correct {
+            background: #10b981;
+            color: white;
+            border-color: #10b981;
+        }
+
+        .choice-btn.incorrect {
+            background: #ef4444;
+            color: white;
+            border-color: #ef4444;
+        }
+
+        .story-text {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .poem-display {
+            background: #fff9e6;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            border: 2px dashed #764ba2;
+            white-space: pre-line;
+        }
+
+        .feedback {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .feedback.correct {
+            background: #d1fae5;
+            border-left: 4px solid #10b981;
+            color: #065f46;
+        }
+
+        .feedback.incorrect {
+            background: #fee2e2;
+            border-left: 4px solid #ef4444;
+            color: #991b1b;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e5e7eb;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .score-display {
+            text-align: center;
+            font-size: 3em;
+            color: #667eea;
+            margin: 30px 0;
+            font-weight: bold;
+        }
+
+        .summary-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .summary-card h3 {
+            color: #764ba2;
+            margin-bottom: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .highlight {
+            background: #fef3c7;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.4em;
+            }
+        }
+
+        .instruction-box {
+            background: #e0e7ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="welcome-screen">
+            <h1>📚 Poetry Quest</h1>
+            <p class="subtitle">An Interactive Journey Through the Fundamentals of Poetry</p>
+            
+            <div class="instruction-box">
+                <strong>Welcome, Poetry Explorer!</strong>
+                <p>You're about to embark on an adventure through the mystical Library of Verses. Along the way, you'll master four fundamental poetry concepts:</p>
+                <ul>
+                    <li><strong>Rhyme Scheme</strong> - The pattern of rhymes in a poem</li>
+                    <li><strong>Meter</strong> - The rhythmic structure of verses</li>
+                    <li><strong>Imagery</strong> - Language that appeals to the senses</li>
+                    <li><strong>Metaphor</strong> - Comparing two unlike things without using "like" or "as"</li>
+                </ul>
+                <p>Each correct answer earns you 25 points. You need 75 points to pass. Good luck!</p>
+            </div>
+
+            <div class="form-group">
+                <label for="student-name">Your Name:</label>
+                <input type="text" id="student-name" placeholder="Enter your full name" required aria-required="true">
+            </div>
+
+            <div class="form-group">
+                <label for="student-email">Your Email:</label>
+                <input type="email" id="student-email" placeholder="Enter your email address" required aria-required="true">
+            </div>
+
+            <button id="start-btn" onclick="startAdventure()">Begin Your Quest</button>
+        </div>
+
+        <div id="game-screen" class="hidden">
+            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-fill" id="progress-fill" style="width: 0%;">
+                    <span id="progress-text">0%</span>
+                </div>
+            </div>
+
+            <div id="story-content"></div>
+        </div>
+
+        <div id="results-screen" class="hidden">
+            <h1>🎓 Quest Complete!</h1>
+            <div class="score-display" id="final-score"></div>
+            <div id="grade-message"></div>
+            
+            <div class="summary-card">
+                <h3>Your Performance Summary</h3>
+                <div id="performance-details"></div>
+            </div>
+
+            <div class="instruction-box">
+                <strong>📧 Next Steps:</strong>
+                <p>Click the button below to generate an email with your results. This will open your email client with a pre-filled message to submit to your professor.</p>
+            </div>
+
+            <button onclick="submitResults()">Email Results to Professor</button>
+            <button onclick="location.reload()" style="margin-top: 10px; background: #6b7280;">Retake Quest</button>
+        </div>
+    </div>
+
+    <script>
+        let studentName = '';
+        let studentEmail = '';
+        let currentChallenge = 0;
+        let score = 0;
+        const totalChallenges = 4;
+        const answers = [];
+
+        const challenges = [
+            {
+                title: "Chapter 1: The Rhyme Scheme Chamber",
+                story: "You enter the ancient Library of Verses and find yourself in a chamber filled with glowing books. The Guardian of Rhyme appears and presents you with a poem:",
+                poem: `The woods are lovely, dark and deep,   (A)
+But I have promises to keep,        (A)
+And miles to go before I sleep,     (A)
+And miles to go before I sleep.     (A)`,
+                question: "What is the rhyme scheme of this stanza from Robert Frost's 'Stopping by Woods on a Snowy Evening'?",
+                choices: [
+                    { text: "AABB", correct: false, feedback: "Not quite. Look at which lines rhyme with each other. All four lines end with words that rhyme (deep, keep, sleep, sleep)." },
+                    { text: "AAAA", correct: true, feedback: "Excellent! You've identified that all four lines rhyme with each other (deep/keep/sleep/sleep), creating an AAAA rhyme scheme. This creates a sense of unity and emphasis." },
+                    { text: "ABAB", correct: false, feedback: "Remember, the same letter indicates lines that rhyme. In this stanza, all lines rhyme together." },
+                    { text: "ABCB", correct: false, feedback: "This would mean only the second and fourth lines rhyme. But notice that 'deep,' 'keep,' and 'sleep' all rhyme with each other." }
+                ],
+                concept: "Rhyme Scheme"
+            },
+            {
+                title: "Chapter 2: The Meter Maze",
+                story: "The Guardian smiles at your knowledge and leads you to the Meter Maze. Here, the rhythm of language itself creates pathways. You must understand the beat of poetry to proceed.",
+                poem: `Shall I compare thee to a summer's day?
+da-DUM da-DUM da-DUM da-DUM da-DUM`,
+                question: "This line from Shakespeare's Sonnet 18 is written in iambic pentameter. What does this mean?",
+                choices: [
+                    { text: "Five unstressed syllables followed by five stressed syllables", correct: false, feedback: "Not quite. Iambic pentameter alternates unstressed and stressed syllables in a specific pattern." },
+                    { text: "Five pairs of syllables, each pair having an unstressed then stressed syllable (da-DUM)", correct: true, feedback: "Perfect! Iambic pentameter consists of five iambs (an iamb is da-DUM: unstressed-stressed). This creates the heartbeat rhythm that makes Shakespeare's sonnets so memorable: 'shall I / com-PARE / thee TO / a SUM / mer's DAY?'" },
+                    { text: "Ten syllables with random stress patterns", correct: false, feedback: "While there are ten syllables, the stress pattern in iambic pentameter is not random—it follows a specific rhythm." },
+                    { text: "Five stressed syllables followed by five unstressed syllables", correct: false, feedback: "This would be the opposite of what happens in this line. Listen to the rhythm: da-DUM da-DUM da-DUM..." }
+                ],
+                concept: "Meter"
+            },
+            {
+                title: "Chapter 3: The Garden of Imagery",
+                story: "You navigate successfully through the Meter Maze and emerge in a lush garden where every flower seems to whisper sensory details. The Guardian of Imagery tests your perception.",
+                poem: `The fog comes
+on little cat feet.
+It sits looking
+over harbor and city
+on silent haunches
+and then moves on.
+— Carl Sandburg`,
+                question: "Which literary device is Sandburg using when he describes fog as having 'little cat feet' and 'silent haunches'?",
+                choices: [
+                    { text: "Simile", correct: false, feedback: "A simile uses 'like' or 'as' to compare. Sandburg doesn't say the fog is LIKE a cat; he describes it AS IF it IS a cat." },
+                    { text: "Metaphor", correct: true, feedback: "Brilliant! This is an extended metaphor. Sandburg compares fog to a cat without using 'like' or 'as,' giving the fog cat-like qualities (feet, haunches, sitting, moving). This creates vivid imagery that helps us visualize how fog moves—quietly, slowly, deliberately, just like a cat." },
+                    { text: "Alliteration", correct: false, feedback: "Alliteration is the repetition of consonant sounds at the beginning of words. While present in 'silent' and 'sits,' it's not the main device being asked about." },
+                    { text: "Hyperbole", correct: false, feedback: "Hyperbole is exaggeration. This poem uses comparison rather than exaggeration to create its effect." }
+                ],
+                concept: "Imagery & Metaphor"
+            },
+            {
+                title: "Chapter 4: The Metaphor Mountain",
+                story: "Your journey nears its end. The final challenge awaits at the peak of Metaphor Mountain. Here, you must demonstrate your understanding of how poets transform the ordinary into the extraordinary.",
+                poem: `Hope is the thing with feathers
+That perches in the soul,
+And sings the tune without the words,
+And never stops at all.
+— Emily Dickinson`,
+                question: "What is Emily Dickinson comparing hope to in this metaphor?",
+                choices: [
+                    { text: "A song without words", correct: false, feedback: "While the poem mentions 'the tune without the words,' this describes what the metaphorical subject does, not what hope is being compared to." },
+                    { text: "The human soul", correct: false, feedback: "The soul is where the metaphorical bird perches—it's the location, not what hope is being compared to." },
+                    { text: "A bird", correct: true, feedback: "Excellent work! Dickinson uses an extended metaphor, comparing hope to a bird. The bird 'perches' (rests), 'sings' (brings joy), and 'never stops' (is persistent). This metaphor helps us understand hope as something light, uplifting, and ever-present in our lives—just like a bird's song." },
+                    { text: "Feathers", correct: false, feedback: "Hope is described as 'the thing WITH feathers'—having feathers, not being feathers. What creature has feathers?" }
+                ],
+                concept: "Metaphor"
+            }
+        ];
+
+        function startAdventure() {
+            studentName = document.getElementById('student-name').value.trim();
+            studentEmail = document.getElementById('student-email').value.trim();
+
+            if (!studentName || !studentEmail) {
+                alert('Please enter both your name and email address to begin.');
+                return;
+            }
+
+            if (!validateEmail(studentEmail)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+
+            document.getElementById('welcome-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.remove('hidden');
+            loadChallenge(0);
+        }
+
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function loadChallenge(index) {
+            currentChallenge = index;
+            updateProgress();
+
+            const challenge = challenges[index];
+            const content = document.getElementById('story-content');
+            
+            content.innerHTML = `
+                <h2>${challenge.title}</h2>
+                <div class="story-text">
+                    <p>${challenge.story}</p>
+                </div>
+                <div class="poem-display" role="article" aria-label="Poem excerpt">
+                    ${challenge.poem}
+                </div>
+                <div class="instruction-box">
+                    <strong>Question:</strong> ${challenge.question}
+                </div>
+                <div class="choice-container" id="choices-${index}">
+                    ${challenge.choices.map((choice, i) => `
+                        <button class="choice-btn" onclick="selectAnswer(${index}, ${i})" aria-label="Choice ${i + 1}">
+                            ${choice.text}
+                        </button>
+                    `).join('')}
+                </div>
+                <div id="feedback-${index}"></div>
+            `;
+        }
+
+        function selectAnswer(challengeIndex, choiceIndex) {
+            const challenge = challenges[challengeIndex];
+            const choice = challenge.choices[choiceIndex];
+            const isCorrect = choice.correct;
+
+            // Disable all buttons
+            const buttons = document.querySelectorAll(`#choices-${challengeIndex} button`);
+            buttons.forEach(btn => btn.disabled = true);
+
+            // Mark the selected button
+            buttons[choiceIndex].classList.add(isCorrect ? 'correct' : 'incorrect');
+
+            // Show feedback
+            const feedbackDiv = document.getElementById(`feedback-${challengeIndex}`);
+            feedbackDiv.innerHTML = `
+                <div class="feedback ${isCorrect ? 'correct' : 'incorrect'}">
+                    <strong>${isCorrect ? '✅ Correct!' : '❌ Not quite.'}</strong>
+                    <p>${choice.feedback}</p>
+                </div>
+            `;
+
+            // Record answer
+            answers.push({
+                challenge: challenge.concept,
+                question: challenge.question,
+                selected: choice.text,
+                correct: isCorrect
+            });
+
+            if (isCorrect) {
+                score += 25;
+            }
+
+            // Add continue button
+            setTimeout(() => {
+                feedbackDiv.innerHTML += `
+                    <button onclick="nextChallenge()" style="margin-top: 15px;">
+                        ${challengeIndex < challenges.length - 1 ? 'Continue Your Quest →' : 'Complete Your Quest 🎓'}
+                    </button>
+                `;
+            }, 500);
+        }
+
+        function nextChallenge() {
+            if (currentChallenge < challenges.length - 1) {
+                loadChallenge(currentChallenge + 1);
+            } else {
+                showResults();
+            }
+        }
+
+        function updateProgress() {
+            const progress = ((currentChallenge + 1) / totalChallenges) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+            document.getElementById('progress-text').textContent = Math.round(progress) + '%';
+        }
+
+        function showResults() {
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('results-screen').classList.remove('hidden');
+
+            const percentage = (score / 100) * 100;
+            let grade, message, emoji;
+
+            if (percentage >= 75) {
+                grade = 'Pass';
+                emoji = '🎉';
+                message = '<p style="color: #10b981; font-size: 1.2em;">Congratulations! You have successfully completed Poetry Quest and demonstrated solid understanding of fundamental poetry concepts.</p>';
+            } else {
+                grade = 'Needs Improvement';
+                emoji = '📚';
+                message = '<p style="color: #f59e0b; font-size: 1.2em;">You\'ve completed the quest, but may benefit from reviewing these concepts. Consider retaking the quest to strengthen your understanding.</p>';
+            }
+
+            document.getElementById('final-score').textContent = `${emoji} ${score}/100 (${percentage}%)`;
+            document.getElementById('grade-message').innerHTML = `
+                <div class="summary-card">
+                    <h3>Grade: ${grade}</h3>
+                    ${message}
+                </div>
+            `;
+
+            let detailsHTML = '<ul style="list-style: none; padding: 0;">';
+            answers.forEach((answer, index) => {
+                detailsHTML += `
+                    <li style="margin: 10px 0; padding: 10px; background: ${answer.correct ? '#d1fae5' : '#fee2e2'}; border-radius: 5px;">
+                        <strong>${answer.challenge}:</strong> ${answer.correct ? '✅ Correct' : '❌ Incorrect'}<br>
+                        <small>Your answer: ${answer.selected}</small>
+                    </li>
+                `;
+            });
+            detailsHTML += '</ul>';
+            document.getElementById('performance-details').innerHTML = detailsHTML;
+        }
+
+        function submitResults() {
+            const subject = encodeURIComponent('Poetry Quest Assignment Submission - ' + studentName);
+            
+            let bodyText = `Dear Professor Ritter-Guth,\n\n`;
+            bodyText += `Please find my Poetry Quest assignment results below:\n\n`;
+            bodyText += `Student Name: ${studentName}\n`;
+            bodyText += `Student Email: ${studentEmail}\n`;
+            bodyText += `Date Completed: ${new Date().toLocaleDateString()}\n\n`;
+            bodyText += `FINAL SCORE: ${score}/100 (${(score/100)*100}%)\n`;
+            bodyText += `GRADE: ${score >= 75 ? 'PASS' : 'NEEDS IMPROVEMENT'}\n\n`;
+            bodyText += `DETAILED RESULTS:\n`;
+            bodyText += `-------------------\n`;
+            
+            answers.forEach((answer, index) => {
+                bodyText += `\nChallenge ${index + 1}: ${answer.challenge}\n`;
+                bodyText += `Question: ${answer.question}\n`;
+                bodyText += `Student Answer: ${answer.selected}\n`;
+                bodyText += `Result: ${answer.correct ? 'CORRECT ✓' : 'INCORRECT ✗'}\n`;
+            });
+
+            bodyText += `\n-------------------\n`;
+            bodyText += `\nThank you for reviewing my work.\n\n`;
+            bodyText += `Best regards,\n${studentName}`;
+
+            const mailtoLink = `mailto:beth.ritter-guth@desales.edu?subject=${subject}&body=${encodeURIComponent(bodyText)}`;
+            window.location.href = mailtoLink;
+        }
+    </script>
+</body>
+</html>
