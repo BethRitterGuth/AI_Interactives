@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Journal Entry - Celtic Advent</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#11d452",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                    },
+                    fontFamily: {
+                        "display": ["Noto Serif", "serif"],
+                        "sans": ["Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Noto Sans', sans-serif;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-sans text-stone-900 dark:text-stone-200">
+<div class="relative flex min-h-screen w-full flex-col">
+<!-- Top App Bar -->
+<header class="sticky top-0 z-10 flex h-16 w-full items-center justify-between bg-background-light/80 px-4 backdrop-blur-sm dark:bg-background-dark/80">
+<button class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-stone-700 hover:bg-stone-200 dark:text-stone-300 dark:hover:bg-stone-700">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<h1 class="flex-1 text-center text-lg font-bold font-display leading-tight tracking-[-0.015em] text-stone-800 dark:text-stone-100">Day 3: Reflection on Stillness</h1>
+<div class="h-10 w-10 shrink-0"></div> <!-- Spacer for centering title -->
+</header>
+<!-- Main Content Area -->
+<main class="flex flex-1 flex-col px-4 pt-4 pb-2">
+<div class="flex-1">
+<label class="flex h-full flex-col">
+<p class="pb-2 font-display text-base font-medium leading-normal text-stone-700 dark:text-stone-300">Your Reflection</p>
+<textarea class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg border-stone-300 bg-stone-100 p-4 text-base font-normal leading-normal text-stone-900 placeholder:text-stone-500 focus:border-primary focus:ring-primary/50 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-100 dark:placeholder:text-stone-400 dark:focus:border-primary dark:focus:ring-primary/50" placeholder="Begin your reflection here..."></textarea>
+</label>
+</div>
+</main>
+<!-- Action Buttons -->
+<footer class="sticky bottom-0 w-full bg-background-light/80 px-4 py-4 backdrop-blur-sm dark:bg-background-dark/80">
+<div class="flex w-full flex-col items-center gap-3">
+<button class="flex h-12 min-w-[84px] w-full max-w-md cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-primary px-5 text-base font-bold leading-normal tracking-[0.015em] text-background-dark transition-opacity hover:opacity-90">
+<span class="truncate">Save Entry</span>
+</button>
+<button class="flex h-12 min-w-[84px] w-full max-w-md cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-primary/20 px-5 text-base font-bold leading-normal tracking-[0.015em] text-primary transition-opacity hover:opacity-90 dark:bg-stone-700 dark:text-stone-200 dark:hover:bg-stone-600">
+<span class="truncate">View Past Entries</span>
+</button>
+</div>
+</footer>
+</div>
+</body></html>

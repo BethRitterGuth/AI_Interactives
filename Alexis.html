@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emily's Adventures</title>
+  <style>
+    body { 
+      margin: 0; 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: 'Georgia', serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    canvas { 
+      display: block; 
+      border: 4px solid #2d3748;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+  </style>
+</head>
+<body>
+  <canvas id="gameCanvas" width="800" height="400"></canvas>
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function startGame() {
+      const groundY = 350;
+      const playerWidth = 50;
+      const playerHeight = 80;
+      let playerX = 100;
+      let playerY = groundY - playerHeight;
+      let velocityY = 0;
+      const gravity = 0.6;
+      const jumpPower = -16;
+      let isJumping = false;
+      let score = 0;
+      const maxCollect = 5;
+      let gameState = 'menu';
+      let objects = [];
+      const speed = 4;
+      const keys = {};
+      let lastGen = 0;
+      let lastRestart = 0;
+
+      window.addEventListener('keydown', e => { keys[e.key.toLowerCase()] = true; });
+      window.addEventListener('keyup', e => { keys[e.key.toLowerCase()] = false; });
+
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+      function beep(freq, duration) {
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        oscillator.type = 'sine';
+        oscillator.frequency.value = freq;
+        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration / 1000);
+        oscillator.start();
+        oscillator.stop(audioCtx.currentTime + duration / 1000);
+      }
+
+      function restart() {
+        playerX = 100; playerY = groundY - playerHeight; velocityY = 0; isJumping = false;
+        score = 0; objects = []; gameState = 'playing'; lastGen = Date.now(); lastRestart = Date.now();
+        beep(400, 200);
+      }
+
+      function update() {
+        if ((gameState === 'menu' || gameState === 'gameover' || gameState === 'won') && 
+          (keys[' '] || keys['enter']) && Date.now() - lastRestart > 300) {
+          if (gameState === 'menu') gameState = 'playing';
+          else restart();
+        }
+
+        if (gameState === 'playing') {
+          if (keys['arrowleft'] || keys['a']) playerX -= 5;
+          if (keys['arrowright'] || keys['d']) playerX += 5;
+          playerX = Math.max(0, Math.min(canvas.width - playerWidth, playerX));
+
+          if ((keys[' '] || keys['w'] || keys['arrowup']) && !isJumping) {
+            velocityY = jumpPower; isJumping = true; beep(700, 150);
+          }
+
+          velocityY += gravity;
+          playerY += velocityY;
+          if (playerY >= groundY - playerHeight) {
+            playerY = groundY - playerHeight; velocityY = 0; isJumping = false;
+          }
+
+          if (Date.now() - lastGen > 1500) { generateObject(); lastGen = Date.now(); }
+
+          objects.forEach(obj => obj.x -= speed);
+
+          objects = objects.filter(obj => {
+            const playerRect = { x: playerX + 10, y: playerY + 10, w: playerWidth - 20, h: playerHeight - 20 };
+            const objRect = { x: obj.x, y: obj.y, w: obj.width, h: obj.height };
+            if (collides(playerRect, objRect)) {
+              if (obj.type === 'obstacle') { gameState = 'gameover'; beep(150, 500); return false; }
+              if (obj.type === 'collectible') { score++; beep(900, 150); if (score >= maxCollect) gameState = 'won'; return false; }
+              if (obj.type === 'door') { beep(600, 200); }
+            }
+            return obj.x > -obj.width;
+          });
+        }
+
+        draw();
+        requestAnimationFrame(update);
+      }
+
+      function generateObject() {
+        const rand = Math.random();
+        let obj;
+        if (rand < 0.35) {
+          obj = {
+            type: 'obstacle',
+            x: canvas.width,
+            y: groundY - 80,
+            width: 60,
+            height: 80
+          };
+        } else if (rand < 0.65) {
+          obj = {
+            type: 'collectible',
+            x: canvas.width,
+            y: 100 + Math.random() * 160,
+            width: 50,
+            height: 50,
+            emoji: ['📖', '✨', '🔑', '💎', '⭐'][Math.floor(Math.random() * 5)]
+          };
+        } else {
+          obj = {
+            type: 'door',
+            x: canvas.width,
+            y: groundY - 200,
+            width: 100,
+            height: 200
+          };
+        }
+        objects.push(obj);
+      }
+
+      function collides(r1, r2) {
+        return r1.x < r2.x + r2.w && r1.x + r1.w > r2.x && r1.y < r2.y + r2.h && r1.y + r1.h > r2.y;
+      }
+
+      function drawBackground() {
+        const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        gradient.addColorStop(0, '#87CEEB');
+        gradient.addColorStop(0.7, '#E0F6FF');
+        gradient.addColorStop(1, '#90EE90');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Draw clouds
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+        for (let i = 0; i < 5; i++) {
+          const x = (i * 200 + (Date.now() / 50) % 200) % 900 - 100;
+          const y = 50 + i * 30;
+          ctx.beginPath();
+          ctx.arc(x, y, 25, 0, Math.PI * 2);
+          ctx.arc(x + 25, y - 10, 30, 0, Math.PI * 2);
+          ctx.arc(x + 50, y, 25, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Ground
+        ctx.fillStyle = '#8B7355';
+        ctx.fillRect(0, groundY, canvas.width, canvas.height - groundY);
+        ctx.fillStyle = '#6B5345';
+        for (let i = 0; i < canvas.width; i += 20) {
+          ctx.fillRect(i, groundY, 15, 5);
+        }
+      }
+
+      function drawPlayer(x, y) {
+        // Girl character
+        ctx.fillStyle = '#FFD1DC';
+        ctx.beginPath();
+        ctx.arc(x + playerWidth / 2, y + 20, 15, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Hair
+        ctx.fillStyle = '#8B4513';
+        ctx.beginPath();
+        ctx.arc(x + playerWidth / 2, y + 15, 18, Math.PI, Math.PI * 2);
+        ctx.fill();
+
+        // Body
+        ctx.fillStyle = '#FF69B4';
+        ctx.fillRect(x + 15, y + 35, 20, 30);
+
+        // Arms
+        ctx.strokeStyle = '#FFD1DC';
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.moveTo(x + 15, y + 40);
+        ctx.lineTo(x + 5, y + 50);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(x + 35, y + 40);
+        ctx.lineTo(x + 45, y + 50);
+        ctx.stroke();
+
+        // Legs
+        ctx.fillStyle = '#4169E1';
+        ctx.fillRect(x + 15, y + 65, 7, 15);
+        ctx.fillRect(x + 28, y + 65, 7, 15);
+      }
+
+      function drawObstacle(x, y, w, h) {
+        // Stack of books
+        const bookHeight = 20;
+        const colors = ['#8B4513', '#654321', '#A0522D', '#CD853F'];
+        for (let i = 0; i < Math.floor(h / bookHeight); i++) {
+          ctx.fillStyle = colors[i % colors.length];
+          ctx.fillRect(x, y + h - (i + 1) * bookHeight, w, bookHeight - 2);
+          ctx.strokeStyle = '#000';
+          ctx.lineWidth = 1;
+          ctx.strokeRect(x, y + h - (i + 1) * bookHeight, w, bookHeight - 2);
+          // Book spine details
+          ctx.strokeStyle = '#FFD700';
+          ctx.beginPath();
+          ctx.moveTo(x + 5, y + h - (i + 1) * bookHeight + 5);
+          ctx.lineTo(x + 5, y + h - (i + 1) * bookHeight + 15);
+          ctx.stroke();
+        }
+      }
+
+      function drawDoor(x, y, w, h) {
+        // Door frame
+        ctx.fillStyle = '#8B4513';
+        ctx.fillRect(x, y, w, h);
+        
+        // Door panel
+        ctx.fillStyle = '#A0522D';
+        ctx.fillRect(x + 10, y + 10, w - 20, h - 20);
+        
+        // Door details
+        ctx.strokeStyle = '#654321';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(x + 15, y + 15, w - 30, h - 30);
+        ctx.strokeRect(x + 20, y + 20, w - 40, h / 2 - 30);
+        ctx.strokeRect(x + 20, y + h / 2 + 10, w - 40, h / 2 - 30);
+        
+        // Door knob
+        ctx.fillStyle = '#FFD700';
+        ctx.beginPath();
+        ctx.arc(x + w - 25, y + h / 2, 5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      function draw() {
+        drawBackground();
+
+        if (gameState === 'playing') {
+          drawPlayer(playerX, playerY);
+
+          objects.forEach(obj => {
+            if (obj.type === 'obstacle') {
+              drawObstacle(obj.x, obj.y, obj.width, obj.height);
+            } else if (obj.type === 'collectible') {
+              ctx.font = '40px serif';
+              ctx.fillText(obj.emoji, obj.x + 5, obj.y + 40);
+            } else if (obj.type === 'door') {
+              drawDoor(obj.x, obj.y, obj.width, obj.height);
+            }
+          });
+
+          ctx.fillStyle = '#000';
+          ctx.font = 'bold 28px serif';
+          ctx.fillText(`Collected: ${score} / ${maxCollect}`, 20, 40);
+        }
+
+        const overlayAlpha = 0.85;
+        if (gameState === 'menu') {
+          ctx.fillStyle = `rgba(0, 0, 50, ${overlayAlpha})`;
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = '#FFD700';
+          ctx.textAlign = 'center';
+          ctx.font = 'bold 54px serif';
+          ctx.fillText("Emily's Adventures", canvas.width / 2, 120);
+          ctx.fillStyle = '#fff';
+          ctx.font = 'bold 22px serif';
+          ctx.fillText("Jump over book piles, pass through doors,", canvas.width / 2, 200);
+          ctx.fillText("and collect all 5 magical items!", canvas.width / 2, 235);
+          ctx.font = 'bold 20px serif';
+          ctx.fillText("← → or A/D: Move | Space/W/↑: Jump", canvas.width / 2, 290);
+          ctx.fillStyle = '#FFD700';
+          ctx.font = 'bold 32px serif';
+          ctx.fillText("Press Space or Enter to Start", canvas.width / 2, 350);
+        } else if (gameState === 'gameover') {
+          ctx.fillStyle = `rgba(80, 0, 0, ${overlayAlpha})`;
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = '#FF6B6B';
+          ctx.textAlign = 'center';
+          ctx.font = 'bold 64px serif';
+          ctx.fillText('Game Over!', canvas.width / 2, 170);
+          ctx.fillStyle = '#fff';
+          ctx.font = 'bold 28px serif';
+          ctx.fillText(`You collected ${score} out of ${maxCollect} items`, canvas.width / 2, 240);
+          ctx.fillStyle = '#FFD700';
+          ctx.font = 'bold 32px serif';
+          ctx.fillText('Press Space or Enter to Try Again', canvas.width / 2, 320);
+        } else if (gameState === 'won') {
+          ctx.fillStyle = `rgba(0, 60, 0, ${overlayAlpha})`;
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = '#FFD700';
+          ctx.textAlign = 'center';
+          ctx.font = 'bold 72px serif';
+          ctx.fillText('🎉 You Won! 🎉', canvas.width / 2, 160);
+          ctx.fillStyle = '#fff';
+          ctx.font = 'bold 32px serif';
+          ctx.fillText('All items collected!', canvas.width / 2, 230);
+          ctx.font = '60px serif';
+          ctx.fillText('⭐ 📖 ✨ 🔑 💎', canvas.width / 2, 290);
+          ctx.fillStyle = '#FFD700';
+          ctx.font = 'bold 28px serif';
+          ctx.fillText('Press Space or Enter to Play Again', canvas.width / 2, 360);
+        }
+        ctx.textAlign = 'left';
+      }
+
+      update();
+    }
+
+    startGame();
+  </script>
+</body>
+</html>

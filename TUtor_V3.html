@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tutor Inspiration Calendar – Works Any Day of the Year!</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="21 daily motivational quotes + free accessible tools. Works in any month – perfect for testing or year-round use.">
+<style>
+  :root {
+    --primary: #1e40af;
+    --accent: #dc2626;
+    --success: #16a34a;
+    --light: #f8fafc;
+    --gray: #64748b;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, sans-serif;
+    background: linear-gradient(135deg, #6366f1 0%, #a78bfa 100%);
+    color: #1e293b;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  header {
+    background: rgba(30, 64, 175, 0.96);
+    color: white;
+    text-align: center;
+    padding: 2.5rem 1rem;
+  }
+  h1 { margin: 0 0 0.5rem; font-size: clamp(2rem, 6vw, 3.2rem); }
+  main { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+
+  .controls {
+    text-align: center;
+    background: white;
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+  .calendar { display: grid; gap: 1.8rem; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); }
+  .day {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.22);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .day:focus-within { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+  .day-header {
+    background: var(--primary);
+    color: white;
+    padding: 1.2rem;
+    font-size: 1.5rem;
+    text-align: center;
+  }
+  .content { padding: 1.8rem; }
+  .svg-header {
+    width: 100%;
+    height: 160px;
+    background: linear-gradient(135deg, #818cf8, #c084fc);
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+  .quote {
+    background: var(--light);
+    padding: 1.3rem;
+    border-left: 6px solid var(--accent);
+    font-style: italic;
+    font-size: 1.1rem;
+    margin: 1rem 0;
+  }
+  .author { text-align: right; font-weight: 600; color: var(--accent); margin-top: 0.5rem; }
+  .tool {
+    background: #f0f9ff;
+    padding: 1.2rem;
+    border-radius: 10px;
+    margin: 1.2rem 0;
+  }
+  textarea {
+    width: 100%;
+    min-height: 140px;
+    padding: 1rem;
+    border: 2px solid #cbd5e1;
+    border-radius: 10px;
+    font: inherit;
+    margin-top: 0.8rem;
+    resize: vertical;
+  }
+  textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(59,130,246,0.3);
+  }
+  button {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.4rem;
+    margin: 0.5rem 0.4rem 0 0;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.2s;
+  }
+  button:hover, button:focus { background: #b91c1c; }
+  .btn-clear { background: var(--gray); }
+  .btn-clear:hover { background: #475569; }
+  .contact-btn {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    width: 68px;
+    height: 68px;
+    background: var(--success);
+    color: white;
+    border-radius: 50%;
+    font-size: 2.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    z-index: 1000;
+  }
+  .contact-btn:hover { transform: scale(1.12); }
+  footer { text-align: center; padding: 3rem; color: white; }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap;
+    border: 0;
+  }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+  @media (prefers-color-scheme: dark) {
+    body { background: #0f172a; color: #e2e8f0; }
+    .day, .controls { background: #1e293b; }
+    .quote, .tool { background: #334155; }
+    textarea { background: #1e293b; color: #e2e8f0; border-color: #475569; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Tutor Inspiration Calendar</h1>
+  <p>21 days of quotes & free accessible tools • Works any month • Reflections saved forever in your browser</p>
+</header>
+
+<main>
+  <section class="controls" aria-labelledby="test-mode">
+    <h2 id="test-mode" class="visually-hidden">Testing Mode</h2>
+    <p><strong>Current day:</strong> <span id="today-display">Day 1</span> — <em>You can change it anytime to test any day!</em></p>
+    <label for="day-select" class="visually-hidden">Choose day to preview</label>
+    <select id="day-select" aria-label="Jump to any day for testing">
+      <option value="0">Day 1 – Jan 2</option>
+      <!-- Options filled by JS -->
+    </select>
+    <button onclick="resetAllData()" style="background:#7c2d12;">Clear All Reflections (Start Fresh)</button>
+  </section>
+
+  <section class="calendar" id="calendar" aria-live="polite"></section>
+</main>
+
+<a href="mailto:BethRitterGuth@gmail.com?subject=Tutor%20Calendar%20Question&body=Hi%20Beth%2C%0A%0AI%20have%20a%20question%20about%20the%20inspiration%20calendar%3A%0A%0AThanks!"
+   class="contact-btn"
+   aria-label="Email Beth Ritter-Guth with questions">Envelope</a>
+
+<footer>
+  <p>Made with love for tutors • Fully accessible • No internet needed after first load</p>
+</footer>
+
+<script>
+// 21 business days – works any time of year
+const content = [
+  {date:"Day 1", real:"Jan 2", quote:"The function of education is to teach one to think intensively and to think critically. Intelligence plus character — that is the goal of true education.", author:"Martin Luther King Jr.", tool:"Desmos Graphing Calculator", link:"https://desmos.com", act:["Explore parabolas with sliders","Visual Pythagorean theorem"]},
+  {date:"Day 2", real:"Jan 5", quote:"Tell me and I forget. Teach me and I remember. Involve me and I learn.", author:"Benjamin Franklin", tool:"GeoGebra", link:"https://geogebra.org", act:["Dynamic geometry constructions","3D shape rotations"]},
+  {date:"Day 3", real:"Jan 6", quote:"Education is not the filling of a pail, but the lighting of a fire.", author:"W.B. Yeats", tool:"Canva for Education", link:"https://canva.com/education", act:["Create infographics","Literary mood boards"]},
+  {date:"Day 4", real:"Jan 7", quote:"The beautiful thing about learning is that no one can take it away from you.", author:"B.B. King", tool:"Quizlet", link:"https://quizlet.com", act:["Diagram labeling sets","Accessible Live games"]},
+  {date:"Day 5", real:"Jan 8", quote:"It is the supreme art of the teacher to awaken joy in creative expression and knowledge.", author:"Albert Einstein", tool:"Book Creator", link:"https://bookcreator.com", act:["Multimedia journals","Collaborative class books"]},
+  {date:"Day 6", real:"Jan 9", quote:"The mediocre teacher tells. The good teacher explains. The superior teacher demonstrates. The great teacher inspires.", author:"William Arthur Ward", tool:"Padlet", link:"https://padlet.com", act:["Virtual sticky walls","Voice + image responses"]},
+  {date:"Day 7", real:"Jan 12", quote:"Education is the most powerful weapon which you can use to change the world.", author:"Nelson Mandela", tool:"Wakelet", link:"https://wakelet.com", act:["Curated resource collections","Student portfolios"]},
+  {date:"Day 8", real:"Jan 13", quote:"A good teacher can inspire hope, ignite the imagination, and instill a love of learning.", author:"Brad Henry", tool:"Nearpod", link:"https://nearpod.com", act:["VR field trips","Draw It collaboration"]},
+  {date:"Day 9", real:"Jan 14", quote:"Teaching kids to count is fine, but teaching them what counts is best.", author:"Bob Talbert", tool:"Kami", link:"https://kamiapp.com", act:["Collaborative text annotation","Voice feedback"]},
+  {date:"Day 10", real:"Jan 15", quote:"The best teachers show you where to look but don’t tell you what to see.", author:"Alexandra K. Trenfor", tool:"Google Jamboard", link:"https://jamboard.google.com", act:["Real-time concept maps","Virtual sticky notes"]},
+  {date:"Day 11", real:"Jan 16", quote:"Learning is not attained by chance, it must be sought for with ardor and diligence.", author:"Abigail Adams", tool:"Flip", link:"https://flip.com", act:["Video discussion threads","Peer video feedback"]},
+  {date:"Day 12", real:"Jan 20", quote:"I touch the future. I teach.", author:"Christa McAuliffe", tool:"Edpuzzle", link:"https://edpuzzle.com", act:["Interactive YouTube lessons","Voice-over explanations"]},
+  {date:"Day 13", real:"Jan 21", quote:"The art of teaching is the art of assisting discovery.", author:"Mark Van Doren", tool:"Mentimeter", link:"https://mentimeter.com", act:["Live word clouds","Instant polls"]},
+  {date:"Day 14", real:"Jan 22", quote:"Children must be taught how to think, not what to think.", author:"Margaret Mead", tool:"CK-12 Flexi", link:"https://flexi.ck12.org", act:["Adaptive practice","Physics simulations"]},
+  {date:"Day 15", real:"Jan 23", quote:"What we learn with pleasure we never forget.", author:"Alfred Mercier", tool:"PhET Simulations", link:"https://phet.colorado.edu", act:["Circuit Construction","Wave on a String"]},
+  {date:"Day 16", real:"Jan 26", quote:"A teacher affects eternity; they can never tell where their influence stops.", author:"Henry Adams", tool:"CommonLit", link:"https://commonlit.org", act:["Reading + questions","Text annotation"]},
+  {date:"Day 17", real:"Jan 27", quote:"If you have to put someone on a pedestal, put teachers. They are society’s heroes.", author:"Guy Kawasaki", tool:"InsertLearning", link:"https://insertlearning.com", act:["Turn any webpage into a lesson","Insert questions & highlights"]},
+  {date:"Day 18", real:"Jan 28", quote:"Good teaching is more a giving of right questions than a giving of right answers.", author:"Josef Albers", tool:"Whiteboard.fi", link:"https://whiteboard.fi", act:["Live individual whiteboards","Instant formative assessment"]},
+  {date:"Day 19", real:"Jan 29", quote:"To teach is to learn twice.", author:"Joseph Joubert", tool:"Classcraft", link:"https://classcraft.com", act:["Gamify participation","Team quests"]},
+  {date:"Day 20", real:"Jan 30", quote:"The teacher who is indeed wise does not bid you to enter the house of his wisdom but rather leads you to the threshold of your mind.", author:"Khalil Gibran", tool:"Genially", link:"https://genial.ly", act:["Interactive images","Educational escape rooms"]},
+  {date:"Day 21", real:"Jan 30", quote:"One book, one pen, one child, and one teacher can change the world.", author:"Malala Yousafzai", tool:"CoSpaces Edu", link:"https://cospaces.io/edu", act:["Build & code 3D worlds","Virtual gallery walks"]}
+];
+
+let currentDayIndex = 0;
+
+// Build dropdown + calendar
+const calendar = document.getElementById('calendar');
+const select = document.getElementById('day-select');
+const todayDisplay = document.getElementById('today-display');
+
+content.forEach((day, i) => {
+  // Dropdown
+  const opt = document.createElement('option');
+  opt.value = i;
+  opt.textContent = `${day.date} – ${day.real} 2026}`;
+  select.appendChild(opt);
+
+  // Card
+  const article = document.createElement('article');
+  article.className = 'day';
+  article.id = `day-${i}`;
+  article.innerHTML = `
+    <header class="day-header">${day.date} <small>(${day.real} 2026)</small></header>
+    <div class="content">
+      <div class="svg-header" role="img" aria-label="Decorative colorful inspiration banner"></div>
+      <blockquote class="quote">
+        <p>${day.quote}</p>
+        <footer class="author">— ${day.author}</footer>
+      </blockquote>
+
+      <section class="tool" aria-labelledby="tool-${i}">
+        <h3 id="tool-${i}">Free Tool: ${day.tool}</h3>
+        <p><a href="${day.link}" target="_blank" rel="noopener">${day.link}</a></p>
+        <ul aria-label="Sample activities">
+          <li>${day.act[0]}</li>
+          <li>${day.act[1]}</li>
+        </ul>
+      </section>
+
+      <section class="reflection" aria-labelledby="reflect-${i}">
+        <h3 id="reflect-${i}">My Reflection – ${day.date}</h3>
+        <label for="ta-${i}" class="visually-hidden">Reflection for ${day.date}</label>
+        <textarea id="ta-${i}" placeholder="What inspired you today? How will you try this tool?"></textarea>
+        <div class="buttons">
+          <button type="button" onclick="saveDay(${i})">Save Reflection</button>
+          <button type="button" class="btn-clear" onclick="clearDay(${i})">Clear This Day</button>
+        </div>
+      </section>
+    </div>
+  `;
+  calendar.appendChild(article);
+});
+
+// Load current day (default = Day 1, or remember last visit)
+function loadCurrentDay() {
+  const saved = localStorage.getItem('tutorCalCurrentDay');
+  currentDayIndex = saved ? parseInt(saved) : 0;
+  select.value = currentDayIndex;
+  todayDisplay.textContent = content[currentDayIndex].date;
+  document.getElementById(`day-${currentDayIndex}`).scrollIntoView({ behavior: "smooth" });
+  loadAllReflections();
+}
+loadCurrentDay();
+
+// Save + load reflections
+function loadAllReflections() {
+  content.forEach((_, i) => {
+    const saved = localStorage.getItem(`tutorCal-ref-${i}`);
+    if (saved) document.getElementById(`ta-${i}`).value = saved;
+  });
+}
+function saveDay(i) {
+  const val = document.getElementById(`ta-${i}`).value;
+  localStorage.setItem(`tutorCal-ref-${i}`, val);
+  alert(`Saved! Your reflection for ${content[i].date} is safe.`);
+}
+function clearDay(i) {
+  if (confirm(`Delete reflection for ${content[i].date}?`)) {
+    document.getElementById(`ta-${i}`).value = '';
+    localStorage.removeItem(`tutorCal-ref-${i}`);
+  }
+}
+function resetAllData() {
+  if (confirm("Delete ALL reflections and reset to Day 1?")) {
+    localStorage.clear();
+    location.reload();
+  }
+}
+
+// Day selector
+select.addEventListener('change', (e) => {
+  currentDayIndex = parseInt(e.target.value);
+  localStorage.setItem('tutorCalCurrentDay', currentDayIndex);
+  todayDisplay.textContent = content[currentDayIndex].date;
+  document.getElementById(`day-${currentDayIndex}`).scrollIntoView({ behavior: "smooth" });
+});
+</script>
+</body>
+</html>

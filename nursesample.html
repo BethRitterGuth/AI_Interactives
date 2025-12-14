@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive CPR Simulation</title>
+    <style>
+        /* Base styles for the body and main container */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #004d99; /* School Blue */
+            color: #fff;
+            text-align: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            background-color: #f7a020; /* School Orange */
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        /* Styling for the header and question text */
+        h1 {
+            color: #004d99;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        p.question-text {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            font-weight: bold;
+        }
+
+        /* Styling for multiple-choice options */
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .option-button {
+            background-color: #fff;
+            color: #004d99;
+            border: 3px solid #004d99;
+            padding: 1rem 1.5rem;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .option-button:hover {
+            background-color: #e6e6e6;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Visual feedback for correct and incorrect answers */
+        .correct {
+            background-color: #28a745 !important;
+            color: white !important;
+            border-color: #28a745 !important;
+            animation: pulse-correct 0.5s ease-out;
+        }
+
+        .incorrect {
+            background-color: #dc3545 !important;
+            color: white !important;
+            border-color: #dc3545 !important;
+            animation: shake 0.5s ease-out;
+        }
+
+        /* Animation keyframes */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-10px); }
+            40%, 80% { transform: translateX(10px); }
+        }
+
+        @keyframes pulse-correct {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Message and progress bar styling */
+        .feedback-message {
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            font-weight: bold;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            margin-top: 2rem;
+            border: 2px solid #004d99;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: #004d99;
+            width: 0%;
+            transition: width 0.5s ease-in-out;
+        }
+
+        /* Modal styling for game over */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background-color: #f7a020;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            width: 80%;
+            max-width: 500px;
+        }
+
+        .modal-content h2 {
+            color: #004d99;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-content p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: #004d99;
+        }
+
+        .modal-content button {
+            background-color: #004d99;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .modal-content button:hover {
+            background-color: #003366;
+        }
+
+        /* Responsive design for smaller screens */
+        @media (max-width: 600px) {
+            .container {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            p.question-text {
+                font-size: 1.2rem;
+            }
+
+            .option-button {
+                font-size: 1rem;
+            }
+
+            .feedback-message {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>CPR Training Simulation</h1>
+        <p class="question-text" id="question-text">Loading...</p>
+
+        <div class="options-container" id="options-container">
+            <!-- Buttons will be generated here by JavaScript -->
+        </div>
+
+        <p class="feedback-message" id="feedback-message"></p>
+
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+    </div>
+
+    <!-- The patient status modal, hidden by default -->
+    <div id="status-modal" class="modal">
+        <div class="modal-content">
+            <h2 id="modal-title"></h2>
+            <p id="modal-message"></p>
+            <button id="modal-button">Play Again</button>
+        </div>
+    </div>
+
+    <script>
+        // Data structure for the CPR questions
+        const questions = [
+            {
+                question: "You find an unconscious patient. What is the first thing you should do?",
+                options: [
+                    "Call for help and activate the emergency response system.",
+                    "Check for a pulse and breathing.",
+                    "Begin chest compressions immediately.",
+                    "Go find a defibrillator."
+                ],
+                correctAnswer: "Check for a pulse and breathing."
+            },
+            {
+                question: "After checking for a pulse and breathing, you find none. What is the next step?",
+                options: [
+                    "Initiate two rescue breaths.",
+                    "Perform 30 chest compressions.",
+                    "Activate the emergency response system and get an AED if available.",
+                    "Check for responsiveness again."
+                ],
+                correctAnswer: "Activate the emergency response system and get an AED if available."
+            },
+            {
+                question: "When performing chest compressions on an adult, what is the correct depth?",
+                options: [
+                    "At least 1 inch (2.5 cm)",
+                    "Approximately 1.5 inches (4 cm)",
+                    "At least 2 inches (5 cm)",
+                    "No more than 2.5 inches (6 cm)"
+                ],
+                correctAnswer: "At least 2 inches (5 cm)"
+            },
+            {
+                question: "What is the recommended compression-to-ventilation ratio for a single rescuer on an adult?",
+                options: [
+                    "15 compressions to 2 ventilations",
+                    "30 compressions to 2 ventilations",
+                    "5 compressions to 1 ventilation",
+                    "30 compressions to 1 ventilation"
+                ],
+                correctAnswer: "30 compressions to 2 ventilations"
+            },
+            {
+                question: "How long should you take to give two rescue breaths?",
+                options: [
+                    "No longer than 1 second per breath.",
+                    "Approximately 2 seconds per breath.",
+                    "As long as it takes to see chest rise.",
+                    "3 to 5 seconds per breath."
+                ],
+                correctAnswer: "No longer than 1 second per breath."
+            }
+        ];
+
+        // Global state variables
+        let currentQuestionIndex = 0;
+        let isAnswerLocked = false;
+
+        // DOM elements
+        const questionTextEl = document.getElementById('question-text');
+        const optionsContainerEl = document.getElementById('options-container');
+        const feedbackMessageEl = document.getElementById('feedback-message');
+        const progressBarEl = document.getElementById('progress-bar');
+        const statusModalEl = document.getElementById('status-modal');
+        const modalTitleEl = document.getElementById('modal-title');
+        const modalMessageEl = document.getElementById('modal-message');
+        const modalButtonEl = document.getElementById('modal-button');
+
+        // Function to load and display the current question and options
+        function loadQuestion() {
+            // Check if all questions are completed
+            if (currentQuestionIndex >= questions.length) {
+                // If so, the patient is saved and we show the success modal
+                showModal("Patient is Saved!", "You have successfully completed the CPR training simulation. The patient is alive and well!");
+                return;
+            }
+            
+            // Reset state for new question
+            isAnswerLocked = false;
+            feedbackMessageEl.textContent = '';
+            
+            // Get the current question object
+            const currentQuestion = questions[currentQuestionIndex];
+            
+            // Update the question text
+            questionTextEl.textContent = currentQuestion.question;
+            
+            // Clear existing options
+            optionsContainerEl.innerHTML = '';
+            
+            // Create a button for each option
+            currentQuestion.options.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.classList.add('option-button');
+                button.addEventListener('click', () => checkAnswer(option, button));
+                optionsContainerEl.appendChild(button);
+            });
+            
+            // Update the progress bar
+            updateProgressBar();
+        }
+
+        // Function to check if the selected answer is correct
+        function checkAnswer(selectedOption, button) {
+            // Prevent multiple clicks while an answer is being processed
+            if (isAnswerLocked) return;
+            isAnswerLocked = true;
+
+            const currentQuestion = questions[currentQuestionIndex];
+
+            if (selectedOption === currentQuestion.correctAnswer) {
+                // Correct answer path
+                button.classList.add('correct');
+                feedbackMessageEl.textContent = "Correct! You are a lifesaver! Moving to the next step...";
+                // After a delay, move to the next question
+                setTimeout(() => {
+                    currentQuestionIndex++;
+                    loadQuestion();
+                }, 1500);
+            } else {
+                // Incorrect answer path - the patient 'croaks'
+                button.classList.add('incorrect');
+                feedbackMessageEl.textContent = "Oops! The patient croaked. Let's review and try again.";
+                // After a delay, show the modal for review
+                setTimeout(() => {
+                    showModal("Patient Croaked", "Review the steps and try to save the patient on the next attempt!");
+                }, 1500);
+            }
+        }
+
+        // Function to update the progress bar's width based on progress
+        function updateProgressBar() {
+            const progress = (currentQuestionIndex / questions.length) * 100;
+            progressBarEl.style.width = `${progress}%`;
+        }
+
+        // Function to show the end-of-game modal
+        function showModal(title, message) {
+            modalTitleEl.textContent = title;
+            modalMessageEl.textContent = message;
+            statusModalEl.style.display = 'flex';
+        }
+
+        // Function to restart the simulation
+        function restartSimulation() {
+            currentQuestionIndex = 0;
+            statusModalEl.style.display = 'none';
+            loadQuestion();
+        }
+
+        // Add event listener to the modal button to restart the game
+        modalButtonEl.addEventListener('click', restartSimulation);
+
+        // Initial call to start the simulation when the page loads
+        loadQuestion();
+
+    </script>
+</body>
+</html>

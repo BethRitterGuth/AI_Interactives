@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Rest & Relaxation: 8-bit Hopper</title>
+<style>
+  :root {
+    --bg: #0e0e10;
+    --panel: #1c1c20;
+    --text: #e6e6e6;
+    --accent: #e3b34a;
+    --danger: #e36363;
+    --good: #6fdc6f;
+  }
+  html, body {
+    height: 100%;
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: monospace;
+  }
+  .wrap {
+    display: grid;
+    place-items: center;
+    gap: 12px;
+    padding: 20px;
+  }
+  .hud {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    background: var(--panel);
+    border: 2px solid #333;
+    padding: 10px 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .hud .title {
+    color: var(--accent);
+    font-weight: bold;
+  }
+  .hud .stat {
+    padding: 2px 6px;
+    border: 1px solid #333;
+    background: #111;
+  }
+  .hud .status {
+    padding: 2px 8px;
+    border: 1px solid #333;
+    background: #111;
+    color: var(--good);
+  }
+  canvas {
+    border: 3px solid #333;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    background: #000;
+    display: block;
+  }
+  .help {
+    max-width: 840px;
+    background: var(--panel);
+    border: 2px solid #333;
+    padding: 10px 12px;
+    line-height: 1.4;
+  }
+  .help b {
+    color: var(--accent);
+  }
+  .overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10,10,12,0.85);
+    z-index: 100;
+  }
+  .overlay.hidden {
+    display: none;
+  }
+  .dialog {
+    background: var(--panel);
+    border: 3px solid var(--accent);
+    padding: 20px 30px;
+    width: 420px;
+    text-align: center;
+  }
+  .dialog h2 {
+    margin: 0 0 12px;
+    color: var(--accent);
+  }
+  .dialog p {
+    margin: 10px 0;
+    line-height: 1.5;
+  }
+  .btn {
+    margin-top: 15px;
+    display: inline-block;
+    background: var(--accent);
+    border: 2px solid var(--accent);
+    color: #000;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: monospace;
+  }
+  .btn:hover { 
+    background: #f4c766;
+    border-color: #f4c766;
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hud">
+      <div class="title">MY YEAR OF REST & RELAXATION — 8-bit Hopper</div>
+      <div class="stat">Score: <span id="score">0</span></div>
+      <div class="stat">Lives: <span id="lives">3</span></div>
+      <div class="stat">Level: <span id="level">1</span></div>
+      <div class="status" id="status">Click START to begin!</div>
+    </div>
+    <canvas id="game" width="960" height="540" aria-label="8-bit hopper game"></canvas>
+    <div class="help">
+      <b>Controls:</b> Arrow keys or WASD to move. <b>Goal:</b> Pick up coffee & cozy items (gold), dodge people (red), and reach HOME (green house) at the top. A soft ding plays when you collect an item. <b>Space:</b> Pause. <b>R:</b> Restart.
+    </div>
+  </div>
+
+  <div class="overlay" id="startOverlay">
+    <div class="dialog">
+      <h2>My Year of Rest & Relaxation</h2>
+      <p>Collect comforts. Avoid people. Reach home.</p>
+      <p style="font-size: 12px; color: #999;">Use Arrow Keys or WASD to move</p>
+      <div class="btn" id="startBtn">START GAME</div>
+    </div>
+  </div>
+
+  <div class="overlay hidden" id="pauseOverlay">
+    <div class="dialog">
+      <h2>Paused</h2>
+      <p>Press Space or click Resume to continue.</p>
+      <div class="btn" id="resumeBtn">RESUME</div>
+    </div>
+  </div>
+
+  <div class="overlay hidden" id="gameOverOverlay">
+    <div class="dialog">
+      <h2 id="gameOverTitle">Game Over</h2>
+      <p id="gameOverText"></p>
+      <div class="btn" id="restartBtn">RESTART</div>
+    </div>
+  </div>
+
+<script>
+(() => {
+  // Canvas setup
+  const canvas = document.getElementById('game');
+  const ctx = canvas.getContext('2d');
+  ctx.imageSmoothingEnabled = false;
+
+  // HUD elements
+  const scoreEl = document.getElementById('score');
+  const livesEl = document.getElementById('lives');
+  const levelEl = document.getElementById('level');
+  const statusEl = document.getElementById('status');
+  const startOverlay = document.getElementById('startOverlay');
+  const pauseOverlay = document.getElementById('pauseOverlay');
+  const gameOverOverlay = document.getElementById('gameOverOverlay');
+  const gameOverTitle = document.getElementById('gameOverTitle');
+  const gameOverText = document.getElementById('gameOverText');
+  const startBtn = document.getElementById('startBtn');
+  const resumeBtn = document.getElementById('resumeBtn');
+  const restartBtn = document.getElementById('restartBtn');
+
+  // Game state
+  let score = 0;
+  let lives = 3;
+  let level = 1;
+  let running = false;
+  let paused = false;
+  let gameOver = false;
+  let gameStarted = false;
+
+  // Timing
+  let last = 0;
+
+  // World config
+  const world = {
+    tile: 48,
+    playerSpeed: 3.5,
+    npcSpeedMin: 1.5,
+    npcSpeedMax: 3.0,
+    lanes: 6,
+    collectibleCount: 10,
+    npcCount: 14
+  };
+
+  // Input
+  const keys = Object.create(null);
+  window.addEventListener('keydown', (e) => {
+    const key = e.key.toLowerCase();
+    keys[key] = true;
+    
+    if (e.key === ' ' && running && gameStarted && !gameOver) {
+      e.preventDefault();
+      togglePause();
+    }
+    if (key === 'r' && (gameOver || paused)) {
+      e.preventDefault();
+      restart();
+    }
+  });
+  
+  window.addEventListener('keyup', (e) => {
+    keys[e.key.toLowerCase()] = false;
+  });
+
+  // Audio: simple ding
+  let audioCtx = null;
+  function ding() {
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.25);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.26);
+    } catch (err) {}
+  }
+
+  // Load images from web
+  const assets = {
+    player: loadImage('https://cdn.pixabay.com/photo/2016/03/31/19/50/avatar-1295773_960_720.png'),
+    bg: loadImage('https://cdn.pixabay.com/photo/2016/11/29/03/35/architecture-1867187_960_720.jpg'),
+    npc1: loadImage('https://cdn.pixabay.com/photo/2016/08/20/05/38/avatar-1606916_960_720.png'),
+    npc2: loadImage('https://cdn.pixabay.com/photo/2014/04/03/10/32/user-310807_960_720.png'),
+    coffee: loadImage('https://cdn.pixabay.com/photo/2017/01/31/21/23/coffee-2027411_960_720.png'),
+    home: loadImage('https://cdn.pixabay.com/photo/2017/04/10/22/28/residence-2219972_960_720.png'),
+  };
+
+  function loadImage(src) {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.src = src;
+    return img;
+  }
+
+  // Wait for images
+  function imagesReady() {
+    const list = Object.values(assets);
+    return Promise.all(list.map(img => new Promise(res => {
+      if (img.complete) return res();
+      img.onload = () => res();
+      img.onerror = () => res();
+    })));
+  }
+
+  // Entities
+  const player = {
+    x: canvas.width / 2 - world.tile / 2,
+    y: canvas.height - world.tile * 1.5,
+    w: world.tile,
+    h: world.tile,
+    speed: world.playerSpeed
+  };
+
+  const npcs = [];
+  const collectibles = [];
+  const homeGoal = {
+    x: canvas.width - world.tile * 2,
+    y: Math.floor(world.tile * 0.5),
+    w: Math.floor(world.tile * 2),
+    h: Math.floor(world.tile * 1.8)
+  };
+
+  // Setup level
+  function setupLevel() {
+    npcs.length = 0;
+    collectibles.length = 0;
+    const laneTop = world.tile * 2.5;
+    const laneHeight = (canvas.height - laneTop - world.tile * 2) / world.lanes;
+    
+    // Collectibles
+    for (let i = 0; i < world.collectibleCount; i++) {
+      const lane = (i % world.lanes);
+      const y = Math.floor(laneTop + lane * laneHeight + laneHeight / 2 - world.tile / 2);
+      const x = Math.floor((Math.random() * (canvas.width - world.tile * 3)) + world.tile * 1.5);
+      collectibles.push({
+        x, y, 
+        w: Math.floor(world.tile * 0.8), 
+        h: Math.floor(world.tile * 0.8),
+        picked: false
+      });
+    }
+    
+    // NPCs
+    for (let i = 0; i < world.npcCount; i++) {
+      const lane = i % world.lanes;
+      const y = Math.floor(laneTop + lane * laneHeight + laneHeight / 2 - world.tile / 2);
+      const leftToRight = Math.random() < 0.5;
+      const speed = (Math.random() * (world.npcSpeedMax - world.npcSpeedMin) + world.npcSpeedMin) * (leftToRight ? 1 : -1);
+      const startX = leftToRight ? -world.tile * (Math.random() * 3 + 1) : canvas.width + world.tile * (Math.random() * 3 + 1);
+      const isType1 = Math.random() < 0.5;
+      npcs.push({
+        x: startX, y,
+        w: world.tile * 0.9, 
+        h: world.tile * 0.9,
+        speed,
+        isType1
+      });
+    }
+    
+    player.x = canvas.width / 2 - world.tile / 2;
+    player.y = canvas.height - world.tile * 1.5;
+  }
+
+  // Collision
+  function hit(a, b) {
+    return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+  }
+
+  // Drawing
+  function drawBg() {
+    if (assets.bg && assets.bg.complete && assets.bg.naturalWidth) {
+      ctx.globalAlpha = 0.4;
+      ctx.drawImage(assets.bg, 0, 0, canvas.width, canvas.height);
+      ctx.globalAlpha = 1;
+    }
+    
+    ctx.fillStyle = '#1a1a2e';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    const laneTop = world.tile * 2.5;
+    const laneH = (canvas.height - laneTop - world.tile * 2) / world.lanes;
+    
+    // Lanes
+    for (let i = 0; i < world.lanes; i++) {
+      ctx.fillStyle = i % 2 === 0 ? '#252a3a' : '#2a2f40';
+      ctx.fillRect(0, Math.floor(laneTop + i * laneH), canvas.width, Math.floor(laneH));
+    }
+    
+    // Lane lines
+    ctx.strokeStyle = '#ffffff15';
+    ctx.lineWidth = 2;
+    for (let i = 0; i <= world.lanes; i++) {
+      const y = Math.floor(laneTop + i * laneH);
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(canvas.width, y);
+      ctx.stroke();
+    }
+    
+    // Top safe zone
+    ctx.fillStyle = '#1e3a2e';
+    ctx.fillRect(0, 0, canvas.width, Math.floor(world.tile * 2.5));
+  }
+
+  function drawHome() {
+    if (assets.home && assets.home.complete && assets.home.naturalWidth) {
+      ctx.drawImage(assets.home, homeGoal.x, homeGoal.y, homeGoal.w, homeGoal.h);
+    } else {
+      ctx.fillStyle = '#4a7c59';
+      ctx.fillRect(homeGoal.x, homeGoal.y, homeGoal.w, homeGoal.h);
+      ctx.fillStyle = '#6fdc6f';
+      ctx.fillRect(homeGoal.x + 10, homeGoal.y + 10, 20, 20);
+      ctx.fillStyle = '#fff';
+      ctx.font = '12px monospace';
+      ctx.fillText('HOME', homeGoal.x + 35, homeGoal.y + 25);
+    }
+  }
+
+  function drawPlayer() {
+    if (assets.player && assets.player.complete && assets.player.naturalWidth) {
+      ctx.drawImage(assets.player, player.x, player.y, player.w, player.h);
+    } else {
+      ctx.fillStyle = '#6fdc6f';
+      ctx.fillRect(player.x, player.y, player.w, player.h);
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(player.x + 15, player.y + 10, 8, 8);
+      ctx.fillRect(player.x + 25, player.y + 10, 8, 8);
+    }
+  }
+
+  function drawNPC(npc) {
+    const img = npc.isType1 ? assets.npc1 : assets.npc2;
+    if (img && img.complete && img.naturalWidth) {
+      ctx.drawImage(img, npc.x, npc.y, npc.w, npc.h);
+    } else {
+      ctx.fillStyle = '#e36363';
+      ctx.fillRect(npc.x, npc.y, npc.w, npc.h);
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(npc.x + 12, npc.y + 8, 6, 6);
+      ctx.fillRect(npc.x + 22, npc.y + 8, 6, 6);
+    }
+  }
+
+  function drawCollectible(c) {
+    if (c.picked) return;
+    if (assets.coffee && assets.coffee.complete && assets.coffee.naturalWidth) {
+      ctx.drawImage(assets.coffee, c.x, c.y, c.w, c.h);
+    } else {
+      ctx.fillStyle = '#ffd700';
+      ctx.fillRect(c.x, c.y, c.w, c.h);
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(c.x + 10, c.y + 10, c.w - 20, c.h - 20);
+    }
+  }
+
+  // Update
+  function update(dt) {
+    if (!running || paused || gameOver) return;
+
+    const left = keys['arrowleft'] || keys['a'];
+    const right = keys['arrowright'] || keys['d'];
+    const up = keys['arrowup'] || keys['w'];
+    const down = keys['arrowdown'] || keys['s'];
+
+    const speed = player.speed * (dt / (1000/60));
+    if (left) player.x -= speed;
+    if (right) player.x += speed;
+    if (up) player.y -= speed;
+    if (down) player.y += speed;
+
+    player.x = Math.max(0, Math.min(canvas.width - player.w, player.x));
+    player.y = Math.max(0, Math.min(canvas.height - player.h, player.y));
+
+    // NPCs
+    for (const npc of npcs) {
+      npc.x += npc.speed * (dt / (1000/60));
+      
+      if (npc.speed > 0 && npc.x > canvas.width + world.tile) {
+        npc.x = -world.tile;
+      } else if (npc.speed < 0 && npc.x < -world.tile) {
+        npc.x = canvas.width + world.tile;
+      }
+      
+      if (hit(player, npc)) {
+        lives -= 1;
+        livesEl.textContent = lives;
+        statusEl.textContent = 'Ouch! Avoid people!';
+        player.y = Math.min(canvas.height - player.h, player.y + world.tile);
+        if (lives <= 0) endGame(false);
+      }
+    }
+
+    // Collectibles
+    for (const c of collectibles) {
+      if (!c.picked && hit(player, c)) {
+        c.picked = true;
+        score += 10;
+        scoreEl.textContent = score;
+        statusEl.textContent = 'Comfort collected!';
+        ding();
+      }
+    }
+
+    // Home
+    if (hit(player, homeGoal)) {
+      endGame(true);
+    }
+  }
+
+  // Render
+  function render() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBg();
+    drawHome();
+    for (const c of collectibles) drawCollectible(c);
+    for (const npc of npcs) drawNPC(npc);
+    drawPlayer();
+  }
+
+  // Game loop
+  function loop(ts) {
+    if (!last) last = ts;
+    const dt = Math.min(ts - last, 100);
+    last = ts;
+    update(dt);
+    render();
+    requestAnimationFrame(loop);
+  }
+
+  // Pause
+  function togglePause() {
+    if (gameOver || !gameStarted) return;
+    paused = !paused;
+    if (paused) {
+      pauseOverlay.classList.remove('hidden');
+    } else {
+      pauseOverlay.classList.add('hidden');
+    }
+  }
+
+  // End game
+  function endGame(won) {
+    gameOver = true;
+    running = false;
+    gameOverOverlay.classList.remove('hidden');
+    gameOverTitle.textContent = won ? '🏠 You Made It Home!' : '😔 Game Over';
+    gameOverText.innerHTML = won
+      ? `Score: <b>${score}</b><br>Level: ${level}<br>Rest achieved!`
+      : `Score: <b>${score}</b><br>Out of lives. Try again!`;
+  }
+
+  // Restart
+  function restart() {
+    score = 0;
+    lives = 3;
+    level = 1;
+    gameOver = false;
+    paused = false;
+    scoreEl.textContent = score;
+    livesEl.textContent = lives;
+    levelEl.textContent = level;
+    pauseOverlay.classList.add('hidden');
+    gameOverOverlay.classList.add('hidden');
+    setupLevel();
+    running = true;
+    last = 0;
+    statusEl.textContent = 'Collect comforts. Avoid people. Reach home.';
+  }
+
+  // Start game
+  startBtn.addEventListener('click', () => {
+    startOverlay.classList.add('hidden');
+    gameStarted = true;
+    setupLevel();
+    running = true;
+    statusEl.textContent = 'Collect comforts. Avoid people. Reach home.';
+    requestAnimationFrame(loop);
+  });
+
+  resumeBtn.addEventListener('click', () => {
+    togglePause();
+  });
+
+  restartBtn.addEventListener('click', () => {
+    restart();
+  });
+
+  // Initialize
+  imagesReady().then(() => {
+    console.log('Images loaded, ready to start!');
+    render(); // Draw initial frame
+  });
+
+})();
+</script>
+</body>
+</html>

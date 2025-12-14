@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Celtic Advent 2025</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          primary: "#11d452",
+          "background-light": "#f6f8f6",
+          "background-dark": "#102216",
+          "text-light": "#1f2937",
+          "text-dark": "#e5e7eb",
+          "text-muted-light": "#6b7280",
+          "text-muted-dark": "#9ca3af",
+        },
+        fontFamily: { display: ["Noto Serif", "serif"], sans: ["Noto Sans", "sans-serif"] },
+      },
+    },
+  };
+</script>
+<style>
+  .material-symbols-outlined { font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24; }
+  body { min-height: 100dvh; }
+</style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark">
+
+<div id="calendar" class="max-w-5xl mx-auto p-6 pt-10">
+  <h1 class="font-display text-5xl font-bold text-center mb-10 text-primary">Celtic Advent 2025</h1>
+  <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-7 gap-5" id="grid"></div>
+</div>
+
+<div id="dayView" class="fixed inset-0 hidden overflow-y-auto bg-background-light dark:bg-background-dark z-50">
+  <div class="relative min-h-screen pb-32">
+    <div class="sticky top-0 z-10 flex items-center bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm p-4 border-b border-white/10">
+      <button id="closeDay" class="mr-4"><span class="material-symbols-outlined text-4xl">close</span></button>
+      <span class="material-symbols-outlined text-4xl">calendar_month</span>
+      <h2 id="dayTitle" class="font-display text-xl font-bold flex-1 text-center"></h2>
+      <button onclick="navigator.share?.({title: document.getElementById('dayTitle').innerText, url: location.href})">
+        <span class="material-symbols-outlined text-3xl">share</span>
+      </button>
+    </div>
+    <div id="dayContent" class="px-6 pt-8 space-y-12"></div>
+    <nav class="fixed bottom-0 w-full bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm border-t border-white/10 p-5 text-center">
+      <button id="closeDayBottom" class="text-primary font-bold text-lg">← Back to Calendar</button>
+    </nav>
+  </div>
+</div>
+
+<script>
+const days = [
+  {day:1, date:"Nov 30", title:"Day 1: Waiting in Hope", headline:"The Thin Place", image:"https://lh3.googleusercontent.com/aida-public/AB6AXuB74m5nG5nh2EbyEQDsLnUIV_DVWz6JoEGLt5X6Sy9jzauFMNNWklEHgulILK9gW8J0wyDkgqYu3EYCt_83dMyJ3g8iXRH7QpaP8UY88yelVgcZt_EeWcQIgDxQiJvAsb8peJV-wsmb3bzRkyoZoaqmwGy9GHxoHZuzRpGrsVqfLHn_tCtxb8QAaRJM-fK0A-1XnPHnlgM1d_LN2ksNAgYHCnP2vYBFa7I3xatH-nM3oosYvFw80_bkPj0ryOW5LJIgE2A1LkJR_SQ", saint:"St Andrew the Apostle", prayer:"Circle me, O God,<br>Keep hope within,<br>Keep doubt without.<br><br>Circle me, O God,<br>Keep light near,<br>And darkness afar.", morePrayers:[
+    {text:"Deep peace of the running wave to you,<br>Deep peace of the flowing air to you,<br>Deep peace of the quiet earth to you,<br>Deep peace of the shining stars to you.", src:"Fiona Macleod, 1895"},
+    {text:"May the road rise up to meet you,<br>May the wind be always at your back…", src:"Traditional Gaelic Blessing"}
+  ], hymn:"O Come, O Come Emmanuel – Celtic", yt:"https://www.youtube.com/watch?v=2R7lX8l1X7w"},
+
+  {day:2, date:"Dec 1", title:"Day 2: Awakening", headline:"The Dawn Within", image:"https://images.unsplash.com/photo-1601134467661-3cb6dd927c70?w=1200", saint:"St Ciarán of Saighir", prayer:"Awaken my soul, O God of the morning,<br>May I rise with the lark<br>and greet Your coming light.", morePrayers:[], hymn:"Come Thou Long Expected Jesus – Celtic Harp", yt:"https://www.youtube.com/watch?v=Gfp5ow1WCBE"},
+
+  {day:3, date:"Dec 3", title:"Day 3: Silence", headline:"The Gift of Light", image:"https://lh3.googleusercontent.com/aida-public/AB6AXuAaQezBVFkCA_xNLAUqGQlAb_LbkIhoF5jqoDDfNmN5da0Y77RebVGcYUAIKzGM_ZamnzBBduP6VquTNQZC7TGlJGQpJMTjKn-4i3Oa_GuT5XfL1spRo0mMEcp2BHkmTk4pENItAl55kFfpvVgVzWa_UWDZVc3PQDFguKgHAnbkIzrRqqTHoKMe79rxXk84oKkq6QowiS3gswIGwpv02Z1CzVtpCowQ8DUSKIYUu0V4TiYGlNXXyFMXZZ8_rzxd2qc547pPhGMYbBI", saint:"St Brigid of Kildare", prayer:"Circle me, Lord,<br>Keep protection near<br>And danger afar.<br><br>Circle me, Lord,<br>Keep hope within.<br>Keep doubt without.<br><br>Circle me, Lord,<br>Keep light near<br>And darkness afar.", morePrayers:[
+    {text:"Deep peace of the quiet earth to you…", src:"Celtic oral tradition / Fiona Macleod"},
+    {text:"Be a bright flame before me, O God…", src:"Attributed to St Columba"},
+    {text:"Leave me alone with You, O God…", src:"St Aidan of Lindisfarne"},
+    {text:"In the turning of the year…", src:"David Adam"},
+    {text:"O God who makes the wild goose fly in silence…", src:"Carmina Gadelica"},
+    {text:"Christ in the silence of my heart…", src:"Breastplate tradition"},
+    {text:"As the deer seeks the quiet waters…", src:"Hebridean tradition"}
+  ], hymn:"Be Thou My Vision – Celtic Worship", yt:"https://www.youtube.com/watch?v=XiukM6WHQEQ"},
+
+  {day:4, date:"Dec 4", title:"Day 4: Journey", headline:"The Pilgrim Road", image:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200", saint:"St Brendan the Navigator", prayer:"Christ be with me on the road,<br>Christ behind me and before me,<br>Christ beneath my feet and in my breath.", morePrayers:[], hymn:"Be Thou My Vision (Instrumental)", yt:"https://www.youtube.com/watch?v=8v6g6QeLYoM"},
+
+  {day:5, date:"Dec 5", title:"Day 5: Courage", headline:"Fire in the Heart", image:"https://images.unsplash.com/photo-1519606247866-9c13a7069b23?w=1200", saint:"St Columba of Iona", prayer:"Be, O Lord, a bright flame before me,<br>a guiding star above me,<br>a smooth path below me,<br>a kindly shepherd behind me.", morePrayers:[], hymn:"In Christ Alone – Celtic Version", yt:"https://www.youtube.com/watch?v=5q-7sN9e3qU"},
+
+  {day:6, date:"Dec 6", title:"Day 6: Generosity", headline:"The Gift-Giver", image:"https://images.unsplash.com/photo-1543589077-47b380e9d0b3?w=1200", saint:"St Nicholas", prayer:"Teach me, O Christ,<br>to give as freely as You gave,<br>to love as fiercely as You loved.", morePrayers:[], hymn:"Good King Wenceslas – Celtic Harp", yt:"https://www.youtube.com/watch?v=Sf8a8KPk5iM"},
+
+  {day:7, date:"Dec 7", title:"Day 7: Mercy", headline:"The Healing Well", image:"https://images.unsplash.com/photo-1518531939096-7a4f00f7b760?w=1200", saint:"St Ita of Killeedy", prayer:"O Christ of the wounds,<br>heal me.<br>O Christ of the tears,<br>comfort me.", morePrayers:[], hymn:"There Is a Balm in Gilead – Celtic", yt:"https://www.youtube.com/watch?v=9U3j24P9e6M"},
+
+  {day:8, date:"Dec 8", title:"Day 8: Immaculate Conception", headline:"Mary of the Gael", image:"https://images.unsplash.com/photo-1570545893588-0d243b5b9a7a?w=1200", saint:"The Blessed Virgin Mary", prayer:"Hail Mary, full of grace,<br>daughter of Anne, mother of the King,<br>pray for us in our waiting.", morePrayers:[], hymn:"Immaculate Mary (Celtic)", yt:"https://www.youtube.com/watch?v=2q5k9X5q5kE"},
+
+  {day:9, date:"Dec 9", title:"Day 9: Wisdom", headline:"The Ancient Song", image:"https://images.unsplash.com/photo-1518709268800-6b8d3e0b3e88?w=1200", saint:"St Finnian of Clonard", prayer:"Grant me, O God,<br>the wisdom of the old ones,<br>the courage of the saints,<br>the silence of the stones.", morePrayers:[], hymn:"The Lord’s My Shepherd – Celtic", yt:"https://www.youtube.com/watch?v=pN4tPkX0MG0"},
+
+  {day:10, date:"Dec 10", title:"Day 10: Humility", headline:"The Lowly Way", image:"https://images.unsplash.com/photo-1540979388269-2c4c081er4e5?w=1200", saint:"St John Roberts", prayer:"Teach me to walk the lowly road,<br>to serve and not be served,<br>to be last that I may be first in Your kingdom.", morePrayers:[], hymn:"Make Me a Channel of Your Peace – Celtic", yt:"https://www.youtube.com/watch?v=5Q3Q9j0Y1oU"},
+
+  {day:11, date:"Dec 11", title:"Day 11: Joy", headline:"The Laughing Christ", image:"https://images.unsplash.com/photo-1518614369278-2d9d9c0c4d3d?w=1200", saint:"St Damasus I", prayer:"Let me laugh with You, O Christ,<br>let my heart dance in Your joy,<br>for You have come.", morePrayers:[], hymn:"Joy to the World – Celtic", yt:"https://www.youtube.com/watch?v=kbXs4lP1G8"},
+
+  {day:12, date:"Dec 12", title:"Day 12: Our Lady of Guadalupe", headline:"Star of the New World", image:"https://upload.wikimedia.org/wikipedia/commons/4/41/Our_Lady_of_Guadalupe.jpg", saint:"Our Lady of Guadalupe", prayer:"Holy Mary of Tepeyac,<br>mother of the poor,<br>pray for us who wait in darkness.", morePrayers:[], hymn:"La Guadalupana – Celtic Harp", yt:"https://www.youtube.com/watch?v=8J8l7j9q2kM"},
+
+  {day:13, date:"Dec 13", title:"Day 13: Martyrdom", headline:"The Red Path", image:"https://images.unsplash.com/photo-1517334597884-8e01d2c94d56?w=1200", saint:"St Lucy", prayer:"O Lucy, bearer of light,<br>walk with me through the dark,<br>that I may not fear the night.", morePrayers:[], hymn:"St. Patrick’s Breastplate (excerpt)", yt:"https://www.youtube.com/watch?v=8v6g6QeLYoM"},
+
+  {day:14, date:"Dec 14", title:"Day 14: Trust", headline:"The Hidden Seed", image:"https://images.unsplash.com/photo-1518531933037-9d6e6e2f2d5c?w=1200", saint:"St John of the Cross", prayer:"In the dark night of the soul,<br>bright flows the river of God.<br>I trust in You.", morePrayers:[], hymn:"You Are Mine – Celtic", yt:"https://www.youtube.com/watch?v=5q-7sN9e3qU"},
+
+  {day:15, date:"Dec 15", title:"Day 15: Peace", headline:"The Dove Descends", image:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200", saint:"St Mary di Rosa", prayer:"O Prince of Peace,<br>calm the storm within me,<br>let Your dove rest on my soul.", morePrayers:[], hymn:"Dona Nobis Pacem – Celtic", yt:"https://www.youtube.com/watch?v=9U3j24P9e6M"},
+
+  {day:16, date:"Dec 16", title:"Day 16: Preparation", headline:"The Way-Maker", image:"https://images.unsplash.com/photo-1517334597884-8e01d2c94d3d?w=1200", saint:"St Adelaide", prayer:"Prepare in me a highway for my God,<br>make straight in my heart a path.", morePrayers:[], hymn:"Prepare the Way O Zion", yt:"https://www.youtube.com/watch?v=kbXs4lP1G8"},
+
+  {day:17, date:"Dec 17", title:"Day 17: O Wisdom", headline:"O Sapientia", image:"https://images.unsplash.com/photo-1519602032615-2d88e54e9f3e?w=1200", saint:"O Antiphons Begin", prayer:"O Wisdom, coming forth from the mouth of the Most High,<br>reach from one end of the earth to the other,<br>mightly and sweetly ordering all things:<br>Come and teach us the way of prudence.", morePrayers:[], hymn:"O Come, O Come Emmanuel (Verse 1)", yt:"https://www.youtube.com/watch?v=2R7lX8l1X7w"},
+
+  {day:18, date:"Dec 18", title:"Day 18: O Adonai", headline:"O Lord and Leader", image:"https://images.unsplash.com/photo-1517334597884-8e01d2c94d3d?w=1200", saint:"O Adonai", prayer:"O Adonai, and leader of the House of Israel,<br>who appeared to Moses in the burning bush did reveal Your holy Name:<br>Come with an outstretched arm and redeem us.", morePrayers:[], hymn:"O Come, O Come Emmanuel (Verse 2)", yt:"https://www.youtube.com/watch?v=2R7lX8l1X7w"},
+
+  {day:19, date:"Dec 19", title:"Day 19: O Root of Jesse", headline:"O Radix Jesse", image:"https://images.unsplash.com/photo-1518531933037-9d6e6e2f2d5c?w=1200", saint:"O Root of Jesse", prayer:"O Root of Jesse, standing as a sign among the peoples;<br>before You kings will shut their mouths,<br>to You the nations will make their prayer:<br>Come and deliver us, and delay no longer.", morePrayers:[], hymn:"O Come, O Come Emmanuel (Verse 3)", yt:"https://www.youtube.com/watch?v=2R7lX8l1X7w"},
+
+  {day:20, date:"Dec 20", title:"Day 20: O Key of David", headline:"O Clavis David", image:"https://images.unsplash.com/photo-1519602032615-2d88e54e9f3e?w=1200", saint:"O Key of David", prayer:"O Key of David and sceptre of the House of Israel;<br>You open and no one can close;<br>You close and no one can open:<br>Come and lead the prisoners from the prison house.", morePrayers:[], hymn:"O Come, O Come Emmanuel (Verse 4)", yt:"https://www.youtube.com/watch?v=2R7lX8l1X7w"},
+
+  {day:21, date:"Dec 21", title:"Day 21: O Dayspring", headline:"O Oriens", image:"https://images.unsplash.com/photo-1517334597884-8e01d2c94d3d?w=1200", saint:"St Thomas Apostle", prayer:"O Dayspring, splendour of light eternal and sun of justice:<br>Come and shine on those who dwell in darkness and the shadow of death.", morePrayers:[], hymn:"Hark! A Thrilling Voice Is Sounding", yt:"https://www.youtube.com/watch?v=5Q3Q9j0Y1oU"},
+
+  {day:22, date:"Dec 22", title:"Day 22: O King of Nations", headline:"O Rex Gentium", image:"https://images.unsplash.com/photo-1519602032615-2d88e54e9f3e?w=1200", saint:"O King of the Nations", prayer:"O King of the nations, and their desire,<br>the cornerstone making both one:<br>Come and save the human race, which You fashioned from clay.", morePrayers:[], hymn:"O Come, O Come Emmanuel (Verse 6)", yt:"https://www.youtube.com/watch?v=2R7lX8l1X7w"},
+
+  {day:23, date:"Dec 23", title:"Day 23: O Emmanuel", headline:"God With Us", image:"https://images.unsplash.com/photo-1518531933037-9d6e6e2f2d5c?w=1200", saint:"O Emmanuel", prayer:"O Emmanuel, our King and our Lawgiver,<br>the hope of the nations and their Saviour:<br>Come and save us, O Lord our God.", morePrayers:[], hymn:"O Come, O Come Emmanuel (Verse 7)", yt:"https://www.youtube.com/watch?v=2R7lX8l1X7w"},
+
+  {day:24, date:"Dec 24", title:"Day 24: Vigil", headline:"The Night Is Far Spent", image:"https://images.unsplash.com/photo-1543589077-47b380e9d0b3?w=1200", saint:"Christmas Eve", prayer:"O Holy Night,<br>the stars are brightly shining,<br>It is the night of our dear Saviour's birth.", morePrayers:[], hymn:"Silent Night – Celtic Harp", yt:"https://www.youtube.com/watch?v=8J8l7j9q2kM"},
+
+  {day:25, date:"Dec 25", title:"Day 25: The Nativity", headline:"Christ Is Born!", image:"https://upload.wikimedia.org/wikipedia/commons/2/2f/Adoration_of_the_Shepherds_by_Gerard_van_Honthorst_1622.jpg", saint:"The Birth of Our Lord", prayer:"Glory to God in the highest,<br>and on earth peace<br>to people of good will.<br>Alleluia!", morePrayers:[], hymn:"Hark! The Herald Angels Sing – Celtic", yt:"https://www.youtube.com/watch?v=kbXs4lP1G8"} ,  // Final day
+];
+
+const grid = document.getElementById('grid');
+days.forEach((d, i) => {
+  const btn = document.createElement('button');
+  const isToday = new Date().toISOString().slice(0,10) === `2025-${d.date.slice(4,6).padStart(2,'0')}-${d.date.slice(0,3)}`; // rough match
+  btn.className = `aspect-square rounded-2xl border-4 flex flex-col items-center justify-center justify-center text-2xl font-bold transition-all hover:scale-110 ${i + 1 <= new Date('2025-12-25') - new Date('2025-11-29') && new Date() >= new Date('2025-11-30') ? 'border-primary bg-primary/20' : 'border-white/20 bg-black/30'} ${isToday ? 'ring-8 ring-primary/60 scale-125' : ''}`;
+  btn.innerHTML = `<span class="text-5xl">${d.day}</span><span class="text-sm mt-1">${d.date.replace(' ','<br>')}</span>`;
+  btn.onclick = () => openDay(d);
+  grid.appendChild(btn);
+});
+
+function openDay(day) {
+  document.getElementById('dayTitle').innerHTML = `${day.title}<br><span class="text-lg opacity-80">${day.date}</span>`;
+  const c = document.getElementById('dayContent');
+  c.innerHTML = `
+    <h1 class="font-display text-4xl md:text-5xl font-bold text-center">${day.headline}</h1>
+    <div class="rounded-3xl overflow-hidden h-80 md:h-96 bg-cover bg-center shadow-2xl" style="background-image:url('${day.image}')"></div>
+
+    <section>
+      <h3 class="font-display text-2xl font-bold mb-3">Today's Saint / Theme</h3>
+      <p class="text-lg text-text-muted-light dark:text-text-muted-dark">${day.saint}</p>
+    </section>
+
+    <section>
+      <h3 class="font-display text-2xl font-bold mb-3">Celtic Prayer</h3>
+      <p class="italic text-lg leading-relaxed">${day.prayer}</p>
+    </section>
+
+    ${day.morePrayers?.length ? `
+    <section>
+      <button id="moreToggle" class="w-full text-left bg-primary/10 rounded-xl p-5 flex justify-between items-center hover:bg-primary/20 transition">
+        <h3 class="font-display text-xl font-bold">More Celtic Prayers for ${day.title.split(': ')[1] || 'Today'}</h3>
+        <span class="material-symbols-outlined text-4xl" id="chevron">expand_more</span>
+      </button>
+      <div id="moreSection" class="hidden mt-6 space-y-8">
+        ${day.morePrayers.map(p => `
+          <div class="border-l-4 border-primary/60 pl-6">
+            <p class="italic text-lg leading-relaxed">${p.text}</p>
+            <p class="text-sm text-text-muted-light dark:text-text-muted-dark mt-3 not-italic">— ${p.src}</p>
+          </div>
+        `).join('')}
+      </div>
+    </section>` : ''}
+
+    <section>
+      <h3 class="font-display text-2xl font-bold mb-4">Hymn for Reflection</h3>
+      <a href="${day.yt}" target="_blank" class="block rounded-3xl overflow-hidden aspect-video relative group shadow-2xl">
+        <img src="https://img.youtube.com/vi/${day.yt.split('v=')[1]}/maxresdefault.jpg" class="w-full h-full object-cover transition group-hover:scale-105"/>
+        <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+          <div class="bg-primary/90 rounded-full w-24 h-24 flex items-center justify-center"><span class="material-symbols-outlined text-white text-6xl">play_arrow</span></div>
+        </div>
+      </a>
+      <p class="text-center mt-4 text-lg text-text-muted-light dark:text-text-muted-dark">${day.hymn}</p>
+    </section>
+  `;
+
+  document.getElementById('calendar').classList.add('hidden');
+  document.getElementById('dayView').classList.remove('hidden');
+
+  if (day.morePrayers?.length) {
+    const toggle = c.querySelector('#moreToggle');
+    const section = c.querySelector('#moreSection');
+    const chevron = c.querySelector('#chevron');
+    toggle.onclick = () => {
+      section.classList.toggle('hidden');
+      chevron.textContent = section.classList.contains('hidden') ? 'expand_more' : 'expand_less';
+    };
+  }
+}
+
+document.getElementById('closeDay').onclick = document.getElementById('closeDayBottom').onclick = () => {
+  document.getElementById('dayView').classList.add('hidden');
+  document.getElementById('calendar').classList.remove('hidden');
+};
+</script>
+</body>
+</html>

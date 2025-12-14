@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Celtic Soul: Daily Journal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --forest-green: #2C5530;
+            --moss-green: #4A6B48;
+            --parchment: #F4F1EA;
+            --stone: #2F2F2F;
+            --gold: #C5A059;
+            --shadow: rgba(0,0,0,0.1);
+        }
+
+        body {
+            background-color: var(--parchment);
+            color: var(--stone);
+            font-family: 'Lora', serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            background-image: radial-gradient(#e0ddd5 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        header {
+            background-color: var(--forest-green);
+            color: var(--parchment);
+            text-align: center;
+            padding: 2rem;
+            border-bottom: 4px solid var(--gold);
+            position: relative;
+        }
+
+        h1 {
+            font-family: 'Cinzel Decorative', cursive;
+            margin: 0;
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-style: italic;
+            opacity: 0.9;
+        }
+
+        /* Celtic Knot SVG Styling */
+        .knot-icon {
+            width: 60px;
+            height: 60px;
+            fill: var(--gold);
+            margin-bottom: 10px;
+            display: block;
+            margin: 0 auto 10px auto;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* Prompt Generator Card */
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px var(--shadow);
+            border: 1px solid #dcdcdc;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .concept-title {
+            font-family: 'Cinzel Decorative', cursive;
+            color: var(--forest-green);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .concept-def {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        .prompt-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--stone);
+        }
+
+        /* Form Elements */
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-family: 'Lora', serif;
+            font-size: 1rem;
+            resize: vertical;
+            margin-bottom: 1rem;
+            box-sizing: border-box;
+            background-color: #fafafa;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--moss-green);
+            background-color: white;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-family: 'Cinzel Decorative', cursive;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--forest-green);
+            color: white;
+            border: 2px solid var(--forest-green);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--moss-green);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--forest-green);
+            border: 2px solid var(--forest-green);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--forest-green);
+            color: white;
+        }
+
+        .btn-reset {
+            background-color: #8b3a3a;
+            color: white;
+        }
+        
+        .btn-reset:hover {
+            background-color: #a64444;
+        }
+
+        /* History Section */
+        .history-section {
+            margin-top: 3rem;
+        }
+
+        .history-title {
+            font-family: 'Cinzel Decorative', cursive;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .entry-card {
+            background: white;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--gold);
+            box-shadow: 0 2px 5px var(--shadow);
+            position: relative;
+        }
+
+        .entry-date {
+            font-size: 0.8rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .entry-prompt {
+            font-weight: bold;
+            color: var(--forest-green);
+            margin: 0.5rem 0;
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        .delete-btn:hover {
+            color: #8b3a3a;
+        }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <!-- SVG Triquetra Symbol -->
+    <svg class="knot-icon" viewBox="0 0 100 100">
+        <path d="M50,15 C50,15 70,50 85,50 C100,50 90,80 65,80 C40,80 50,50 50,50" fill="none" stroke="currentColor" stroke-width="5" />
+        <path d="M50,15 C50,15 30,50 15,50 C0,50 10,80 35,80 C60,80 50,50 50,50" fill="none" stroke="currentColor" stroke-width="5" />
+        <path d="M15,50 C15,50 50,40 85,50" fill="none" stroke="currentColor" stroke-width="5" />
+        <circle cx="50" cy="55" r="35" fill="none" stroke="currentColor" stroke-width="3" />
+    </svg>
+    <h1>Celtic Soul Journal</h1>
+    <div class="subtitle">Daily Reflections from the Ancient Paths</div>
+</header>
+
+<div class="container">
+
+    <div class="card">
+        <div id="symbol-display">
+            <!-- Dynamic Concept appears here -->
+        </div>
+        <h2 id="concept-title" class="concept-title">Welcome</h2>
+        <p id="concept-def" class="concept-def">Press the button below to receive a Celtic spiritual concept.</p>
+        <p id="prompt-display" class="prompt-text">Your prompt will appear here.</p>
+        
+        <div class="btn-group">
+            <button class="btn-primary" onclick="generatePrompt()">New Prompt</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3 style="font-family:'Cinzel Decorative'; color:var(--forest-green);">Journal Entry</h3>
+        <textarea id="journal-entry" placeholder="Reflect on the prompt here..."></textarea>
+        <div class="btn-group">
+            <button class="btn-secondary" onclick="saveEntry()">Save Entry</button>
+            <button class="btn-reset" onclick="resetForm()">Clear</button>
+        </div>
+    </div>
+
+    <div class="history-section">
+        <h2 class="history-title">Past Reflections</h2>
+        <div id="entries-list">
+            <!-- Saved entries load here -->
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Database of Celtic Concepts and Prompts
+    const celticData = [
+        {
+            concept: "Anam Cara",
+            definition: "Gaelic for 'Soul Friend'. A person with whom you can share your innermost self.",
+            prompt: "Who acts as a mirror to your soul? Reflect on a relationship where you feel completely understood."
+        },
+        {
+            concept: "Thin Places",
+            definition: "Locations where the veil between heaven and earth is merely tissue-thin.",
+            prompt: "Describe a moment or a place where you felt the divine was palpably close to you."
+        },
+        {
+            concept: "Peregrinatio",
+            definition: "Wandering for the love of God; a journey without a known destination.",
+            prompt: "In what area of your life are you being asked to trust the journey without knowing the outcome?"
+        },
+        {
+            concept: "The Sacred Three",
+            definition: "The Celtic obsession with the Trinity and the threefold nature of existence (past, present, future).",
+            prompt: "Reflect on your past, observe your present, and hope for your future. How do they weave together today?"
+        },
+        {
+            concept: "Imbas",
+            definition: "The 'fire in the head', divine inspiration or poetic insight.",
+            prompt: "What creative spark or sudden insight has stirred in your heart recently?"
+        },
+        {
+            concept: "Creation as Scripture",
+            definition: "The belief that God wrote two books: the Bible and Nature.",
+            prompt: "Step outside or look out a window. What is the 'Big Book' of nature telling you about God today?"
+        },
+        {
+            concept: "Caim",
+            definition: "Encompassing. A prayer of protection drawn as a circle around oneself.",
+            prompt: "Where do you feel vulnerable right now? Visualize drawing a circle of peace around that situation."
+        },
+        {
+            concept: "Hospitality",
+            definition: "Seeing the stranger as Christ disguised.",
+            prompt: "How can you open the door of your heart to something or someone unfamiliar today?"
+        }
+    ];
+
+    // Variables
+    const titleEl = document.getElementById('concept-title');
+    const defEl = document.getElementById('concept-def');
+    const promptEl = document.getElementById('prompt-display');
+    const journalEl = document.getElementById('journal-entry');
+    const entriesList = document.getElementById('entries-list');
+
+    let currentPrompt = "";
+
+    // 1. Generate Prompt Function
+    function generatePrompt() {
+        const randomIndex = Math.floor(Math.random() * celticData.length);
+        const data = celticData[randomIndex];
+
+        titleEl.textContent = data.concept;
+        defEl.textContent = data.definition;
+        promptEl.textContent = data.prompt;
+        
+        currentPrompt = data.prompt; // Store for saving
+        
+        // Slight animation effect
+        titleEl.style.opacity = 0;
+        setTimeout(() => titleEl.style.opacity = 1, 100);
+    }
+
+    // 2. Save Entry Function
+    function saveEntry() {
+        const text = journalEl.value;
+        if (!text.trim()) {
+            alert("Please write something before saving.");
+            return;
+        }
+
+        const entry = {
+            id: Date.now(),
+            date: new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
+            prompt: currentPrompt || "Free Reflection",
+            text: text
+        };
+
+        // Get existing entries from LocalStorage
+        let entries = JSON.parse(localStorage.getItem('celticJournalEntries')) || [];
+        entries.unshift(entry); // Add new entry to the top
+        localStorage.setItem('celticJournalEntries', JSON.stringify(entries));
+
+        // Clear form and reload list
+        journalEl.value = "";
+        loadEntries();
+    }
+
+    // 3. Reset Function
+    function resetForm() {
+        if(confirm("Are you sure you want to clear your current writing?")) {
+            journalEl.value = "";
+        }
+    }
+
+    // 4. Load Entries Function
+    function loadEntries() {
+        entriesList.innerHTML = "";
+        const entries = JSON.parse(localStorage.getItem('celticJournalEntries')) || [];
+
+        if (entries.length === 0) {
+            entriesList.innerHTML = "<p style='text-align:center; color:#999;'>No saved entries yet.</p>";
+            return;
+        }
+
+        entries.forEach(entry => {
+            const div = document.createElement('div');
+            div.className = 'entry-card';
+            div.innerHTML = `
+                <button class="delete-btn" onclick="deleteEntry(${entry.id})">&times;</button>
+                <div class="entry-date">${entry.date}</div>
+                <div class="entry-prompt">${entry.prompt}</div>
+                <div class="entry-text">${entry.text.replace(/\n/g, '<br>')}</div>
+            `;
+            entriesList.appendChild(div);
+        });
+    }
+
+    // 5. Delete Entry Function
+    function deleteEntry(id) {
+        if(confirm("Delete this entry forever?")) {
+            let entries = JSON.parse(localStorage.getItem('celticJournalEntries')) || [];
+            entries = entries.filter(entry => entry.id !== id);
+            localStorage.setItem('celticJournalEntries', JSON.stringify(entries));
+            loadEntries();
+        }
+    }
+
+    // Initialize on page load
+    window.onload = function() {
+        loadEntries();
+        // Generate an initial prompt if the text is placeholder
+        if(promptEl.textContent === "Your prompt will appear here.") {
+            generatePrompt();
+        }
+    };
+
+</script>
+
+</body>
+</html>

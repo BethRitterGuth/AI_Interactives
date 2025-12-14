@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Your Own Adventure - Four Stories</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            padding: 40px;
+            min-height: 500px;
+        }
+
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: #764ba2;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .home-screen {
+            text-align: center;
+        }
+
+        .story-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .story-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 3px solid transparent;
+        }
+
+        .story-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            border-color: #667eea;
+        }
+
+        .story-card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .story-card p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .game-screen {
+            display: none;
+        }
+
+        .story-text {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            line-height: 1.8;
+            font-size: 1.1em;
+            border-left: 5px solid #667eea;
+        }
+
+        .choices {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .choice-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-align: left;
+            font-family: 'Georgia', serif;
+        }
+
+        .choice-btn:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .choice-btn:active {
+            transform: scale(0.98);
+        }
+
+        .feedback {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .feedback h3 {
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        .feedback.correct h3 {
+            color: #28a745;
+        }
+
+        .feedback.incorrect h3 {
+            color: #dc3545;
+        }
+
+        .nav-buttons {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.3s;
+            font-family: 'Georgia', serif;
+        }
+
+        .nav-btn:hover {
+            background: #5a6268;
+        }
+
+        .nav-btn.primary {
+            background: #667eea;
+        }
+
+        .nav-btn.primary:hover {
+            background: #5568d3;
+        }
+
+        .progress {
+            background: #e9ecef;
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            transition: width 0.3s;
+        }
+
+        .ending {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 30px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 3px solid #ff9a76;
+        }
+
+        .ending h3 {
+            color: #d63031;
+            margin-bottom: 15px;
+            font-size: 1.6em;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .story-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="homeScreen" class="home-screen">
+            <h1>📚 Choose Your Own Adventure</h1>
+            <p style="text-align: center; font-size: 1.2em; color: #666; margin-bottom: 20px;">
+                Select a story to begin your learning journey
+            </p>
+            <div class="story-grid">
+                <div class="story-card" onclick="startGame('pegleg')">
+                    <h3>⚓ A Bargain with Peg-Leg</h3>
+                    <p>Navigate the treacherous waters of negotiation and learn the true cost of hasty decisions. Will you make ethical choices?</p>
+                </div>
+                <div class="story-card" onclick="startGame('twohearts')">
+                    <h3>💕 Two Hearts that Beat as One</h3>
+                    <p>Explore the power of empathy and understanding. Can you bridge differences and find common ground?</p>
+                </div>
+                <div class="story-card" onclick="startGame('slickdick')">
+                    <h3>🎭 The Dual Personalities of Slick Dick Nickerson</h3>
+                    <p>Discover the importance of integrity and authenticity. What happens when you live a double life?</p>
+                </div>
+                <div class="story-card" onclick="startGame('memorandum')">
+                    <h3>📋 A Memorandum of Sudden Death</h3>
+                    <p>Learn the critical importance of attention to detail and clear communication. Every word matters.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="gameScreen" class="game-screen">
+            <div class="progress">
+                <div id="progressBar" class="progress-bar" style="width: 0%"></div>
+            </div>
+            <h2 id="gameTitle"></h2>
+            <div id="storyContent" class="story-text"></div>
+            <div id="feedback" class="feedback"></div>
+            <div id="choicesContainer" class="choices"></div>
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="goHome()">🏠 Home</button>
+                <button class="nav-btn primary" onclick="restartGame()" style="display: none;" id="restartBtn">🔄 Restart Story</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentGame = '';
+        let currentScene = '';
+        let totalScenes = 0;
+        let visitedScenes = 0;
+
+        const games = {
+            pegleg: {
+                title: '⚓ A Bargain with Peg-Leg',
+                scenes: {
+                    start: {
+                        text: `You're a young merchant sailor who encounters the infamous Peg-Leg Pete at a bustling port tavern. He offers you a deal: "I know where a Spanish treasure ship sank. Join me crew, and ye'll get a fair share. But ye must decide now, before me competitors catch wind." His eyes glint with both opportunity and danger.`,
+                        choices: [
+                            {
+                                text: 'Ask for time to research his reputation and the legality of the venture',
+                                next: 'research',
+                                correct: true
+                            },
+                            {
+                                text: 'Immediately agree—this is a once-in-a-lifetime opportunity!',
+                                next: 'hasty_agreement',
+                                correct: false
+                            },
+                            {
+                                text: 'Demand to see proof of the treasure before committing',
+                                next: 'demand_proof',
+                                correct: true
+                            }
+                        ]
+                    },
+                    research: {
+                        text: `You spend two days investigating. You learn Peg-Leg has a mixed reputation—he's found treasure before but has also been accused of abandoning crew members. More importantly, you discover the wreck is in protected waters. Armed with this knowledge, you return to negotiate.`,
+                        feedback: {
+                            type: 'correct',
+                            title: '✓ Excellent Due Diligence!',
+                            message: 'You demonstrated critical thinking by researching before committing. In any negotiation, gathering information prevents costly mistakes and protects your interests.'
+                        },
+                        choices: [
+                            {
+                                text: 'Propose a legal salvage operation with proper permits',
+                                next: 'legal_path',
+                                correct: true
+                            },
+                            {
+                                text: 'Decline the offer since it involves illegal activity',
+                                next: 'ethical_decline',
+                                correct: true
+                            },
+                            {
+                                text: 'Join anyway—everyone bends the rules sometimes',
+                                next: 'ignore_warning',
+                                correct: false
+                            }
+                        ]
+                    },
+                    hasty_agreement: {
+                        text: `You shake hands immediately. Within hours, you're aboard his ship. Days later, you discover the treasure hunt is actually a cover for smuggling operations. You're now complicit in illegal activities, and naval authorities are closing in.`,
+                        feedback: {
+                            type: 'incorrect',
+                            title: '✗ Hasty Decisions Have Consequences',
+                            message: 'Rushing into agreements without research is a common mistake. In negotiations, pressure to decide quickly is often a red flag. Always take time to evaluate offers critically.'
+                        },
+                        choices: [
+                            {
+                                text: 'Turn yourself in and cooperate with authorities',
+                                next: 'turn_in',
+                                correct: true
+                            },
+                            {
+                                text: 'Stay quiet and hope you aren\'t caught',
+                                next: 'bad_ending_caught',
+                                correct: false
+                            }
+                        ]
+                    },
+                    demand_proof: {
+                        text: `Peg-Leg laughs, "Smart one, ye are!" He shows you a genuine Spanish medallion and navigational charts with detailed coordinates. "I respect a sailor who doesn't take bait without seein' the hook," he says. His openness suggests he might be legitimate.`,
+                        feedback: {
+                            type: 'correct',
+                            title: '✓ Smart Verification!',
+                            message: 'Demanding proof protects you from scams and establishes that you\'re a serious partner. Legitimate opportunities can withstand scrutiny.'
+                        },
+                        choices: [
+                            {
+                                text: 'Negotiate for written contracts and fair terms',
+                                next: 'negotiate_terms',
+                                correct: true
+                            },
+                            {
+                                text: 'Accept immediately now that you\'ve seen proof',
+                                next: 'accept_after_proof',
+                                correct: false
+                            }
+                        ]
+                    },
+                    legal_path: {
+                        text: `Peg-Leg is impressed by your knowledge. Together, you file for legal salvage rights. The process takes months, but eventually you lead a legitimate expedition. You find the wreck and recover artifacts legally. Though the profit is less after permits and fees, you build a reputation as an honest treasure hunter and receive offers for future expeditions.`,
+                        feedback: {
+                            type: 'correct',
+                            title: '🌟 OPTIMAL OUTCOME!',
+                            message: 'You achieved the best possible result! By prioritizing legality and ethics, you gained sustainable success and a strong reputation. Short-term sacrifices for long-term gains demonstrate mature decision-making.'
+                        },
+                        choices: [],
+                        ending: true
+                    },
+                    ethical_decline: {
+                        text: `You politely but firmly decline. Peg-Leg respects your integrity. Three months later, you hear his crew was arrested for looting protected sites. Meanwhile, your reputation for ethical conduct leads to a position with a respected maritime trading company. You sleep well at night.`,
+                        feedback: {
+                            type: 'correct',
+                            title: '🌟 EXCELLENT ETHICAL CHOICE!',
+                            message: 'Standing by your principles, even when difficult, builds character and reputation. You avoided legal trouble and gained something more valuable—integrity and future opportunities.'
+                        },
+                        choices: [],
+                        ending: true
+                    },
+                    ignore_warning: {
+                        text: `You proceed despite your research. The treasure hunt turns into a nightmare when authorities raid the operation. You face criminal charges, lose your merchant sailor license, and spend years rebuilding your reputation. The "treasure" was never worth the cost.`,
+                        feedback: {
+                            type: 'incorrect',
+                            title: '✗ Ignored Warning Signs',
+                            message: 'Knowing something is wrong but proceeding anyway compounds the mistake. When research reveals red flags, acting on them shows wisdom. Your license and reputation were more valuable than treasure.'
+                        },
+                        choices: [],
+                        ending: true
+                    },
+                    turn_in: {
+                        text: `You contact authorities and provide evidence. While you face legal consequences, your cooperation reduces your sentence. You learn a hard but valuable lesson about due diligence. After serving your time, you rebuild your life with newfound wisdom about careful decision-making.`,
+                        feedback: {
+                            type: 'correct',
+                            title: '✓ Accountability Matters',
+                            message: 'Taking responsibility for mistakes, though difficult, is the path to redemption. You demonstrated moral courage by making things right.'
+                        },
+                        choices: [],
+                        ending: true
+                    },
+                    bad_ending_caught: {
+                        text: `You're arrested during a raid. Without cooperation, you receive the maximum sentence. Your merchant career is over, and your family disowns you. The burden of your hasty decision haunts you for years.`,
+                        feedback: {
+                            type: 'incorrect',
+                            title: '✗ Compounded Mistakes',
+                            message: 'One bad decision followed by another creates deeper consequences. When you make mistakes, taking responsibility and seeking to make things right is always better than hoping to avoid consequences.'
+                        },
+                        choices: [],
+                        ending: true
+                    },
+                    negotiate_terms: {
+                        text: `You insist on written contracts outlining profit shares, safety measures, and legal compliance. Peg-Leg agrees, impressed by your professionalism. The expedition succeeds, and the clear terms prevent disputes. You establish a successful partnership built on mutual respect and trust.`,
+                        feedback: {
+                            type: 'correct',
+                            title: '🌟 MASTERFUL NEGOTIATION!',
+                            message: 'Perfect execution! You verified the opportunity, negotiated clear terms, and ensured legal compliance. This demonstrates advanced negotiation skills: trust but verify, document agreements, and insist on ethical practices.'
+                        },
+                        choices: [],
+                        ending: true
+                    },
+                    accept_after_proof: {
+                        text: `The proof was real, but without written agreements, disputes arise over profit shares. Peg-Leg claims expenses you didn't know about. Without contracts, you have no recourse. You learn that proof of opportunity isn't the same as protection of your interests.`,
+                        feedback: {
+                            type: 'incorrect',
+                            title: '✗ Incomplete Protection',
+                            message: 'Verifying the opportunity was good, but you needed to protect your interests with clear, written terms. In negotiations, verbal agreements are vulnerable to misunderstandings and disputes.'
+                        },
+                        choices: [],
+                        ending: true
+                    }
+                }
+            },
+            twohearts: {
+                title: '💕 Two Hearts that Beat as One',
+                scenes: {
+                    start: {
+                        text: `You're a mediator called to help two neighboring shop owners, Maria and Ahmed, who've been feuding for months. Maria, who runs a bakery, complains Ahmed's restaurant music is too loud. Ahmed argues Maria's delivery trucks block his entrance. Both are suffering from lost customers. They sit across from each other, arms crossed, refusing to make eye contact.`,
+                        choices: [
+                            {
+                                text: 'Let each person fully share their perspective without interruption',
+                                next: 'active_listening',
+                                correct: true
+                            },
+                            {
+                                text: 'Immediately propose a compromise—each gives up something',
+                                next: 'quick_compromise',
+                                correct: false
+                            },
+                            {
+                                text: 'Point out the flaws in each person\'s argument',
+                                next: 'point_flaws',
+                                correct: false
+                            }
+                        ]
+                    },
+                    active_listening: {
+                        text: `You create space for each to speak uninterrupted. Maria shares that the music reminds her of when her store failed elsewhere—it triggers anxiety. Ahmed reveals his elderly mother lives upstairs and is comforted by the traditional songs. Suddenly, both realize the other isn't just being difficult—they're each protecting something precious.`,
+                        feedback: {
+                            type: 'correct',
+                            title: '✓ Excellent Empathetic Listening!',
+                            message: 'By allowing both parties to fully express themselves, you uncovered the real issues beneath the surface conflict. Active listening reveals emotional truths that facts alone cannot show.'
+                        },
+                        choices: [
+                            {
+                                text: 'Ask them what they think the other person needs most',
+                                next: 'perspective_taking',
+                                correct: true
+                            },
+                            {
+                                text: 'Now suggest they compromise on volume and parking',
+                                next: 'surface_compromise',
+                                correct: false
+                            },
+                            {
+                                text: 'Help them find creative solutions that honor both needs',
+                                next: 'creative_solutions',
+                                correct: true
+                            }
+                        ]
+                    },
+                    quick_compromise: {
+                        text: `You suggest Ahmed lower his music to half volume, and Maria schedule her deliveries for early morning. Both reluctantly agree, but neither feels heard. Within a week, tensions resurface. Maria is still anxious, Ahmed still worried about his mother. The compromise addressed symptoms, not causes.`,
+                        feedback: {
+                            type: 'incorrect',
+                            title: '✗ Surface Solutions Miss Deeper Issues',
+                            message: 'Quick compromises without understanding underlying needs often fail. Effective conflict resolution requires exploring the "why" behind positions, not just splitting the difference between demands.'
+                        },
+                        choices: [
+                            {
+                                text: 'Go back and truly listen to their deeper concerns',
+                                next: 'second_chance_listening',
+                                correct: true
+                            },
+                            {
+                                text: 'Insist they stick to the agreement',
+                                next: 'bad_ending_unresolved',
+                                correct: false
+                            }
+                        ]
+                    },
+                    point_flaws: {
+                        text: `You tell Maria she's being oversensitive and Ahmed that his music IS objectively loud. Both become defensive and unite—against you. The conflict escalates as they now feel attacked rather than understood. The mediation ends with both parties more entrenched in their positions.`,
+                        feedback: {
+                            type: 'incorrect',
+                            title: '✗ Criticism Triggers Defensiveness',
+                            message: 'Pointing out flaws makes people defensive and closes communication. Empathy requires suspending judgment to truly understand each perspective, even when you disagree.'
+                        },
+                        choices: [],
+                        ending: true
+                    },
+                    perspective_taking: {
+                        text: `A long silence follows. Then Maria quietly says, "I think Ahmed wants his mother to feel at home." Ahmed's eyes widen: "And I think Maria needs to feel safe in her space." This simple act of perspective-taking creates a breakthrough. They begin brainstorming together.`,
+                        feedback: {
+                            type: 'correct',
+                            title: '✓ Powerful Perspective Shift!',
+                            message: 'When people articulate what the other needs, empathy naturally develops. This technique transforms adversaries into problem-solving partners by shifting focus from "me vs. you" to "us vs. the problem."'
+                        },
+                        choices: [
+                            {
+                                text: 'Help them develop solutions together',
+                                next: 'collaborative_solution',
+                                correct: true
+                            }
+                        ]
+                    },
+                    creative_solutions: {
+                        text: `With understanding in place, creativity flows. Ahmed agrees to close his windows during certain hours and adds soundproofing. Maria offers to use his parking lot for deliveries—and suggests coordinating a weekend "Culture Festival" featuring both their businesses. They discover collaboration creates more value than competition.`,
+                        feedback: {
+                            type: 'correct',
+                            title: '🌟 OPTIMAL CREATIVE RESOLUTION!',
+                            message: 'When people feel understood, they become creative problem-solvers. The best solutions honor everyone\'s needs and often create unexpected benefits. You facilitated transformation from conflict to collaboration.'
+                        },
+                        choices: [],
+                        ending: true
+                    },
+                    surface_compromise: {
+                        text: `The technical solutions help, but the relationship remains strained. They follow the rules but avoid each other. A year later, a new dispute arises over outdoor seating. Without the foundation of mutual understanding, every disagreement becomes a new battle.`,
+                        feedback: {
+                            type: 'incorrect',
+                            title: '✗ Missed Relationship Building',
+                            message: 'Technical fixes without emotional connection are fragile. True resolution requires addressing both practical issues AND building understanding. Empathy creates resilient relationships that withstand future conflicts.'
+                        },
+                        choices: [],
+                        ending: true
+                    },
+                    second_chance_listening: {
+                        text: `You reset the conversation, admitting you moved too quickly. This time, you create space for deeper sharing. Maria and Ahmed open up about their fears and hopes. Understanding emerges, and together they craft solutions that honor both their needs. The process takes longer but builds a genuine, lasting resolution.`,
+                        feedback: {
+                            type: 'correct',
+                            title: '✓ Wisdom in Course Correction!',
+                            message: 'Recognizing when to slow down and deepen understanding shows mature facilitation. True empathy sometimes requires multiple attempts and the humility to adjust your approach.'
+                        },
+                        choices: [],
+                        ending: true
+                    },
+                    bad_ending_unresolved: {
+                        text: `Both parties feel unheard and resentful. The forced compromise breeds contempt. Eventually, Maria moves her bakery to another location, and Ahmed's business suffers from the negative atmosphere. The neighborhood loses both beloved establishments—all because surface solutions replaced genuine understanding.`,
+                        feedback: {
+                            type: 'incorrect',
+                            title: '✗ Empathy Cannot Be Forced',
+                            message: 'Insisting on compliance without emotional connection leads to breakdown. Lasting solutions require genuine understanding, not just behavioral compliance. Empathy takes time but prevents greater losses.'
+                        },
+                        choices: [],
+                        ending: true
+                    },
+                    collaborative_solution: {
+                        text: `Working together, Maria and Ahmed create innovative solutions neither would have imagined alone. Ahmed installs a sound system that directs music away from Maria's shop while enhancing his customers' experience. Maria shares her loading zone and they coordinate deliveries. They become friends, frequently referring customers to each other. Their collaboration becomes a neighborhood example of how empathy transforms conflict into opportunity.`,
+                        feedback: {
+                            type: 'correct',
+                            title: '🌟 EXEMPLARY COLLABORATION!',
+                            message: 'Perfect outcome! By building empathy first, then solving problems together, you created not just a resolution but a partnership. This demonstrates the highest level of conflict resolution: transforming adversaries into allies through genuine understanding.'
+                        },
+                        choices: [],
+                        ending: true
+                    }
+                }
+            },
+            slickdick: {
+                title: '🎭 The Dual Personalities of Slick Dick Nickerson',
+                scenes: {
+                    start: {
+                        text: `You're Dick Nickerson, a talented salesperson. At work, you're "Slick Dick"—charming, making exaggerated claims about products, and bending the truth to close deals. Your sales numbers are great. At home and with friends, you're honest, genuine Dick. But lately, the lines are blurring. Today, your boss asks you to sell a product you know has defects that aren't being disclosed to customers.`,
+                        choices: [
+                            {
+                                text: 'Refuse to sell the defective product and report the issue',
+                                next: 'integrity_stand',
+                                correct: true
+                            },
+                            {
+                                text: 'Sell it but hint at the problems without being explicit',
+                                next: 'half_honesty',
+                                correct: false
+                            },
+                            {
+                                text: 'Sell it like everything else—everyone exaggerates in sales',
+                                next: 'full_deception',
+                                correct: false
+                            }
+                        ]
+                    },
+                    integrity_stand: {
+                        text: `You tell your boss you won't sell a defective product. "This isn't just about sales—it's about people trusting us," you say. Your boss is angry initially, but when you offer to work with the product team to fix the issues, he pauses. Your courage impresses him, and he agrees to pull the product until it's fixed.`,
+                        feedback: {
+                            type: 'correct',
+                            title: '✓ Courageous Integrity!',
+                            message: 'Standing up for what\'s right, especially when it risks your job, demonstrates true character. Integrity means your values stay consistent regardless of context or pressure.'
+                        },
+                        choices: [
+                            {
+                                text: 'Propose rebuilding the sales approach around honesty',
+                                next: 'transform_culture',
+                                correct: true
+                            },
+                            {
+                                text: 'Just focus on selling the other products honestly',
+                                next: 'partial_change',
+                                correct: false
+                            }
+                        ]
+                    },
+                    half_honesty: {
+                        text: `You make vague references to "adjusting expectations" and "considering all factors." Customers are confused by your mixed messages. Some buy anyway and later discover the defects. They feel betrayed—not by the product alone, but by your unclear communication. Your reputation suffers because you tried to have it both ways.`,
+                        feedback: {
+                            type: 'incorrect',
+                            title: '✗ Half-Truths Aren\'t Honest',
+                            message: 'Attempting to maintain plausible deniability while still deceiving is worse than clear wrongdoing. It shows you know the behavior is wrong but lack the courage to stop. Integrity requires clear, honest communication.'
+                        },
+                        choices: [
+                            {
+                                text: 'Commit to full honesty going forward',
+                                next: 'redemption_path',
+                                correct: true
+                            },
+                            {
+                                text: 'Continue with the dual approach',
+                                next: 'identity_crisis',
+                                correct: false
+                            }
+                        ]
+                    },
+                    full_deception: {
+                        text: `You sell the defective products with your usual charm. Sales are great—until the returns and complaints flood in. Customers feel deceived. Your top client, who trusted you personally, is furious: "I thought we were friends, Dick. But you're just 'Slick Dick' who lies for commission." Your personal relationships suffer as word spreads about your professional dishonesty.`,
+                        feedback: {
+                            type: 'incorrect',
+                            title: '✗ Dual Lives Cannot Last',
+                            message: 'You cannot maintain separate ethical standards for different parts of your life. Who you are at work IS who you are. Dishonesty in one area corrodes integrity everywhere.'
+                        },
+                        choices: [
+                            {
+                                text: 'Make amends and commit to change',
+                                next: 'difficult_amends',
+                                correct: true
+                            },
+                            {
+                                text: 'Blame the company and find a new job',
+                                next: 'bad_ending_pattern',
+                                correct: false
+                            }
+                        ]
+                    },
+                    transform_culture: {
+                        text: `You develop a new sales philosophy: "Honest persuasion." You train the team to lead with transparency about products—both strengths and limitations. Initially, sales dip. But then something remarkable happens: customer loyalty soars, returns decrease, and referrals increase. "Honest Dick" becomes your reputation, and it turns out to be far better for business than "Slick Dick" ever was.`,
+                        feedback: {
+                            type: 'correct',
+                            title: '🌟 TRANSFORMATIONAL LEADERSHIP!',
+                            message: 'You achieved the highest outcome by not just maintaining personal integrity but transforming organizational culture. Authentic leadership inspires others and proves that ethics and success aren\'t opposing forces.'
+                        },
+                        choices: [],
+                        ending: true
+                    },
+                    partial_change: {
+                        text: `You sell other products honestly but avoid addressing the systemic issues. The company continues problematic practices. You feel increasingly uncomfortable. After two years, you realize you're complicit through silence. You can sleep better than before, but you know you could have done more.`,
+                        feedback: {
+                            type: 'incorrect',
+                            title: '✗ Partial Integrity Has Limits',
+                            message: 'Personal integrity is important, but remaining in an unethical system without advocating for change means you\'re still supporting that system. True integrity sometimes requires challenging the status quo.'
+                        },
+                        choices: [],
+                        ending: true
+                    },
+                    redemption_path: {
+                        text: `You meet with affected customers personally, apologize, and offer refunds even beyond what's required. It's humbling and expensive. But gradually, some customers give you a second chance. You rebuild your reputation one honest interaction at a time. It takes years, but "Slick Dick" dies, and authentic Dick emerges stronger.`,
+                        feedback: {
+                            type: 'correct',
+                            title: '✓ Genuine Redemption!',
+                            message: 'Taking full responsibility for mistakes and making genuine amends demonstrates growth. Rebuilding trust is harder than maintaining it, but this path restored your integrity and taught you valuable lessons.'
+                        },
+                        choices: [],
+                        ending: true
+                    },
+                    identity_crisis: {
+                        text: `You continue splitting your identity. Your partner notices you're becoming evasive at home. Your friends question your stories. The stress of maintaining dual personalities affects your health. You lose track of which version of yourself you're supposed to be. Eventually, you have a breakdown, realizing you've lost touch with who you really are.`,
+                        feedback: {
+                            type: 'incorrect',
+                            title: '✗ Lost Authentic Self',
+                            message: 'Living with internal contradiction creates psychological stress. Authentic identity requires consistency across contexts. When we compartmentalize our ethics, we fragment our sense of self.'
+                        },
+                        choices: [],
+                        ending: true
+                    },
+                    difficult_amends: {
+                        text: `Making amends is painful. You publicly acknowledge your deception and offer full refunds and apologies. Many customers don't forgive you. You lose your job. But in facing consequences honestly, you begin healing. You find work with a company known for integrity. Starting over is humbling, but you're finally becoming one integrated person. Your new motto: "Who I am when no one's watching is who I really am."`,
+                        feedback: {
+                            type: 'correct',
+                            title: '✓ Hard-Won Authenticity!',
+                            message: 'Taking responsibility despite severe consequences shows moral courage. While the path was difficult, you emerged with something more valuable than career success: an integrated, authentic identity.'
+                        },
+                        choices: [],
+                        ending: true
+                    },
+                    bad_ending_pattern: {
+                        text: `You change jobs, but the pattern repeats. Without addressing your own choices, you blame each employer. Your résumé grows long with short stints. Relationships remain shallow because people sense your inauthenticity. Years later, you realize the common factor in all your failures was you. But by then, the habits are deeply ingrained.`,
+                        feedback: {
+                            type: 'incorrect',
+                            title: '✗ Unbroken Patterns',
+                            message: 'Blaming external circumstances while avoiding personal accountability prevents growth. The dual personality wasn\'t imposed on you—it was a choice. Only by taking ownership could you have changed.'
+                        },
+                        choices: [],
+                        ending: true
+                    }
+                }
+            },
+            memorandum: {
+                title: '📋 A Memorandum of Sudden Death',
+                scenes: {
+                    start: {
+                        text: `You're an administrative assistant at a hospital. Your supervisor hastily hands you a memorandum about a critical medication dosage change and says, "Send this to all staff immediately." Glancing at it, you notice the dosage seems unusually high and there's a typo in the medication name. But your supervisor is rushing to a meeting and you have 50 other urgent tasks. What do you do?`,
+                        choices: [
+                            {
+                                text: 'Stop everything and verify the information before sending',
+                                next: 'verify_first',
+                                correct: true
+                            },
+                            {
+                                text: 'Send it immediately as ordered, noting your concerns after',
+                                next: 'send_then_question',
+                                correct: false
+                            },
+                            {
+                                text: 'Fix the obvious typo and send it—they probably meant that',
+                                next: 'fix_and_send',
+                                correct: false
+                            }
+                        ]
+                    },
+                    verify_first: {
+                        text: `You catch your supervisor before the meeting. "This dosage seems wrong, and there's a medication name typo. This could be dangerous." She's initially annoyed at the delay, but checks her source. Her face goes pale. The original dosage in her notes was correct—she made a critical transcription error. You just prevented potential patient deaths.`,
+                        feedback: {
+                            type: 'correct',
+                            title: '✓ Heroic Attention to Detail!',
+                            message: 'Your willingness to question authority and verify critical information saved lives. In high-stakes environments, attention to detail and the courage to speak up are essential. Never assume errors are "probably fine."'
+                        },
+                        choices: [
+                            {
+                                text: 'Suggest implementing a verification protocol for critical communications',
+                                next: 'create_system',
+                                correct: true
+                            },
+                            {
+                                text: 'Just send the corrected memo and move on',
+                                next: 'missed_opportunity',
+                                correct: false
+                            }
+                        ]
+                    },
+                    send_then_question: {
+                        text: `You send the memorandum immediately as ordered. Twenty minutes later, you email your concerns. But it's too late—a nurse has already prepared the wrong dosage based on the memo. Fortunately, another nurse catches the error before administering it. An investigation follows. You explain you "followed orders," but the review board notes that blind compliance isn't acceptable when lives are at stake.`,
+                        feedback: {
+                            type: 'incorrect',
+                            title: '✗ Following Orders Isn\'t Enough',
+                            message: 'In critical fields, everyone shares responsibility for safety. "I was just following orders" doesn\'t absolve you when you noticed a potential life-threatening error. Speak up immediately when you see red flags.'
+                        },
+                        choices: [
+                            {
+                                text: 'Accept responsibility and commit to change',
+                                next: 'learn_lesson',
+                                correct: true
+                            },
+                            {
+                                text: 'Argue it wasn\'t your responsibility to check',
+                                next: 'defensive_response',
+                                correct: false
+                            }
+                        ]
+                    },
+                    fix_and_send: {
+                        text: `You "fix" what you assume is the error and send the memo. But you guessed wrong—the typo was in a different word than you thought. You've now created a memo that looks official but contains incorrect information. A pharmacist, seeing no obvious errors, fills prescriptions based on your "corrected" version. Three patients receive incorrect dosages before the error is discovered.`,
+                        feedback: {
+                            type: 'incorrect',
+                            title: '✗ Assumptions Can Kill',
+                            message: 'Never assume you know what someone meant in critical communications. Making unauthorized changes to medical information without verification is extremely dangerous. When in doubt, always verify with the source.'
+                        },
+                        choices: [
+                            {
+                                text: 'Immediately report what happened and help fix it',
+                                next: 'emergency_response',
+                                correct: true
+                            },
+                            {
+                                text: 'Stay quiet and hope no one traces it to you',
+                                next: 'bad_ending_catastrophe',
+                                correct: false
+                            }
+                        ]
+                    },
+                    create_system: {
+                        text: `You propose a new protocol: all critical medical communications must be verified by two people before distribution, with a mandatory checklist for dosages and medication names. Your supervisor champions the idea. The system is implemented hospital-wide. Over the next five years, this protocol catches dozens of potential errors. Your attention to detail literally created a life-saving system.`,
+                        feedback: {
+                            type: 'correct',
+                            title: '🌟 SYSTEMIC IMPACT!',
+                            message: 'The highest achievement: you turned one near-miss into an institutional safeguard. This demonstrates leadership—using an incident to improve systems so future errors are prevented. Your vigilance multiplied across the entire organization.'
+                        },
+                        choices: [],
+                        ending: true
+                    },
+                    missed_opportunity: {
+                        text: `The immediate crisis is averted, but no systematic changes are made. Two years later, a similar error occurs with a different staff member. This time, a patient is harmed. During the review, someone mentions, "Didn't we have a near-miss like this before?" You realize you could have prevented this by pushing for systemic changes. Personal vigilance prevented one disaster, but didn't protect the system.`,
+                        feedback: {
+                            type: 'incorrect',
+                            title: '✗ Individual Vigilance Isn\'t Enough',
+                            message: 'While your attention to detail saved lives once, organizations need systems, not just heroes. When you identify a vulnerability, advocate for systematic solutions that protect everyone, not just those lucky enough to have you checking their work.'
+                        },
+                        choices: [],
+                        ending: true
+                    },
+                    learn_lesson: {
+                        text: `You accept full responsibility and undergo additional training. You become an advocate for safety culture, teaching others that everyone has a duty to question potential errors regardless of hierarchy. Your mistake becomes a teaching moment. You develop a reputation for safety mindfulness and eventually train other staff on catching and preventing errors.`,
+                        feedback: {
+                            type: 'correct',
+                            title: '✓ Growth Through Accountability!',
+                            message: 'Accepting responsibility and using mistakes as learning experiences demonstrates maturity. You transformed a failure into a mission. This kind of humble accountability often leads to the most effective safety advocates.'
+                        },
+                        choices: [],
+                        ending: true
+                    },
+                    defensive_response: {
+                        text: `You insist it wasn't your job to check medical information—you're "just admin." The hospital disagrees. In healthcare, everyone is responsible for patient safety. You're reassigned to non-critical administrative work. Your defensiveness prevented growth and damaged your career. Years later, you realize that "not my job" is a dangerous phrase when lives are at stake.`,
+                        feedback: {
+                            type: 'incorrect',
+                            title: '✗ Deflecting Responsibility',
+                            message: 'In critical environments, the "not my job" mentality is toxic. Everyone shares responsibility for safety. Defensiveness prevents learning and improvement. Accepting appropriate responsibility would have led to growth.'
+                        },
+                        choices: [],
+                        ending: true
+                    },
+                    emergency_response: {
+                        text: `You immediately alert your supervisor and the pharmacy. They issue an urgent correction and check all affected patients. Your quick reporting minimizes harm—all three patients are caught in time. Your honesty, though the situation was frightening, is noted. You receive additional training and become part of the safety review committee. You learned that taking responsibility quickly is far better than hiding mistakes.`,
+                        feedback: {
+                            type: 'correct',
+                            title: '✓ Brave Accountability Saved Lives!',
+                            message: 'Reporting your mistake immediately, though terrifying, was the right choice. In healthcare, rapid response to errors can mean the difference between harm and safety. Your courage turned a dangerous situation into a learning opportunity.'
+                        },
+                        choices: [],
+                        ending: true
+                    },
+                    bad_ending_catastrophe: {
+                        text: `You stay silent out of fear. The error isn't caught in time. One patient dies, and two others suffer serious complications. The investigation traces the altered memo to you. You face criminal negligence charges. Your attempt to avoid responsibility for one mistake led to catastrophic harm and destroyed your career and conscience. The weight of this decision will follow you forever.`,
+                        feedback: {
+                            type: 'incorrect',
+                            title: '✗ Cover-Ups Make Everything Worse',
+                            message: 'Hiding mistakes, especially in safety-critical environments, transforms errors into tragedies. Immediate reporting would have prevented serious harm. The cover-up was worse than the original mistake. In healthcare, honesty isn\'t just ethical—it\'s essential to patient safety.'
+                        },
+                        choices: [],
+                        ending: true
+                    }
+                }
+            }
+        };
+
+        function startGame(gameId) {
+            currentGame = gameId;
+            currentScene = 'start';
+            visitedScenes = 0;
+            totalScenes = Object.keys(games[gameId].scenes).length;
+            
+            document.getElementById('homeScreen').style.display = 'none';
+            document.getElementById('gameScreen').style.display = 'block';
+            document.getElementById('gameTitle').textContent = games[gameId].title;
+            
+            showScene('start');
+        }
+
+        function showScene(sceneId) {
+            const game = games[currentGame];
+            const scene = game.scenes[sceneId];
+            
+            visitedScenes++;
+            updateProgress();
+            
+            document.getElementById('storyContent').textContent = scene.text;
+            
+            const feedbackDiv = document.getElementById('feedback');
+            feedbackDiv.className = 'feedback';
+            feedbackDiv.innerHTML = '';
+            
+            if (scene.feedback) {
+                feedbackDiv.className = `feedback ${scene.feedback.type} show`;
+                feedbackDiv.innerHTML = `
+                    <h3>${scene.feedback.title}</h3>
+                    <p>${scene.feedback.message}</p>
+                `;
+            }
+            
+            const choicesContainer = document.getElementById('choicesContainer');
+            choicesContainer.innerHTML = '';
+            
+            if (scene.ending) {
+                choicesContainer.innerHTML = `
+                    <div class="ending">
+                        <h3>🏁 Story Complete!</h3>
+                        <p>You've reached an ending. Reflect on the choices you made and the outcomes they produced.</p>
+                    </div>
+                `;
+                document.getElementById('restartBtn').style.display = 'inline-block';
+            } else if (scene.choices && scene.choices.length > 0) {
+                scene.choices.forEach((choice, index) => {
+                    const button = document.createElement('button');
+                    button.className = 'choice-btn';
+                    button.textContent = `${index + 1}. ${choice.text}`;
+                    button.onclick = () => makeChoice(choice);
+                    choicesContainer.appendChild(button);
+                });
+            }
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function makeChoice(choice) {
+            currentScene = choice.next;
+            showScene(choice.next);
+        }
+
+        function updateProgress() {
+            const percentage = (visitedScenes / totalScenes) * 100;
+            document.getElementById('progressBar').style.width = percentage + '%';
+        }
+
+        function goHome() {
+            document.getElementById('homeScreen').style.display = 'block';
+            document.getElementById('gameScreen').style.display = 'none';
+            document.getElementById('restartBtn').style.display = 'none';
+            document.getElementById('progressBar').style.width = '0%';
+        }
+
+        function restartGame() {
+            visitedScenes = 0;
+            currentScene = 'start';
+            document.getElementById('restartBtn').style.display = 'none';
+            showScene('start');
+        }
+    </script>
+</body>
+</html>

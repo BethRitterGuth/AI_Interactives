@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Celtic Christian Wheel of the Year Interactive Workbook</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        header {
+            text-align: center;
+            background: linear-gradient(to bottom, #228B22, #90EE90);
+            color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+        nav {
+            background: #8B4513;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        nav button {
+            background: #D2691E;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        nav button:hover {
+            background: #CD853F;
+        }
+        .section {
+            display: none;
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .section.active {
+            display: block;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        h2, h3 {
+            color: #228B22;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+        a {
+            color: #8B4513;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background: #8B4513;
+            color: white;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Celtic Christian Wheel of the Year</h1>
+        <p>An Interactive Workbook Honoring Scottish Traditions through a Christian Lens</p>
+        <p>This workbook celebrates the eightfold wheel, integrating ancient cultural elements with Christian faith. Pagan aspects (e.g., Druidic rituals) are noted historically but reframed through Scripture and prayer for spiritual growth in Christ. All content is self-contained for local hosting.</p>
+    </header>
+
+    <nav>
+        <button onclick="showSection('samhain')">Samhain (Oct 31)</button>
+        <button onclick="showSection('yule')">Yule (Dec 21)</button>
+        <button onclick="showSection('imbolc')">Imbolc (Feb 1)</button>
+        <button onclick="showSection('ostara')">Ostara (Mar 21)</button>
+        <button onclick="showSection('beltane')">Beltane (May 1)</button>
+        <button onclick="showSection('litha')">Litha (Jun 21)</button>
+        <button onclick="showSection('lughnasadh')">Lughnasadh (Aug 1)</button>
+        <button onclick="showSection('mabon')">Mabon (Sep 21)</button>
+    </nav>
+
+    <div id="content">
+        <!-- Samhain Section -->
+        <div id="samhain" class="section active">
+            <h2>Samhain: All Saints' Eve</h2>
+            <img src="images/samhain.jpg" alt="Powerful Celtic image of harvest moon over ancient stones">
+            <h3>History</h3>
+            <p>Ancient Scottish Celts (Druidic culture) marked Samhain as the end of harvest and start of winter, a time when the veil between worlds thinned—pagan beliefs included honoring ancestors with bonfires, but these were cultural gatherings, not witchcraft. Christianity reframed it as All Saints' Day (Nov 1), celebrating the communion of saints (Hebrews 12:1). In Scottish tradition, it evolved into Halloween guising to ward off spirits, now a vigil for prayer.<grok-card data-id="312712" data-type="citation_card"></grok-card><grok-card data-id="2e9574" data-type="citation_card"></grok-card></p>
+            <h3>Prayer</h3>
+            <p>Father, All-Powerful God, on this All Hallows' Eve, we rejoice in Your saints. May their prayers bring us forgiveness and peace. Surround us with Your light, as the Celts lit fires for protection—now in Christ, our true light (John 8:12). Amen.<grok-card data-id="7e170f" data-type="citation_card"></grok-card></p>
+            <h3>Song: The Blessing (Celtic Worship)</h3>
+            <p>Lyrics excerpt: "The Lord bless you and keep you... May His favor be upon you..." (Numbers 6:24-26, Gaelic version).</p>
+            <a href="https://www.youtube.com/watch?v=_y3-tRu8MIk" target="_blank">Listen on YouTube</a><grok-card data-id="977970" data-type="citation_card"></grok-card>
+            <h3>Spiritual Activities</h3>
+            <ul>
+                <li>Light a candle and pray for departed loved ones, reading Psalm 23.</li>
+                <li>Share stories of faithful Scottish Christians like St. Columba.</li>
+                <li>Attend a church All Saints' service or host a home vigil.</li>
+            </ul><grok-card data-id="0c57a1" data-type="citation_card"></grok-card>
+            <h3>Fill-in-the-Blank Activity</h3>
+            <p>The ancient Celtic festival of <input type="text" placeholder="Samhain"> marked the end of <input type="text" placeholder="harvest">, now celebrated as <input type="text" placeholder="All Saints'"> in Christian tradition.</p>
+            <h3>Journal Prompt</h3>
+            <p>Reflect: How has God surrounded you with a "cloud of witnesses" (Hebrews 12:1) in your life? What ancestral faith stories inspire you?</p>
+            <textarea placeholder="Write your reflections here..."></textarea>
+        </div>
+
+        <!-- Yule Section -->
+        <div id="yule" class="section">
+            <h2>Yule: Winter Solstice</h2>
+            <img src="images/yule.jpg" alt="Powerful Celtic image of evergreen wreath with candlelight">
+            <h3>History</h3>
+            <p>Pre-Christian Scots celebrated Yule with feasting and log-burning for light's return—Druidic pagan roots in solstice reverence for nature's cycles, not magic. Christianity overlaid it with Christmas, the birth of Christ as true Light (John 1:4-5). Scottish Yule included caroling and communal meals, blending old customs with hymns.<grok-card data-id="acf07c" data-type="citation_card"></grok-card><grok-card data-id="d43b88" data-type="citation_card"></grok-card></p>
+            <h3>Prayer</h3>
+            <p>Lord of Light, as winter's dark yields to Your Son's birth, warm our hearts with Your presence. Bless our Yule fires as symbols of Christ's eternal flame. Amen.</p>
+            <h3>Song: O Come All Ye Faithful (Celtic Worship)</h3>
+            <p>Lyrics excerpt: "O come all ye faithful, joyful and triumphant... Come and behold Him, born the King of Angels."</p>
+            <a href="https://www.youtube.com/watch?v=PFLq33xP35g" target="_blank">Listen on YouTube</a><grok-card data-id="ef3ef9" data-type="citation_card"></grok-card>
+            <h3>Spiritual Activities</h3>
+            <ul>
+                <li>Burn a Yule log while reading the Nativity story (Luke 2).</li>
+                <li>Exchange gifts symbolizing God's grace.</li>
+                <li>Sing carols in a circle, invoking Scottish Highland traditions.</li>
+            </ul>
+            <h3>Fill-in-the-Blank Activity</h3>
+            <p>Yule celebrates the <input type="text" placeholder="winter solstice"> and Christ's birth, replacing pagan <input type="text" placeholder="log-burning"> with hymns of <input type="text" placeholder="incarnation">.</p>
+            <h3>Journal Prompt</h3>
+            <p>Reflect: In what "dark season" has Christ been your light? How can you share that hope this Yule?</p>
+            <textarea placeholder="Write your reflections here..."></textarea>
+        </div>
+
+        <!-- Imbolc Section -->
+        <div id="imbolc" class="section">
+            <h2>Imbolc: St. Brigid's Day</h2>
+            <img src="images/imbolc.jpg" alt="Powerful Celtic image of Brigid's cross and flames">
+            <h3>History</h3>
+            <p>Ancient Gaelic (Scottish/Irish) pagans honored Imbolc for lambing and hearth fires, tied to goddess Brigid in Druidic lore—cultural fertility rites, clarified as non-witchcraft. Christianity transformed it into St. Brigid's feast and Candlemas (Feb 2), blessing candles as Christ's light (Luke 2:32). Scottish crosses of rushes symbolize protection in faith.<grok-card data-id="775de1" data-type="citation_card"></grok-card><grok-card data-id="c80630" data-type="citation_card"></grok-card></p>
+            <h3>Prayer</h3>
+            <p>St. Brigid, fiery arrow of Christ, bless our hearths with Your warmth. As ewes lactate, may our souls overflow with the Spirit's milk (1 Peter 2:2). Amen.<grok-card data-id="d4316f" data-type="citation_card"></grok-card></p>
+            <h3>Song: Be Thou My Vision (Celtic Worship)</h3>
+            <p>Lyrics excerpt: "Be Thou my vision, O Lord of my heart... Naught be all else to me, save that Thou art."</p>
+            <a href="https://www.youtube.com/watch?v=XiukM6WHQEQ" target="_blank">Listen on YouTube</a><grok-card data-id="5d2186" data-type="citation_card"></grok-card>
+            <h3>Spiritual Activities</h3>
+            <ul>
+                <li>Weave a Brigid's cross and pray over your home.</li>
+                <li>Bless candles at church or home altar.</li>
+                <li>Visit a well or stream for baptismal renewal reflection.</li>
+            </ul><grok-card data-id="f4a2ba" data-type="citation_card"></grok-card>
+            <h3>Fill-in-the-Blank Activity</h3>
+            <p>Imbolc honors <input type="text" placeholder="St. Brigid"> and the promise of <input type="text" placeholder="spring">, with pagan roots in <input type="text" placeholder="lambing"> now lit by Christ's light.</p>
+            <h3>Journal Prompt</h3>
+            <p>Reflect: What "seeds" of faith is God planting in you this season? How will you nurture them?</p>
+            <textarea placeholder="Write your reflections here..."></textarea>
+        </div>
+
+        <!-- Ostara Section -->
+        <div id="ostara" class="section">
+            <h2>Ostara: Easter Dawn</h2>
+            <img src="images/ostara.jpg" alt="Powerful Celtic image of spring flowers and eggs">
+            <h3>History</h3>
+            <p>Anglo-Celtic pagans (influencing Scottish lore) celebrated Ostara for spring renewal, with eggs symbolizing life—Druidic cultural fertility, not sorcery. Christianity aligned it with Easter, Christ's resurrection (1 Corinthians 15:20), incorporating eggs as new life in Him. Scottish Easter includes communal feasts.<grok-card data-id="242ba9" data-type="citation_card"></grok-card><grok-card data-id="82d78c" data-type="citation_card"></grok-card></p>
+            <h3>Prayer</h3>
+            <p>Risen Christ, as spring awakens earth, raise our hearts from winter's tomb. Bless these eggs as signs of Your eternal life. Amen.</p>
+            <h3>Song: In Christ Alone (Celtic Worship)</h3>
+            <p>Lyrics excerpt: "In Christ alone my hope is found... From life's first cry to final breath."</p>
+            <a href="https://www.youtube.com/watch?v=8kvFtXphmMU" target="_blank">Listen on YouTube</a><grok-card data-id="c9c379" data-type="citation_card"></grok-card>
+            <h3>Spiritual Activities</h3>
+            <ul>
+                <li>Dye eggs red for Christ's blood, sharing resurrection testimonies.</li>
+                <li>Plant seeds while praying for spiritual growth.</li>
+                <li>Join an Easter sunrise service, echoing ancient dawn vigils.</li>
+            </ul>
+            <h3>Fill-in-the-Blank Activity</h3>
+            <p>Ostara's pagan <input type="text" placeholder="eggs"> symbolize rebirth, fulfilled in Christian <input type="text" placeholder="Easter"> and Christ's <input type="text" placeholder="resurrection">.</p>
+            <h3>Journal Prompt</h3>
+            <p>Reflect: What "death" in your life is God resurrecting into new life?</p>
+            <textarea placeholder="Write your reflections here..."></textarea>
+        </div>
+
+        <!-- Beltane Section -->
+        <div id="beltane" class="section">
+            <h2>Beltane: May Day Fire</h2>
+            <img src="images/beltane.jpg" alt="Powerful Celtic image of maypole and bonfire">
+            <h3>History</h3>
+            <p>Gaelic Scots lit Beltane fires for protection and summer's start—pagan communal rites honoring land's bounty, distinct from witchcraft. Christianity adapted it to May Day processions and Rogation days, blessing fields (Mark 11:24). Scottish fairs persist with dances.<grok-card data-id="5d9afd" data-type="citation_card"></grok-card><grok-card data-id="f28f73" data-type="citation_card"></grok-card></p>
+            <h3>Prayer</h3>
+            <p>Bless, O Trinity, our homes and fields this Beltane. As fires purify, cleanse us by Your Spirit's flame (Acts 2:3). Amen.<grok-card data-id="4471b5" data-type="citation_card"></grok-card></p>
+            <h3>Song: Christ My Guide (Celtic Praise)</h3>
+            <p>Lyrics excerpt: "Christ be beside me... Christ be before me... In the rough ways."</p>
+            <a href="https://www.youtube.com/playlist?list=PL59DC650A29247BE4" target="_blank">Listen on YouTube</a><grok-card data-id="97339e" data-type="citation_card"></grok-card>
+            <h3>Spiritual Activities</h3>
+            <ul>
+                <li>Jump a safe candle flame, praying for protection.</li>
+                <li>Bless your community with a prayer walk.</li>
+                <li>Dance or sing praises for creation's joy (Psalm 96).</li>
+            </ul><grok-card data-id="f885a9" data-type="citation_card"></grok-card>
+            <h3>Fill-in-the-Blank Activity</h3>
+            <p>Beltane's ancient <input type="text" placeholder="bonfires"> protected livestock; now Christians <input type="text" placeholder="bless"> fields in Christ's name on <input type="text" placeholder="May Day">.</p>
+            <h3>Journal Prompt</h3>
+            <p>Reflect: How is God calling you to "bloom" in community this summer?</p>
+            <textarea placeholder="Write your reflections here..."></textarea>
+        </div>
+
+        <!-- Litha Section -->
+        <div id="litha" class="section">
+            <h2>Litha: Midsummer Light</h2>
+            <img src="images/litha.jpg" alt="Powerful Celtic image of sun wheel and herbs">
+            <h3>History</h3>
+            <p>Celtic solstice fires (Litha) celebrated longest day—Druidic pagan honoring of sun's power, cultural not occult. In Scotland, it became St. John's Day (Jun 24), with herb-gathering for healing, tied to John's baptismal fire (Luke 1:80). Bonfires echo John's light.<grok-card data-id="4b4c09" data-type="citation_card"></grok-card><grok-card data-id="2b010f" data-type="citation_card"></grok-card></p>
+            <h3>Prayer</h3>
+            <p>Sun of Righteousness, at midsummer's peak, illumine our paths with Your truth. Bless these herbs as signs of healing grace. Amen.</p>
+            <h3>Song: How Great Thou Art (Celtic Worship)</h3>
+            <p>Lyrics excerpt: "O Lord my God, when I in awesome wonder... Consider all the worlds Thy hands have made."</p>
+            <a href="https://www.youtube.com/watch?v=zmt5VNnrJIM" target="_blank">Listen on YouTube</a><grok-card data-id="1562d5" data-type="citation_card"></grok-card>
+            <h3>Spiritual Activities</h3>
+            <ul>
+                <li>Gather herbs for a healing sachet, praying Psalm 103.</li>
+                <li>Watch sunset, contemplating God's creation (Psalm 19).</li>
+                <li>Host a solstice meal with Scripture readings.</li>
+            </ul>
+            <h3>Fill-in-the-Blank Activity</h3>
+            <p>Litha's pagan <input type="text" placeholder="solstice"> honors light; Christians celebrate <input type="text" placeholder="St. John"> as forerunner to the true <input type="text" placeholder="Light">.</p>
+            <h3>Journal Prompt</h3>
+            <p>Reflect: At this peak of light, what shadows in your life need God's illumination?</p>
+            <textarea placeholder="Write your reflections here..."></textarea>
+        </div>
+
+        <!-- Lughnasadh Section -->
+        <div id="lughnasadh" class="section">
+            <h2>Lughnasadh: First Harvest</h2>
+            <img src="images/lughnasadh.jpg" alt="Powerful Celtic image of grain sheaves and loaf">
+            <h3>History</h3>
+            <p>Named for god Lugh in Gaelic paganism, Scottish hilltop gatherings celebrated grain harvest—cultural games and feasts, not witchcraft. Christianity recast as Lammas (loaf-mass), blessing bread (John 6:35). Scottish bannocks with crosses symbolize thanks.<grok-card data-id="860231" data-type="citation_card"></grok-card><grok-card data-id="e619ab" data-type="citation_card"></grok-card></p>
+            <h3>Prayer</h3>
+            <p>Bread of Life, at first harvest, we thank You for provision. As loaves are broken, may our lives bear fruit for Your kingdom. Amen.<grok-card data-id="b3b386" data-type="citation_card"></grok-card></p>
+            <h3>Song: Here Is Love (Celtic Source)</h3>
+            <p>Lyrics excerpt: "Here is love, vast as the ocean... Loving kindness, vast as the sea."</p>
+            <a href="https://www.youtube.com/watch?v=I4LR9wHtv1Y" target="_blank">Listen on YouTube</a><grok-card data-id="a816f8" data-type="citation_card"></grok-card>
+            <h3>Spiritual Activities</h3>
+            <ul>
+                <li>Bake Lammas bread, breaking it in Eucharist remembrance.</li>
+                <li>Climb a hill for prayer, echoing ancient pilgrimages.</li>
+                <li>Share harvest bounty with neighbors.</li>
+            </ul><grok-card data-id="39901c" data-type="citation_card"></grok-card>
+            <h3>Fill-in-the-Blank Activity</h3>
+            <p>Lughnasadh's pagan <input type="text" placeholder="games"> mark harvest; Lammas blesses the <input type="text" placeholder="loaf"> as Christ's <input type="text" placeholder="body">.</p>
+            <h3>Journal Prompt</h3>
+            <p>Reflect: What "first fruits" of your labor can you offer God this harvest?</p>
+            <textarea placeholder="Write your reflections here..."></textarea>
+        </div>
+
+        <!-- Mabon Section -->
+        <div id="mabon" class="section">
+            <h2>Mabon: Autumn Equinox</h2>
+            <img src="images/mabon.jpg" alt="Powerful Celtic image of autumn leaves and balance scales">
+            <h3>History</h3>
+            <p>Welsh-Celtic Mabon (influencing Scots) honored balance and second harvest—pagan thanksgiving for earth's gifts, cultural not occult. Christianity links to Michaelmas (Sep 29) or Harvest Festival, praising God's provision (Deuteronomy 8:10). Scottish kirns include dances.<grok-card data-id="d80e3f" data-type="citation_card"></grok-card><grok-card data-id="2a2809" data-type="citation_card"></grok-card></p>
+            <h3>Prayer</h3>
+            <p>Provider God, in autumn's balance, we thank You for abundance. As leaves fall, root us in Your eternal harvest. Amen.</p>
+            <h3>Song: All Creatures of Our God and King (Celtic Worship)</h3>
+            <p>Lyrics excerpt: "All creatures of our God and King, lift up your voice and with us sing."</p>
+            <a href="https://www.youtube.com/watch?v=LOuw3rLY7Zg" target="_blank">Listen on YouTube</a><grok-card data-id="49e87c" data-type="citation_card"></grok-card>
+            <h3>Spiritual Activities</h3>
+            <ul>
+                <li>Create a gratitude altar with fall items, reading Psalm 65.</li>
+                <li>Balance scales meditation on justice (Micah 6:8).</li>
+                <li>Feast with prayers of thanks.</li>
+            </ul>
+            <h3>Fill-in-the-Blank Activity</h3>
+            <p>Mabon's pagan <input type="text" placeholder="equinox"> seeks balance; Christians harvest in <input type="text" placeholder="thanksgiving"> to God, as in <input type="text" placeholder="Michaelmas">.</p>
+            <h3>Journal Prompt</h3>
+            <p>Reflect: In this season of release, what burdens can you lay at God's feet for rest?</p>
+            <textarea placeholder="Write your reflections here..."></textarea>
+        </div>
+    </div>
+
+    <footer>
+        <h3>Image Sources & Setup</h3>
+        <p>Create an "images" folder beside this HTML file. Download free Celtic images:</p>
+        <ul>
+            <li>Samhain: Pixabay Celtic symbols (search "Celtic Samhain moon")<grok-card data-id="b591ed" data-type="citation_card"></grok-card> Save as samhain.jpg</li>
+            <li>Yule: Freepik Celtic Christmas (search "Celtic evergreen")<grok-card data-id="a478f1" data-type="citation_card"></grok-card> Save as yule.jpg</li>
+            <li>Imbolc: Vecteezy Imbolc symbols (search "Celtic Brigid cross")<grok-card data-id="3fc5e3" data-type="citation_card"></grok-card> Save as imbolc.jpg</li>
+            <li>Ostara: Pixabay spring Celtic (search "Celtic eggs flowers")<grok-card data-id="eadd71" data-type="citation_card"></grok-card> Save as ostara.jpg</li>
+            <li>Beltane: Dreamstime Beltane vectors (search "Celtic maypole")<grok-card data-id="5c7f63" data-type="citation_card"></grok-card> Save as beltane.jpg</li>
+            <li>Litha: Shutterstock free trial Celtic sun (search "Celtic solstice")<grok-card data-id="a712f0" data-type="citation_card"></grok-card> Save as litha.jpg</li>
+            <li>Lughnasadh: Adobe Stock free Celtic harvest (search "Lughnasadh grain")<grok-card data-id="ced992" data-type="citation_card"></grok-card> Save as lughnasadh.jpg</li>
+            <li>Mabon: Vecteezy autumn Celtic (search "Mabon leaves")<grok-card data-id="8e73f4" data-type="citation_card"></grok-card> Save as mabon.jpg</li>
+        </ul>
+        <p>For AI images: Generate "powerful Celtic [festival] scene" via tools like Grok and save locally. Open this HTML in a browser to host locally—no server needed.</p>
+        <p>Sources drawn from historical and Christian Celtic traditions; pagan elements clarified as cultural heritage redeemed in Christ.</p>
+    </footer>
+
+    <script>
+        function showSection(id) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(sec => sec.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+        // Auto-show Samhain on load
+        showSection('samhain');
+    </script>
+</body>
+</html>

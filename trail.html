@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Trail</title>
+
+    <style>
+        :root {
+            --bg-color: #f4f4f9;
+            --container-bg: #ffffff;
+            --border-color: #d1d1d1;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --text-color: #333;
+            --button-bg: #007bff;
+            --button-hover-bg: #0056b3;
+            --button-text: #ffffff;
+            
+            --money-color: #4CAF50; /* Green */
+            --energy-color: #2196F3; /* Blue */
+            --grades-color: #ff9800; /* Orange */
+            --lose-color: #f44336;  /* Red */
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        #game-container {
+            width: 90%;
+            max-width: 600px;
+            background-color: var(--container-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            overflow: hidden;
+            text-align: center;
+        }
+
+        /* --- Screens --- */
+        .game-screen {
+            padding: 20px;
+        }
+
+        #start-screen h1 {
+            margin-top: 0;
+        }
+
+        #start-screen p {
+            font-size: 1.1em;
+            margin-bottom: 24px;
+        }
+
+        #character-selection {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .char-button {
+            padding: 15px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .char-button:hover {
+            border-color: var(--button-bg);
+            box-shadow: 0 2px 6px rgba(0, 123, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .char-button h3 {
+            margin: 0 0 10px 0;
+            color: var(--button-bg);
+        }
+
+        .char-button ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+            font-size: 0.9em;
+            color: #555;
+        }
+        
+        /* Hide screens by default */
+        #game-screen,
+        #end-screen {
+            display: none;
+        }
+
+        /* --- Game Screen UI --- */
+        #stats-bar {
+            display: flex;
+            justify-content: space-around;
+            padding: 15px;
+            background-color: var(--bg-color);
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .stat-display {
+            width: 30%;
+        }
+        
+        .stat-display .stat-label {
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-bar {
+            width: 100%;
+            height: 24px;
+            background-color: #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .stat-bar-inner {
+            height: 100%;
+            transition: width 0.3s ease-in-out;
+            text-align: center;
+            line-height: 24px;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8em;
+        }
+        
+        /* Specific stat colors */
+        #stat-money-bar .stat-bar-inner { background-color: var(--money-color); }
+        #stat-energy-bar .stat-bar-inner { background-color: var(--energy-color); }
+        #stat-grades-bar .stat-bar-inner { background-color: var(--grades-color); }
+
+        /* --- Event & Options --- */
+        #message-log {
+            min-height: 100px;
+            padding: 15px;
+            background-color: var(--bg-color);
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            line-height: 1.5;
+            text-align: left;
+        }
+
+        #options-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        #options-container button {
+            width: 100%;
+            padding: 15px;
+            font-size: 1em;
+            font-weight: bold;
+            color: var(--button-text);
+            background-color: var(--button-bg);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        #options-container button:hover {
+            background-color: var(--button-hover-bg);
+        }
+
+        /* --- End Screen --- */
+        #end-message {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        #play-again-button {
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--button-text);
+            background-color: var(--button-bg);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        #play-again-button:hover {
+            background-color: var(--button-hover-bg);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="game-container">
+
+        <div id="start-screen" class="game-screen">
+            <h1>🎓 College Trail</h1>
+            <p>Your journey to graduation begins now. Choose your student profile:</p>
+            
+            <div id="character-selection">
+                <button class="char-button" onclick="startGame('scholar')">
+                    <h3>The Scholar</h3>
+                    <ul>
+                        <li>+ High Grades</li>
+                        <li>- Low Money</li>
+                        <li>- Avg. Energy</li>
+                    </ul>
+                </button>
+
+                <button class="char-button" onclick="startGame('socialite')">
+                    <h3>The Socialite</h3>
+                    <ul>
+                        <li>+ High Energy</li>
+                        <li>- Low Grades</li>
+                        <li>- Avg. Money</li>
+                    </ul>
+                </button>
+
+                <button class="char-button" onclick="startGame('grinder')">
+                    <h3>The Grinder</h3>
+                    <ul>
+                        <li>+ High Money</li>
+                        <li>- Low Energy</li>
+                        <li>- Avg. Grades</li>
+                    </ul>
+                </button>
+
+                <button class="char-button" onclick="startGame('legacy')">
+                    <h3>The Legacy</h3>
+                    <ul>
+                        <li>+ High Money</li>
+                        <li>+ High Energy</li>
+                        <li>- Low Grades</li>
+                    </ul>
+                </button>
+            </div>
+        </div>
+
+        <div id="game-screen" class="game-screen">
+            <div id="stats-bar">
+                <div class="stat-display">
+                    <div class="stat-label">💰 Money</div>
+                    <div class="stat-bar" id="stat-money-bar">
+                        <div class="stat-bar-inner" id="stat-money-val"></div>
+                    </div>
+                </div>
+                <div class="stat-display">
+                    <div class="stat-label">⚡ Energy</div>
+                    <div class="stat-bar" id="stat-energy-bar">
+                        <div class="stat-bar-inner" id="stat-energy-val"></div>
+                    </div>
+                </div>
+                <div class="stat-display">
+                    <div class="stat-label">📚 Grades</div>
+                    <div class="stat-bar" id="stat-grades-bar">
+                        <div class="stat-bar-inner" id="stat-grades-val"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="message-log">
+                Welcome to college!
+            </div>
+
+            <div id="options-container">
+                </div>
+        </div>
+
+        <div id="end-screen" class="game-screen">
+            <h2 id="end-message">You've finished!</h2>
+            <button id="play-again-button" onclick="location.reload()">Play Again</button>
+        </div>
+
+    </div>
+
+    <script>
+        // --- 1. GAME SETUP & STATE ---
+
+        // Player object, will be populated on character selection
+        let player = {
+            name: "",
+            money: 50,
+            energy: 50,
+            grades: 50
+        };
+
+        // Current event index
+        let currentEventIndex = 0;
+
+        // Character definitions
+        const characters = {
+            scholar: { name: "The Scholar", money: 30, energy: 60, grades: 80 },
+            socialite: { name: "The Socialite", money: 60, energy: 80, grades: 40 },
+            grinder: { name: "The Grinder", money: 80, energy: 40, grades: 60 },
+            legacy: { name: "The Legacy", money: 90, energy: 70, grades: 30 }
+        };
+
+        // Game Events "The Trail"
+        // Each event has a message and 2-3 options.
+        // Each option has text and an 'effects' object.
+        const gameEvents = [
+            { // Event 0: Freshman Orientation
+                message: "Welcome to Freshman Orientation! Your first big decision: where to go tonight?",
+                options: [
+                    { text: "Go to the library and get ahead.", effects: { money: 0, energy: -10, grades: +15 } },
+                    { text: "Go to the big dorm party.", effects: { money: -10, energy: +10, grades: -10 } },
+                    { text: "Just go to bed.", effects: { money: 0, energy: +10, grades: 0 } }
+                ]
+            },
+            { // Event 1: Midterms
+                message: "It's your first set of Midterms! The pressure is on.",
+                options: [
+                    { text: "Pull three all-nighters. Coffee is your friend.", effects: { money: -15, energy: -30, grades: +20 } },
+                    { text: "Form a study group.", effects: { money: -5, energy: -15, grades: +15 } },
+                    { text: "Wing it. You'll be fine, right?", effects: { money: 0, energy: +5, grades: -20 } }
+                ]
+            },
+            { // Event 2: Job Offer
+                message: "The campus coffee shop is hiring. A little extra cash could be nice.",
+                options: [
+                    { text: "Take the job (20 hrs/week).", effects: { money: +30, energy: -20, grades: -10 } },
+                    { text: "Pass. You need to focus on school.", effects: { money: -5, energy: +5, grades: +5 } },
+                ]
+            },
+            { // Event 3: Social Event
+                message: "It's the big rivalry football game! Everyone is going.",
+                options: [
+                    { text: "Go all out! Tailgate, game, and after-party!", effects: { money: -30, energy: +20, grades: -15 } },
+                    { text: "Just go to the game.", effects: { money: -15, energy: +10, grades: -5 } },
+                    { text: "Stay home and study. You can't afford the distraction.", effects: { money: 0, energy: -10, grades: +15 } }
+                ]
+            },
+            { // Event 4: Spring Break
+                message: "Spring Break! A whole week off. What's the plan?",
+                options: [
+                    { text: "Road trip with friends! (Expensive)", effects: { money: -40, energy: +30, grades: -10 } },
+                    { text: "Go home and work your old job.", effects: { money: +30, energy: -10, grades: 0 } },
+                    { text: "Stay on campus and catch up on sleep and studies.", effects: { money: -5, energy: +20, grades: +10 } }
+                ]
+            },
+            { // Event 5: Junior Year Slump
+                message: "You're hitting the Junior-year slump. You feel totally burned out.",
+                options: [
+                    { text: "Power through. It's just a feeling.", effects: { money: 0, energy: -25, grades: -5 } },
+                    { text: "Take a 'mental health' weekend. (Go to a concert).", effects: { money: -20, energy: +20, grades: -10 } },
+                    { text: "Visit the campus wellness center and ease your workload.", effects: { money: 0, energy: +15, grades: +5 } }
+                ]
+            },
+            { // Event 6: Senior Project
+                message: "Your Senior Capstone Project is due in two weeks. It's a huge part of your final grade.",
+                options: [
+                    { text: "Lock yourself in the lab. This is your masterpiece.", effects: { money: -10, energy: -30, grades: +30 } },
+                    { text: "Collaborate heavily with your project group.", effects: { money: -5, energy: -15, grades: +20 } },
+                    { text: "Do the bare minimum to pass.", effects: { money: 0, energy: +5, grades: -15 } }
+                ]
+            },
+            { // Event 7: Final Exams
+                message: "This is it. The final exams before graduation.",
+                options: [
+                    { text: "Give it everything you have left.", effects: { money: -10, energy: -30, grades: +25 } },
+                    { text: "You've worked hard all four years. Just review lightly.", effects: { money: 0, energy: -10, grades: +10 } },
+                    { text: "You're so senior-itis. You'll pass.", effects: { money: 0, energy: 0, grades: -10 } }
+                ]
+            }
+        ];
+        
+        // --- 2. CORE GAME LOGIC ---
+
+        /**
+         * Starts the game, triggered by character selection buttons.
+         * @param {string} charName - The key of the chosen character (e.g., 'scholar').
+         */
+        function startGame(charName) {
+            // Set player stats based on selection
+            // Use {...} spread syntax to create a *copy* of the character object
+            player = { ...characters[charName] }; 
+            currentEventIndex = 0;
+
+            // Swap visible screens
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'block';
+
+            // Load the first event
+            updateStatsUI();
+            loadEvent(currentEventIndex);
+        }
+
+        /**
+         * Loads a specific event onto the screen.
+         * @param {number} eventIndex - The index of the event from the gameEvents array.
+         */
+        function loadEvent(eventIndex) {
+            // Check for WIN condition (ran out of events)
+            if (eventIndex >= gameEvents.length) {
+                endGame(true); // Player wins!
+                return;
+            }
+
+            const event = gameEvents[eventIndex];
+            const messageLog = document.getElementById('message-log');
+            const optionsContainer = document.getElementById('options-container');
+
+            // Display the event message
+            messageLog.textContent = event.message;
+
+            // Clear old options
+            optionsContainer.innerHTML = '';
+
+            // Create and append new option buttons
+            event.options.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option.text;
+                // Add click listener to handle the choice
+                button.onclick = () => selectOption(option);
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        /**
+         * Handles the logic when a player clicks an option button.
+         * @param {object} option - The chosen option object (contains text and effects).
+         */
+        function selectOption(option) {
+            // 1. Apply effects
+            player.money += option.effects.money || 0;
+            player.energy += option.effects.energy || 0;
+            player.grades += option.effects.grades || 0;
+
+            // 2. Clamp stats (keep them between 0 and 100)
+            player.money = Math.max(0, Math.min(100, player.money));
+            player.energy = Math.max(0, Math.min(100, player.energy));
+            player.grades = Math.max(0, Math.min(100, player.grades));
+
+            // 3. Update the UI
+            updateStatsUI();
+
+            // 4. Check for LOSE conditions
+            if (player.money <= 0) {
+                endGame(false, "You ran out of money and had to drop out. 💸");
+                return;
+            }
+            if (player.energy <= 0) {
+                endGame(false, "You're completely burned out and went on medical leave. 💤");
+                return;
+            }
+            if (player.grades <= 10) { // Set a "fail out" threshold
+                endGame(false, "Your grades dropped too low. You've been academically dismissed.  F");
+                return;
+            }
+
+            // 5. If not lost, advance to the next event
+            currentEventIndex++;
+            loadEvent(currentEventIndex);
+        }
+
+        /**
+         * Ends the game and shows the final screen.
+         * @param {boolean} didWin - True if the player graduated, false otherwise.
+         * @param {string} [customMessage] - An optional message for losing.
+         */
+        function endGame(didWin, customMessage = "") {
+            const endScreen = document.getElementById('end-screen');
+            const endMessage = document.getElementById('end-message');
+
+            // Swap visible screens
+            document.getElementById('game-screen').style.display = 'none';
+            endScreen.style.display = 'block';
+
+            // Set final message
+            if (didWin) {
+                endMessage.textContent = `Congratulations, ${player.name}! You graduated! 🎓🎉`;
+                endMessage.style.color = 'var(--money-color)';
+            } else {
+                endMessage.textContent = customMessage || "Your college journey has come to an early end.";
+                endMessage.style.color = 'var(--lose-color)';
+            }
+        }
+
+        // --- 3. UI UPDATERS ---
+
+        /**
+         * Updates the visual stat bars and text values based on the player object.
+         */
+        function updateStatsUI() {
+            // Money
+            const moneyBar = document.getElementById('stat-money-bar').querySelector('.stat-bar-inner');
+            moneyBar.style.width = player.money + '%';
+            moneyBar.textContent = player.money;
+
+            // Energy
+            const energyBar = document.getElementById('stat-energy-bar').querySelector('.stat-bar-inner');
+            energyBar.style.width = player.energy + '%';
+            energyBar.textContent = player.energy;
+
+            // Grades
+            const gradesBar = document.getElementById('stat-grades-bar').querySelector('.stat-bar-inner');
+            gradesBar.style.width = player.grades + '%';
+            gradesBar.textContent = player.grades;
+        }
+
+    </script>
+
+</body>
+</html>

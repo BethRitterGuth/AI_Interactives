@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Walden Adventure</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .choice {
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        function choose(option) {
+            const story = document.getElementById('story');
+            const choice = document.querySelector('.choice');
+            if (option === 'explore') {
+                story.textContent = 'You wander through the woods, discovering the beauty of nature. You feel a sense of peace and connection. Do you want to continue exploring or return to the pond?';
+                choice.innerHTML = '<button onclick="choose(\'continue\')">Continue exploring</button><button onclick="choose(\'return\')">Return to the pond</button>';
+            } else if (option === 'build') {
+                story.textContent = 'You start building a cabin by the pond. It\'s hard work, but you feel a sense of accomplishment. Do you want to keep building or take a break?';
+                choice.innerHTML = '<button onclick="choose(\'keepBuilding\')">Keep building</button><button onclick="choose(\'break\')">Take a break</button>';
+            } else if (option === 'continue') {
+                story.textContent = 'You continue exploring and find a hidden grove filled with wildflowers. You sit and meditate, feeling at one with the world. Do you want to reflect on society or return to the pond?';
+                choice.innerHTML = '<button onclick="choose(\'reflect\')">Reflect on society</button><button onclick="choose(\'return\')">Return to the pond</button>';
+            } else if (option === 'return') {
+                story.textContent = 'You return to the pond and sit by the water, reflecting on your journey. You feel a deep sense of tranquility. Do you want to write in your journal or go fishing?';
+                choice.innerHTML = '<button onclick="choose(\'journal\')">Write in journal</button><button onclick="choose(\'fish\')">Go fishing</button>';
+            } else if (option === 'keepBuilding') {
+                story.textContent = 'You keep building your cabin, and it starts to take shape. You feel proud of your work and look forward to living simply. Do you want to plant a garden or gather firewood?';
+                choice.innerHTML = '<button onclick="choose(\'garden\')">Plant a garden</button><button onclick="choose(\'firewood\')">Gather firewood</button>';
+            } else if (option === 'break') {
+                story.textContent = 'You take a break and sit by the pond, enjoying the peaceful surroundings. You feel rejuvenated and ready to continue your journey. Do you want to read a book or take a nap?';
+                choice.innerHTML = '<button onclick="choose(\'read\')">Read a book</button><button onclick="choose(\'nap\')">Take a nap</button>';
+            } else if (option === 'reflect') {
+                story.textContent = 'You reflect on society and the simplicity of life at Walden Pond. You realize the importance of living deliberately and in harmony with nature. Do you want to write your thoughts or continue meditating?';
+                choice.innerHTML = '<button onclick="choose(\'write\')">Write thoughts</button><button onclick="choose(\'meditate\')">Continue meditating</button>';
+            } else if (option === 'journal') {
+                story.textContent = 'You write in your journal, capturing your thoughts and experiences. You feel a sense of clarity and purpose. Do you want to go for a walk or prepare a meal?';
+                choice.innerHTML = '<button onclick="choose(\'walk\')">Go for a walk</button><button onclick="choose(\'meal\')">Prepare a meal</button>';
+            } else if (option === 'fish') {
+                story.textContent = 'You go fishing and catch a few fish. You feel a sense of satisfaction and connection with nature. Do you want to cook the fish or release them back?';
+                choice.innerHTML = '<button onclick="choose(\'cook\')">Cook the fish</button><button onclick="choose(\'release\')">Release them back</button>';
+            } else if (option === 'garden') {
+                story.textContent = 'You plant a garden, looking forward to the fruits of your labor. You feel a sense of self-reliance and connection to the earth. Do you want to water the plants or take a rest?';
+                choice.innerHTML = '<button onclick="choose(\'water\')">Water the plants</button><button onclick="choose(\'rest\')">Take a rest</button>';
+            } else if (option === 'firewood') {
+                story.textContent = 'You gather firewood, preparing for the colder months. You feel a sense of preparedness and self-sufficiency. Do you want to start a fire or store the wood?';
+                choice.innerHTML = '<button onclick="choose(\'fire\')">Start a fire</button><button onclick="choose(\'store\')">Store the wood</button>';
+            } else if (option === 'read') {
+                story.textContent = 'You read a book, immersing yourself in the wisdom of others. You feel inspired and enlightened. Do you want to write your thoughts or take a walk?';
+                choice.innerHTML = '<button onclick="choose(\'write\')">Write thoughts</button><button onclick="choose(\'walk\')">Take a walk</button>';
+            } else if (option === 'nap') {
+                story.textContent = 'You take a nap, feeling refreshed and rejuvenated. You wake up with a clear mind and a sense of peace. Do you want to go for a swim or prepare a meal?';
+                choice.innerHTML = '<button onclick="choose(\'swim\')">Go for a swim</button><button onclick="choose(\'meal\')">Prepare a meal</button>';
+            } else if (option === 'write') {
+                story.textContent = 'You write your thoughts, capturing the essence of your reflections. You feel a sense of clarity and purpose. Do you want to continue meditating or go for a walk?';
+                choice.innerHTML = '<button onclick="choose(\'meditate\')">Continue meditating</button><button onclick="choose(\'walk\')">Go for a walk</button>';
+            } else if (option === 'meditate') {
+                story.textContent = 'You continue meditating, feeling a deep sense of peace and connection with the world. You realize it\'s time to leave Walden Pond, but you carry the lessons with you.';
+                choice.innerHTML = '<button onclick="endGame()">End Game</button>';
+            } else if (option === 'walk') {
+                story.textContent = 'You go for a walk, enjoying the beauty of nature. You feel a sense of freedom and connection with the world. You realize it\'s time to leave Walden Pond, but you carry the lessons with you.';
+                choice.innerHTML = '<button onclick="endGame()">End Game</button>';
+            } else if (option === 'meal') {
+                story.textContent = 'You prepare a simple meal, enjoying the fruits of your labor. You feel a sense of satisfaction and connection with nature. You realize it\'s time to leave Walden Pond, but you carry the lessons with you.';
+                choice.innerHTML = '<button onclick="endGame()">End Game</button>';
+            } else if (option === 'cook') {
+                story.textContent = 'You cook the fish, enjoying a meal you caught yourself. You feel a sense of self-reliance and connection with nature. You realize it\'s time to leave Walden Pond, but you carry the lessons with you.';
+                choice.innerHTML = '<button onclick="endGame()">End Game</button>';
+            } else if (option === 'release') {
+                story.textContent = 'You release the fish back into the pond, feeling a sense of harmony with nature. You realize it\'s time to leave Walden Pond, but you carry the lessons with you.';
+                choice.innerHTML = '<button onclick="endGame()">End Game</button>';
+            } else if (option === 'water') {
+                story.textContent = 'You water the plants, ensuring they have what they need to grow. You feel a sense of responsibility and connection to the earth. You realize it\'s time to leave Walden Pond, but you carry the lessons with you.';
+                choice.innerHTML = '<button onclick="endGame()">End Game</button>';
+            } else if (option === 'fire') {
+                story.textContent = 'You start a fire, feeling its warmth and comfort. You feel a connection to basic survival. You realize it\'s time to leave Walden Pond, but you carry the lessons with you.';
+                choice.innerHTML = '<button onclick="endGame()">End Game</button>';
+            } else if (option === 'store') {
+                story.textContent = 'You store the wood, feeling prepared for the future. You appreciate the value of planning. You realize it\'s time to leave Walden Pond, but you carry the lessons with you.';
+                choice.innerHTML = '<button onclick="endGame()">End Game</button>';
+            } else if (option === 'swim') {
+                story.textContent = 'You go for a swim in the pond, feeling refreshed and invigorated. You connect with the water and nature. You realize it\'s time to leave Walden Pond, but you carry the lessons with you.';
+                choice.innerHTML = '<button onclick="endGame()">End Game</button>';
+            }
+        }
+
+        function endGame() {
+            const story = document.getElementById('story');
+            const choice = document.querySelector('.choice');
+            story.textContent = 'Your Walden adventure comes to an end. You leave with a deeper understanding of yourself and the natural world.';
+            choice.innerHTML = '';
+        }
+    </script>
+</head><body><div class="container">
+<h1>Walden Adventure</h1>
+<p id="story">You arrive at Walden Pond, seeking solitude and a deeper connection with nature. What do you do first?</p>
+<div class="choice"><button onclick="choose('explore')">Explore the woods</button> <button onclick="choose('build')">Build a cabin</button></div>
+</div></body></html>

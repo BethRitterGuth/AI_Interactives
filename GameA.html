@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poetry Quest: An Interactive Adventure in Verse</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #27ae60;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        h1 { font-size: 2.8rem; margin-bottom: 10px; }
+        h2 { font-size: 1.8rem; color: var(--secondary); margin: 20px 0; }
+        .scene {
+            padding: 40px;
+            min-height: 500px;
+            display: none;
+        }
+        .scene.active { display: block; animation: fadeIn 0.8s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        .narrative {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            background: var(--light);
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 6px solid var(--secondary);
+        }
+        .choices {
+            display: grid;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        button {
+            padding: 15px 25px;
+            font-size: 1.1rem;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background: #2980b9;
+            transform: translateY(-3px);
+        }
+        button.correct { background: var(--success); }
+        button.incorrect { background: var(--accent); }
+        
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        label { font-weight: bold; }
+        .feedback {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .feedback.correct { background: #d5efda; border: 2px solid var(--success); color: var(--success); }
+        .feedback.incorrect { background: #fadbd8; border: 2px solid var(--accent); color: var(--accent); }
+        
+        .progress {
+            height: 10px;
+            background: #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        .progress-bar {
+            height: 100%;
+            background: var(--secondary);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        .score-display {
+            font-size: 2rem;
+            text-align: center;
+            color: var(--success);
+            margin: 30px 0;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            font-size: 0.9rem;
+        }
+        img.scene-img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+            .scene { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Poetry Quest</h1>
+            <p>An Interactive Adventure in Reading and Writing Poetry</p>
+        </header>
+
+        <div class="card">
+            <div id="scene-welcome" class="scene active">
+                <div class="narrative">
+                    <h2>Welcome, Poet!</h2>
+                    <p>You stand at the gates of the ancient City of Verse. For centuries, poets have entered these gates to master the arts of rhyme, rhythm, image, and metaphor. Today, you begin your own journey.</p>
+                    <p>Before we begin, please tell us who you are:</p>
+                </div>
+                
+                <div style="max-width: 500px; margin: 0 auto;">
+                    <label for="studentName">Your Name:</label>
+                    <input type="text" id="studentName" placeholder="e.g., Emily Dickinson" required>
+                    
+                    <label for="studentEmail">Your Email:</label>
+                    <input type="email" id="studentEmail" placeholder="you@desales.edu" required>
+                    
+                    <button onclick="startGame()" style="margin-top: 20px; width: 100%; padding: 18px;">Enter the City of Verse</button>
+                </div>
+            </div>
+
+            <!-- Scene 1: Rhyme Scheme -->
+            <div id="scene-rhyme" class="scene">
+                <div class="progress"><div class="progress-bar" style="width: 20%;"></div></div>
+                <div class="narrative">
+                    <h2>The Rhyming Fountain</h2>
+                    <p>You arrive at a beautiful fountain where words dance and play. A stone tablet reads:</p>
+                    <blockquote style="background:#f8f9fa; padding:20px; border-radius:8px; margin:20px 0; font-style:italic;">
+                        The sun does rise with golden grace (A)<br>
+                        To paint the sky in light's embrace (A)<br>
+                        The shadows flee from morning's call (B)<br>
+                        As daylight breaks to greet us all (B)
+                    </blockquote>
+                    <p>The fountain spirit asks: <strong>"What is the rhyme scheme of this quatrain?"</strong></p>
+                </div>
+                <img src="https://images.pexels.com/photos/235605/pexels-photo-235605.jpeg" alt="Ancient stone fountain with flowing water" class="scene-img">
+                <div class="choices">
+                    <button onclick="answer(1, 'AABB', true)">AABB</button>
+                    <button onclick="answer(1, 'ABAB', false)">ABAB</button>
+                    <button onclick="answer(1, 'ABBA', false)">ABBA</button>
+                    <button onclick="answer(1, 'AAAA', false)">AAAA</button>
+                </div>
+                <div id="feedback-1"></div>
+            </div>
+
+            <!-- Scene 2: Meter -->
+            <div id="scene-meter" class="scene">
+                <div class="progress"><div class="progress-bar" style="width: 40%;"></div></div>
+                <div class="narrative">
+                    <h2>The Bridge of Rhythm</h2>
+                    <p>To cross the river, you must walk across a bridge made of drumbeats. Each plank has a line of poetry. You must identify the meter to cross safely.</p>
+                    <p>The bridge keeper chants:</p>
+                    <blockquote style="font-style:italic; background:#f8f9fa; padding:20px; border-radius:8px;">
+                        Shall I compare thee to a summer's day?<br>
+                        Thou art more lovely and more temperate
+                    </blockquote>
+                    <p><strong>What meter is this written in?</strong></p>
+                </div>
+                <img src="https://images.pexels.com/photos/1444772/pexels-photo-1444772.jpeg" alt="Ancient wooden bridge over a misty river" class="scene-img">
+                <div class="choices">
+                    <button onclick="answer(2, 'iambic pentameter', true)">Iambic Pentameter</button>
+                    <button onclick="answer(2, 'trochaic tetrameter', false)">Trochaic Tetrameter</button>
+                    <button onclick="answer(2, 'anapestic trimeter', false)">Anapestic Trimeter</button>
+                    <button onclick="answer(2, 'free verse', false)">Free Verse</button>
+                </div>
+                <div id="feedback-2"></div>
+            </div>
+
+            <!-- Scene 3: Imagery -->
+            <div id="scene-imagery" class="scene">
+                <div class="progress"><div class="progress-bar" style="width: 60%;"></div></div>
+                <div class="narrative">
+                    <h2>The Garden of Images</h2>
+                    <p>You enter a magical garden where every flower is made of words. A sign reads: "Only those who can see with their mind's eye may pick the flowers."</p>
+                    <p>Which of these lines contains the strongest sensory imagery?</p>
+                </div>
+                <img src="https://images.pexels.com/photos/1368382/pexels-photo-1368382.jpeg" alt="Lush garden with colorful flowers" class="scene-img">
+                <div class="choices">
+                    <button onclick="answer(3, 'The rose was red', false)">The rose was red</button>
+                    <button onclick="answer(3, 'The velvet petals dripped with morning dew, releasing a perfume of honey and earth', true)">The velvet petals dripped with morning dew, releasing a perfume of honey and earth</button>
+                    <button onclick="answer(3, 'Roses are pretty flowers', false)">Roses are pretty flowers</button>
+                    <button onclick="answer(3, 'I like flowers a lot', false)">I like flowers a lot</button>
+                </div>
+                <div id="feedback-3"></div>
+            </div>
+
+            <!-- Scene 4: Metaphor Creation -->
+            <div id="scene-metaphor" class="scene">
+                <div class="progress"><div class="progress-bar" style="width: 80%;"></div></div>
+                <div class="narrative">
+                    <h2>The Forge of Metaphor</h2>
+                    <p>At the heart of the city stands a great forge. The master smith turns to you and says:</p>
+                    <p>"True poets do not say 'I am sad.' They forge new connections between unlike things. Create a metaphor for 'hope' that compares it to something unexpected."</p>
+                    <p>Write a metaphor in the form: <strong>Hope is ________</strong></p>
+                </div>
+                <img src="https://images.pexels.com/photos/2351722/pexels-photo-2351722.jpeg" alt="Blacksmith working at a glowing forge" class="scene-img">
+                <textarea id="metaphor-answer" rows="3" placeholder="e.g., Hope is a small green shoot pushing through concrete..."></textarea>
+                <button onclick="submitMetaphor()">Forge My Metaphor</button>
+                <div id="feedback-4"></div>
+            </div>
+
+            <!-- Final Scene: Results -->
+            <div id="scene-results" class="scene">
+                <div class="progress"><div class="progress-bar" style="width: 100%;"></div></div>
+                <div class="narrative">
+                    <h2>Congratulations, Master Poet!</h2>
+                    <p>You have completed your journey through the City of Verse and proven your understanding of its sacred arts.</p>
+                    <div class="score-display" id="final-score">Score: 0/100</div>
+                    <div id="summary-text"></div>
+                    <button onclick="submitAssignment()" style="background: var(--success); margin-top: 30px; padding: 20px; font-size: 1.4rem;">
+                        Submit Assignment to Professor Ritter-Guth
+                    </button>
+                    <p style="margin-top: 20px; font-size: 0.9rem; color: #666;">
+                        Your results will be emailed to beth.ritter-guth@desales.edu<br>
+                        Make sure your name and email were entered correctly!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Poetry Quest © 2025 | ENGL 100 Interactive Assignment | DeSales University</p>
+    </footer>
+
+    <script>
+        let studentName = "";
+        let studentEmail = "";
+        let score = 0;
+        let totalQuestions = 4;
+        let answers = {};
+
+        function startGame() {
+            studentName = document.getElementById('studentName').value.trim();
+            studentEmail = document.getElementById('studentEmail').value.trim();
+            
+            if (!studentName || !studentEmail) {
+                alert("Please enter both your name and email before beginning.");
+                return;
+            }
+            
+            document.getElementById('scene-welcome').classList.remove('active');
+            document.getElementById('scene-rhyme').classList.add('active');
+        }
+
+        function answer(question, choice, isCorrect) {
+            answers[question] = { choice, isCorrect };
+            if (isCorrect) {
+                score += 25;
+                document.getElementById(`feedback-${question}`).innerHTML = 
+                    `<div class="feedback correct">✓ Correct! Well done, poet.</div>`;
+            } else {
+                document.getElementById(`feedback-${question}`).innerHTML = 
+                    `<div class="feedback incorrect">✗ Not quite. The correct answer is highlighted below.</div>`;
+            }
+
+            // Disable buttons
+            const buttons = document.querySelectorAll(`#scene-${question === 1 ? 'rhyme' : question === 2 ? 'meter' : 'imagery'} button`);
+            buttons.forEach(btn => {
+                if (btn.textContent.includes(choice === true ? choice : answers[question].choice)) {
+                    btn.classList.add('correct');
+                }
+                btn.disabled = true;
+            });
+
+            setTimeout(() => {
+                const scenes = ['rhyme', 'meter', 'imagery', 'metaphor'];
+                const currentIndex = scenes.indexOf(question === 1 ? 'rhyme' : question === 2 ? 'meter' : 'imagery');
+                if (currentIndex < scenes.length - 1) {
+                    document.querySelector('.scene.active').classList.remove('active');
+                    document.getElementById(`scene-${scenes[currentIndex + 1]}`).classList.add('active');
+                } else {
+                    document.querySelector('.scene.active').classList.remove('active');
+                    document.getElementById('scene-metaphor').classList.add('active');
+                }
+            }, 2500);
+        }
+
+        function submitMetaphor() {
+            const metaphor = document.getElementById('metaphor-answer').value.trim();
+            if (metaphor.length < 10) {
+                alert("Please write a complete metaphor (at least 10 characters).");
+                return;
+            }
+            
+            answers[4] = { choice: metaphor, isCorrect: true }; // Creative answers are accepted
+            score += 25;
+            
+            document.getElementById('feedback-4').innerHTML = 
+                `<div class="feedback correct">✓ Beautiful! Your metaphor has been forged. You are now a true poet.</div>`;
+            
+            setTimeout(() => {
+                document.getElementById('scene-metaphor').classList.remove('active');
+                showResults();
+            }, 3000);
+        }
+
+        function showResults() {
+            document.getElementById('scene-results').classList.add('active');
+            const percentage = Math.round((score / (totalQuestions * 25)) * 100);
+            document.getElementById('final-score').textContent = `Score: ${score}/100 (${percentage}%)`;
+            
+            let summary = `<p><strong>${studentName}</strong>, your poetic journey is complete!</p>`;
+            summary += `<p>You demonstrated understanding of:</p><ul>`;
+            if (answers[1]?.isCorrect) summary += `<li>✓ Rhyme Scheme</li>`;
+            else summary += `<li>✗ Rhyme Scheme</li>`;
+            if (answers[2]?.isCorrect) summary += `<li>✓ Meter</li>`;
+            else summary += `<li>✗ Meter</li>`;
+            if (answers[3]?.isCorrect) summary += `<li>✓ Imagery</li>`;
+            else summary += `<li>✗ Imagery</li>`;
+            summary += `<li>✓ Creative Metaphor: "${answers[4]?.choice}"</li></ul>`;
+            
+            document.getElementById('summary-text').innerHTML = summary;
+        }
+
+        function submitAssignment() {
+            const percentage = Math.round((score / 100) * 100);
+            const subject = encodeURIComponent(`Poetry Quest Results - ${studentName}`);
+            const body = encodeURIComponent(`
+POETRY QUEST - INTERACTIVE ASSIGNMENT RESULTS
+================================================
+
+Student: ${studentName}
+Email: ${studentEmail}
+Date: ${new Date().toLocaleDateString()}
+
+FINAL SCORE: ${score}/100 (${percentage}%)
+
+Your metaphor for hope:
+"${answers[4]?.choice}"
+
+Question Breakdown:
+1. Rhyme Scheme: ${answers[1]?.isCorrect ? 'Correct ✓' : 'Incorrect ✗'}
+2. Meter (Shakespeare): ${answers[2]?.isCorrect ? 'Correct ✓' : 'Incorrect ✗'}
+3. Imagery: ${answers[3]?.isCorrect ? 'Correct ✓' : 'Incorrect ✗'}
+4. Original Metaphor: Accepted ✓
+
+Great work exploring the City of Verse!
+- Professor Beth Ritter-Guth
+            `.trim());
+
+            window.location.href = `mailto:beth.ritter-guth@desales.edu?subject=${subject}&body=${body}`;
+        }
+
+        // Accessibility: Allow Enter key in inputs
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && document.activeElement.tagName === 'INPUT') {
+                startGame();
+            }
+        });
+    </script>
+</body>
+</html>

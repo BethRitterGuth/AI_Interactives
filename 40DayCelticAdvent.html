@@ -1,0 +1,894 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Great Winter Vigil: 40-Day Celtic Advent in Palmerton, PA</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #006400; /* Dark green for Celtic feel */
+        }
+        #calendar {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            max-width: 1200px;
+            margin: 0 auto 20px;
+        }
+        .day {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+        }
+        .day svg {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 5px;
+        }
+        .day .date {
+            font-size: 12px;
+        }
+        .day input[type="checkbox"] {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+        }
+        #modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        #modalContent {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        #journalEntry {
+            width: 100%;
+            height: 150px;
+            margin: 10px 0;
+        }
+        button {
+            background-color: #006400;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #004d00;
+        }
+        .youtube-link {
+            color: #006400;
+            text-decoration: none;
+        }
+        .reset-buttons {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .gaelic-section {
+            font-style: italic;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>The Great Winter Vigil: Scottish Spirituality in the Hills of Palmerton, PA</h1>
+    <div class="reset-buttons">
+        <button id="resetProgress">Reset Progress</button>
+        <button id="resetJournal">Reset Journal</button>
+    </div>
+    <div id="calendar"></div>
+    <div id="modal">
+        <div id="modalContent">
+            <!-- Content will be injected here -->
+            <textarea id="journalEntry"></textarea>
+            <button id="saveEntry">Save Entry</button>
+            <button id="closeModal">Close</button>
+        </div>
+    </div>
+
+    <script>
+        const days = [
+            {
+                day: 1,
+                date: 'November 15, 2025',
+                feast: 'St. Machar – Aberdeen’s grey shore',
+                theme: 'Descent into winter’s womb – the Cailleach rules the land.',
+                essay: 'We begin where the Picts ended – at the edge of the known world, Aberdeen’s grey shore. Forty days of night-watching start now.',
+                prayer: 'God to enfold me, God to surround me, God in my speaking and my thinking, this night and ever. (CG 1)',
+                hymn: 'Tàladh Chrìosda (Christ-Child Lullaby) – slow Gaelic version from Barra.',
+                youtube: 'https://www.youtube.com/watch?v=-oVIXmABikY',
+                prompt: 'Draw the exact shape of the frost on your Palmerton window this morning. What promise is written there?',
+                gaelic: {
+                    text: 'Slàinte mhòr agus a h-uile beannachd dhuibh.',
+                    english: 'Great health and every good blessing to you.',
+                    source: 'Scottish Gaelic Blessing'
+                }
+            },
+            {
+                day: 2,
+                date: 'November 16, 2025',
+                feast: 'Cailleach strikes the ground',
+                theme: 'Descent into winter’s womb – the Cailleach rules the land.',
+                essay: 'The Cailleach Bheur (Winter Hag) strikes the ground; frost flowers bloom. She is not enemy but midwife of spring.',
+                prayer: 'I lie down with the Hag of Winter, I rise with the Maiden of Spring.',
+                hymn: 'Duan Nollaig (Christmas Poem) – mouth-music only.',
+                youtube: 'https://www.youtube.com/watch?v=a8v0_Hj_cG4',
+                prompt: 'Name one “old hag” belief you are ready to let her hammer crack open today.',
+                gaelic: {
+                    text: 'A h-uile là sona dhuibh ‘s gun là idir dona dhuibh!',
+                    english: 'May all your days be happy ones!',
+                    source: 'Scottish Gaelic Blessing'
+                }
+            },
+            {
+                day: 3,
+                date: 'November 17, 2025',
+                feast: 'Columba’s star falls west',
+                theme: 'Descent into winter’s womb – the Cailleach rules the land.',
+                essay: 'St. Columba’s exile dream: “I saw a star fall into the western sea.”',
+                prayer: 'Kindle Thou in my heart a flame of love to my neighbour, to my foe, to my friend, to my kindred all. (CG 138)',
+                hymn: 'Rorate Caeli – plainchant from Inchcolm Antiphoner.',
+                youtube: 'https://www.youtube.com/watch?v=0snRfbtGFxU',
+                prompt: 'Where in your body do you feel the fallen star burning tonight?',
+                gaelic: {
+                    text: 'Ta mi cur m\' anama \'s mo chorp',
+                    english: 'I am placing my soul and my body',
+                    source: 'Urnuigh Chadail (Sleeping Prayer) - Carmina Gadelica Hymn 29'
+                }
+            },
+            {
+                day: 4,
+                date: 'November 18, 2025',
+                feast: 'Deer cry on the moor',
+                theme: 'Descent into winter’s womb – the Cailleach rules the land.',
+                essay: 'The deer cry on the moor – ancient Celtic sign of souls stirring.',
+                prayer: 'The guarding of the Three upon thee, the keeping of the King of heaven, the peace of the King of life.',
+                hymn: 'Sounds of the Glen (fiddle lament).',
+                youtube: 'https://www.youtube.com/watch?v=jRwM95soZec',
+                prompt: 'Recall a moment you heard an animal sound in Carbon County today – what was it telling you?',
+                gaelic: {
+                    text: 'Biodh do lamh dheas, a Dhe',
+                    english: 'Be Thy right hand, O God',
+                    source: 'Beannachadh Cadail (Sleep Blessing) - Carmina Gadelica Hymn 26'
+                }
+            },
+            {
+                day: 5,
+                date: 'November 19, 2025',
+                feast: 'Ninian’s candle, Whithorn',
+                theme: 'Descent into winter’s womb – the Cailleach rules the land.',
+                essay: 'St. Ninian’s candle at Whithorn: first light in dark Scotland.',
+                prayer: 'Be the bright moon about me, be the guiding star before me.',
+                hymn: 'Ninian’s Prayer – Whithorn Cathedral Choir.',
+                youtube: 'https://www.youtube.com/watch?v=TA3oxT3uaV8',
+                prompt: 'Light a candle at 5:55 pm EST. Write what the flame says to the Pennsylvania dark.',
+                gaelic: {
+                    text: 'Togaidh mi mo theine an diugh',
+                    english: 'I will kindle my fire this morning',
+                    source: 'Beannachadh Beothachaidh (Blessing of the Kindling) - Carmina Gadelica Hymn 82'
+                }
+            },
+            {
+                day: 6,
+                date: 'November 20, 2025',
+                feast: 'Book of Deer monks & wolves',
+                theme: 'Descent into winter’s womb – the Cailleach rules the land.',
+                essay: 'The Book of Deer (c. 850): Gaelic monks copy Gospels while wolves howl outside.',
+                prayer: 'I am placing my soul and my body under Thy guarding this night, O Christ.',
+                hymn: 'Gaelic Psalm 23 – Back Free Church style.',
+                youtube: 'https://www.youtube.com/watch?v=k3MzZgPBL3Q',
+                prompt: 'Who is the wolf at your door right now? Invite it to sit by the fire and listen.',
+                gaelic: {
+                    text: 'Bho is tu is Buachaill',
+                    english: 'As Thou art the Shepherd',
+                    source: 'Achanaidh Comhnadh (Prayer for Protection) - Carmina Gadelica Hymn 13'
+                }
+            },
+            {
+                day: 7,
+                date: 'November 21, 2025',
+                feast: 'Kentigerna, island hermit',
+                theme: 'Descent into winter’s womb – the Cailleach rules the land.',
+                essay: 'St. Kentigerna of Loch Lomond retreats to Inchtavannach – island of the monk’s cell.',
+                prayer: 'O Mother of the White Hands, keep me in thy mantle of mercy.',
+                hymn: 'Kentigerna’s Song – modern Hebridean chant.',
+                youtube: 'https://www.youtube.com/watch?v=imrG21mOXE4',
+                prompt: 'If you fled to an island in the Lehigh River tomorrow, what three objects would you carry?',
+                gaelic: {
+                    text: 'Ainghil Dhe a fhuair mo churam',
+                    english: 'Thou angel of God who hast charge',
+                    source: 'An t-Aingheal Diona (The Guardian Angel) - Carmina Gadelica Hymn 18'
+                }
+            },
+            {
+                day: 8,
+                date: 'November 22, 2025',
+                feast: 'Selkie wives leave skins',
+                theme: 'Descent into winter’s womb – the Cailleach rules the land.',
+                essay: 'The selkie wives leave their sealskins on the shore – souls longing for incarnation.',
+                prayer: 'From the waves Thou camest, to the waves return me not.',
+                hymn: 'Selkie Hymn – Julie Fowlis.',
+                youtube: 'https://www.youtube.com/watch?v=tsfN-SZciWE',
+                prompt: 'What “sealskin” (role or identity) did you shed today without noticing?',
+                gaelic: {
+                    text: 'Beannaicht an long',
+                    english: 'Blest be the boat',
+                    source: 'Urnuigh Mhara (Sea Prayer) - Carmina Gadelica Hymn 121'
+                }
+            },
+            {
+                day: 9,
+                date: 'November 23, 2025',
+                feast: 'Margaret in Dunfermline cave',
+                theme: 'Descent into winter’s womb – the Cailleach rules the land.',
+                essay: 'St. Margaret of Scotland prays in Dunfermline cave: royal yet barefoot.',
+                prayer: 'Be Thou my vision through the dark of this night.',
+                hymn: 'Be Thou My Vision – old Gaelic Slane melody.',
+                youtube: 'https://www.youtube.com/watch?v=6AdBkEJurR4',
+                prompt: 'Walk barefoot for 60 seconds on your coldest floor. Write what the stone taught your soles.',
+                gaelic: {
+                    text: 'Dhe, teasruig an tigh',
+                    english: 'God shield the house',
+                    source: 'Achanaidh Taimh (A resting Prayer) - Carmina Gadelica Hymn 43'
+                }
+            },
+            {
+                day: 10,
+                date: 'November 24, 2025',
+                feast: 'Ember-tide breath-holding',
+                theme: 'Descent into winter’s womb – the Cailleach rules the land.',
+                essay: 'Last night before the ember-tide: “The world holds its breath.”',
+                prayer: 'The Three who are over me, the Three who are below me, the Three who are within me.',
+                hymn: 'Trinity Ember Song – North Uist.',
+                youtube: 'https://www.youtube.com/watch?v=CoftkEOJTL0',
+                prompt: 'Hold your breath for 40 seconds. In the silence, what name did you hear?',
+                gaelic: {
+                    text: 'An ainm an Tighearn Iosa',
+                    english: 'In name of the Lord Jesus',
+                    source: 'Beannachd Taimh (Resting Blessing) - Carmina Gadelica Hymn 32'
+                }
+            },
+            {
+                day: 11,
+                date: 'November 25, 2025',
+                feast: 'St. Andrew’s Eve net-mending',
+                theme: 'Emptying like winter lochs, making room.',
+                essay: 'St. Andrew’s Eve: fishermen mend nets by candle. “Prepare the heart-net.”',
+                prayer: 'Bless, O Threefold True and Bountiful, my boat and my body.',
+                hymn: 'St. Andrew’s Grace – Shetland fiddle.',
+                youtube: 'https://www.youtube.com/watch?v=ZfI3dGS-uh4',
+                prompt: 'Sketch the “heart-net” you are mending for Christ to be caught in.',
+                gaelic: {
+                    text: 'Laighim sios an nochd mar is coir',
+                    english: 'I am lying down to-night as beseems',
+                    source: 'Beannachadh Leapa (Bed Blessing) - Carmina Gadelica Hymn 34'
+                }
+            },
+            {
+                day: 12,
+                date: 'November 26, 2025',
+                feast: 'Geese arrow south over Arran',
+                theme: 'Emptying like winter lochs, making room.',
+                essay: 'The geese fly south over Arran – arrow of the Spirit.',
+                prayer: 'Be the swan’s wing over me.',
+                hymn: 'Wild Goose Song – Iona Community.',
+                youtube: 'https://www.youtube.com/watch?v=VTV9lU-DHwM',
+                prompt: 'Track every V of geese above Palmerton today. How many arrows pointed you home?',
+                gaelic: {
+                    text: 'Taing dhut Iosda Criosda',
+                    english: 'Thanks be to Thee, Jesus Christ',
+                    source: 'Urnuigh Maduinn (Morning Prayer) - Carmina Gadelica Hymn 41'
+                }
+            },
+            {
+                day: 13,
+                date: 'November 27, 2025',
+                feast: 'Maelrubha’s 40-day stone hut',
+                theme: 'Emptying like winter lochs, making room.',
+                essay: 'St. Maelrubha of Applecross fasts 40 days in a stone hut.',
+                prayer: 'Hunger me for Thee alone.',
+                hymn: 'Applecross Lament.',
+                youtube: 'https://www.youtube.com/watch?v=72L8D8orHc4',
+                prompt: 'Fast from one complaint today. Record the hunger pangs as prayer.',
+                gaelic: {
+                    text: 'Dhe, beannaich an taigh',
+                    english: 'God bless the house',
+                    source: 'Beannachadh Taighe (Blessing of House) - Carmina Gadelica Hymn 45'
+                }
+            },
+            {
+                day: 14,
+                date: 'November 28, 2025',
+                feast: 'Moluag’s ravens feed the hermit',
+                theme: 'Emptying like winter lochs, making room.',
+                essay: 'The ravens of St. Moluag feed the hermit on Lismore.',
+                prayer: 'Raven of God, bring me my daily bread.',
+                hymn: 'Moluag’s Raven – Gaelic waulking song.',
+                youtube: 'https://www.youtube.com/watch?v=bOIZC16Jtz8',
+                prompt: 'Leave a crumb outside tonight. Who came? What message did they croak?',
+                gaelic: {
+                    text: 'Fad do ré gun robh thu slàn.',
+                    english: 'May you be healthy all your days.',
+                    source: 'Scottish Gaelic Wedding Blessing'
+                }
+            },
+            {
+                day: 15,
+                date: 'November 29, 2025',
+                feast: 'Callanish moon avenue',
+                theme: 'Emptying like winter lochs, making room.',
+                essay: 'First frost on the Standing Stones of Callanish – moon climbs the avenue.',
+                prayer: 'Ancient stones, bear witness to the Coming.',
+                hymn: 'Callanish Moon – Capercaillie.',
+                youtube: 'https://www.youtube.com/watch?v=HF8BkEul5s',
+                prompt: 'Stand under the rising moon. Write the moon’s exact message in one Gaelic-sounding word.',
+                gaelic: {
+                    text: 'Móran làithean dhuit is sìth.',
+                    english: 'May you be blessed with long life and peace.',
+                    source: 'Scottish Gaelic Wedding Blessing'
+                }
+            },
+            {
+                day: 16,
+                date: 'November 30, 2025',
+                feast: 'First Sunday of Advent – Light 2 candles',
+                theme: 'Hope rises.',
+                essay: 'Awakening to ancient promises, like the druidic seers of old who awaited light in the solstice dark. In Scottish Celtic lore, hope stirs in the lengthening shadows of Samhain\'s wake.',
+                prayer: 'I am bending my knee in the eye of the Father… (full Week 1 prayer from original plan)',
+                hymn: 'Advent Song – New Scottish Hymns.',
+                youtube: 'https://www.youtube.com/watch?v=NbBkEWWw',
+                prompt: 'Hope is a Scottish colour – what shade was it in Palmerton today?',
+                gaelic: {
+                    text: 'Dhe, thug mis a fois na h-oidhch',
+                    english: 'O God, who broughtst me',
+                    source: 'Solus-iuil na Siorruidheachd (The guiding light of Eternity) - Carmina Gadelica Hymn 11'
+                }
+            },
+            {
+                day: 17,
+                date: 'December 1, 2025',
+                feast: 'Fillan’s bell rings alone',
+                theme: 'Emptying like winter lochs, making room.',
+                essay: 'St. Fillan’s bell rings of its own accord in Glendochart.',
+                prayer: 'Ring Thou in my heart, O holy bell.',
+                hymn: 'Fillan’s Bell – pipe reel.',
+                youtube: 'https://www.youtube.com/watch?v=acACwo4_5VY',
+                prompt: 'Ring a bell (or spoon on glass) at 7 pm. Whose heart answered?',
+                gaelic: {
+                    text: 'Thi tha chomhnadh nan ard',
+                    english: 'O Thou who pervadest the heights',
+                    source: 'Beannachadh Cuain (The Ocean Blessing) - Carmina Gadelica Hymn 118'
+                }
+            },
+            {
+                day: 18,
+                date: 'December 2, 2025',
+                feast: 'Salmon of knowledge leaps Dee',
+                theme: 'Emptying like winter lochs, making room.',
+                essay: 'The salmon of knowledge leaps in the River Dee.',
+                prayer: 'Give me wisdom deeper than seven rivers.',
+                hymn: 'Salmon Psalm – mouth-music.',
+                youtube: 'https://www.youtube.com/watch?v=6keJ3I5e6UI',
+                prompt: 'Eat one bite mindfully. What wisdom swam into your mouth?',
+                gaelic: {
+                    text: 'Beannachd Dia/Dhè dhut.',
+                    english: 'Blessings of God be with you.',
+                    source: 'Scottish Gaelic Blessing'
+                }
+            },
+            {
+                day: 19,
+                date: 'December 3, 2025',
+                feast: 'Drostan’s tears water Gospel',
+                theme: 'Emptying like winter lochs, making room.',
+                essay: 'St. Drostan weeps at Deer Abbey – tears water the Gospel.',
+                prayer: 'Let my tears be seed.',
+                hymn: 'Drostan’s Tears – slow air.',
+                youtube: 'https://www.youtube.com/watch?v=9xTCwYkD72s',
+                prompt: 'Collect one tear (real or imagined) in a tiny bowl. Plant it with a seed tomorrow.',
+                gaelic: {
+                    text: 'Nollaig chridheil agus Bliadhma mhath ùr!',
+                    english: 'Merry Christmas and a Happy New Year!',
+                    source: 'Scottish Gaelic Holiday Wish'
+                }
+            },
+            {
+                day: 20,
+                date: 'December 4, 2025',
+                feast: 'Wren, smallest king',
+                theme: 'Emptying like winter lochs, making room.',
+                essay: 'The wren is hunted (old Wren Day eve) – smallest bird, greatest king.',
+                prayer: 'Little king, hide me in Thy feathers.',
+                hymn: 'The Wren Song – Gaelic.',
+                youtube: 'https://www.youtube.com/watch?v=o8jUwJJCr2E',
+                prompt: 'Find the smallest bird you can today. Crown it in your journal.',
+                gaelic: {
+                    text: 'Hoire ! hoire ! beannaicht e!',
+                    english: 'Hail King! hail King! blessed is He!',
+                    source: 'Duan Nollaig (Christmas Carol) - Carmina Gadelica Hymn 56'
+                }
+            },
+            {
+                day: 21,
+                date: 'December 5, 2025',
+                feast: 'Mungo’s robin revives',
+                theme: 'Life stirs beneath the frost.',
+                essay: 'St. Mungo’s robin revives in Glasgow cathedral yard.',
+                prayer: 'Revive Thou my frozen heart.',
+                hymn: 'Mungo’s Robin – children’s Gaelic.',
+                youtube: 'https://www.youtube.com/watch?v=eECBk9PtSW8',
+                prompt: 'Draw a robin on your left palm. Let its heartbeat warm you all day.',
+                gaelic: {
+                    text: 'Ho Ri, ho Ri',
+                    english: 'Hail to the King, hail to the King',
+                    source: 'Nuall Nollaig (Christmas Hail) - Carmina Gadelica Hymn 55'
+                }
+            },
+            {
+                day: 22,
+                date: 'December 6, 2025',
+                feast: 'Rowan berries bleed protection',
+                theme: 'Life stirs beneath the frost.',
+                essay: 'The Rowan tree bleeds red berries – protection against dark.',
+                prayer: 'Rowan and red thread, keep evil from the stead.',
+                hymn: 'Rowan Tree – traditional.',
+                youtube: 'https://www.youtube.com/watch?v=KMrldnhS_MY',
+                prompt: 'Tie a red string on your wrist. What evil did it turn away before sunset?',
+                gaelic: {
+                    text: 'Chunnacas an Oigh a teachd',
+                    english: 'Behold the Virgin approaching',
+                    source: 'The Virgin and Child - Carmina Gadelica Hymn 61'
+                }
+            },
+            {
+                day: 23,
+                date: 'December 7, 2025',
+                feast: 'Second Sunday of Advent – Light 3 candles',
+                theme: 'Peace.',
+                essay: 'Inner stillness amid winter\'s fury, drawing from Scottish hermits who sought peace in beehive cells, preparing souls like fertile soil for the seed of God.',
+                prayer: 'The peace of the kind Christ upon my breast… (full Week 2 prayer from original plan)',
+                hymn: 'Come, Thou Long Expected Jesus – Scottish Festival Singers.',
+                youtube: 'https://www.youtube.com/watch?v=kDXBkEJurR4',
+                prompt: 'Walk your street at dusk. Where did peace hide in Palmerton tonight?',
+                gaelic: {
+                    text: 'Oidhche sin a dhealraich an reult',
+                    english: 'That night the star shone',
+                    source: 'Rugadh Buachaille (The Shepherd of the Flock) - Carmina Gadelica Hymn 62'
+                }
+            },
+            {
+                day: 24,
+                date: 'December 8, 2025',
+                feast: 'Immaculate Conception – Clean Heart',
+                theme: 'Life stirs beneath the frost.',
+                essay: 'Immaculate Conception (old Scots “Feast o’ the Clean Heart”).',
+                prayer: 'Mary of the Clean Heart, wash me.',
+                hymn: 'Gaelic Ave Maria – Barra.',
+                youtube: 'https://www.youtube.com/watch?v=7ttqFjqzBF4',
+                prompt: 'Wash one object slowly. Write what stain left your soul.',
+                gaelic: {
+                    text: 'Dhe, beannaich dhomh an la ur',
+                    english: 'God, bless to me the new day',
+                    source: 'Beannachadh Bliadhna Uir (Blessing of the New Year) - Carmina Gadelica Hymn 67'
+                }
+            },
+            {
+                day: 25,
+                date: 'December 9, 2025',
+                feast: 'Cuthbert’s otter brings fish',
+                theme: 'Life stirs beneath the frost.',
+                essay: 'The otter brings fish to St. Cuthbert on the Farne (Scots border tale).',
+                prayer: 'Playful joy of otter, teach me.',
+                hymn: 'Cuthbert’s Otter – new composition.',
+                youtube: 'https://www.youtube.com/watch?v=YHVpPpzSqKI',
+                prompt: 'Do one unnecessary playful act today. Record the ripple.',
+                gaelic: {
+                    text: 'Gum bi thu, a naoinein bhig, fallain, ionraic, sona air feadh do bheatha gu léir.',
+                    english: 'May you, little baby, be healthy, honest and happy all throughout your life.',
+                    source: 'Scottish Gaelic Baby Blessing'
+                }
+            },
+            {
+                day: 26,
+                date: 'December 10, 2025',
+                feast: 'Colman’s geese return',
+                theme: 'Life stirs beneath the frost.',
+                essay: 'St. Colman’s geese return to the Hebrides.',
+                prayer: 'Be the wild goose calling me home.',
+                hymn: 'Wild Goose Chase – reel.',
+                youtube: 'https://www.youtube.com/watch?v=F3xuXERru9A',
+                prompt: 'Shout one wild call into the night. What answered from the hills?',
+                gaelic: {
+                    text: 'Gum bi do bheatha a’ frasadh ort, a naoinein bhig; an fhallaineachd, an ionracas is an sonas mar thiodhlacan.',
+                    english: 'May your life be fruitful, little baby; health, honesty and happiness be your gifts.',
+                    source: 'Scottish Gaelic Baby Blessing'
+                }
+            },
+            {
+                day: 27,
+                date: 'December 11, 2025',
+                feast: '40-day hearth flame',
+                theme: 'Life stirs beneath the frost.',
+                essay: 'The hearth fire must not go out – 40-day vigil flame.',
+                prayer: 'Sacred Three, keep my fire bright.',
+                hymn: 'Flame of the Hearth – puirt-à-beul.',
+                youtube: 'https://www.youtube.com/watch?v=7QXlIg3AuAA',
+                prompt: 'Stare into your flame for 40 seconds. What shape did it make?',
+                gaelic: {
+                    text: 'Nollaig Chridheil',
+                    english: 'Merry Christmas',
+                    source: 'Scottish Gaelic Christmas Phrase'
+                }
+            },
+            {
+                day: 28,
+                date: 'December 12, 2025',
+                feast: 'Our Lady of the Isles weeps',
+                theme: 'Life stirs beneath the frost.',
+                essay: 'Our Lady of the Isles statue weeps on South Uist.',
+                prayer: 'Mother of Sorrows, hold my grief.',
+                hymn: 'Mo Mhàthair – Hebridean lament.',
+                youtube: 'https://www.youtube.com/watch?v=PyYpmjCmsyo',
+                prompt: 'Hold a stone from your yard. Let it absorb one sorrow. Bury it tomorrow.',
+                gaelic: {
+                    text: 'Oidhche Nollaig',
+                    english: 'Christmas Eve',
+                    source: 'Scottish Gaelic Christmas Phrase'
+                }
+            },
+            {
+                day: 29,
+                date: 'December 13, 2025',
+                feast: 'St. Lucy – eyes of light',
+                theme: 'Life stirs beneath the frost.',
+                essay: 'St. Lucy’s Day – last of the ember light.',
+                prayer: 'Lucy, bright martyr, lend me thine eyes.',
+                hymn: 'Santa Lucia – Scots-Gaelic version.',
+                youtube: 'https://www.youtube.com/watch?v=tIns4N-pTH0',
+                prompt: 'Look into a mirror by candlelight. What did your eyes see that daylight hides?',
+                gaelic: {
+                    text: 'Craobh na Nollaig',
+                    english: 'Christmas Tree',
+                    source: 'Scottish Gaelic Christmas Phrase'
+                }
+            },
+            {
+                day: 30,
+                date: 'December 14, 2025',
+                feast: 'Third Sunday of Advent – Light 4 candles',
+                theme: 'Joy.',
+                essay: 'Sparks of joy piercing the solstice night, akin to ancient Scottish Yule fires lit against the dark, celebrating the inner light of Christ.',
+                prayer: 'Thou Christ of the cresses and the candles… (full Week 3 prayer from original plan)',
+                hymn: 'Tar a Thighearna – Ruth Cunningham.',
+                youtube: 'https://www.youtube.com/watch?v=SY1TcnDZJv8',
+                prompt: 'Joy is a taste – what did you eat today that made you laugh out loud?',
+                gaelic: {
+                    text: 'Bodach na Nollaig',
+                    english: 'Santa',
+                    source: 'Scottish Gaelic Christmas Phrase'
+                }
+            },
+            {
+                day: 31,
+                date: 'December 15, 2025',
+                feast: 'O Wisdom Antiphon',
+                theme: 'The veil thins; heaven touches earth.',
+                essay: 'O Antiphons begin in old Scots use.',
+                prayer: 'O Wisdom… come!',
+                hymn: 'O Come, O Come Emmanuel – Gaelic verses.',
+                youtube: 'https://www.youtube.com/watch?v=72L2xQz0UW4',
+                prompt: 'Write one decision you will let ancient Wisdom make for you this week.',
+                gaelic: {
+                    text: 'Rionnag',
+                    english: 'Star',
+                    source: 'Scottish Gaelic Christmas Phrase'
+                }
+            },
+            {
+                day: 32,
+                date: 'December 16, 2025',
+                feast: 'Deer give birth in corries',
+                theme: 'The veil thins; heaven touches earth.',
+                essay: 'The deer give birth in the corries – silent miracle.',
+                prayer: 'Be born in me this night.',
+                hymn: 'Deer’s Birth – slow harp.',
+                youtube: 'https://www.youtube.com/watch?v=9XdBkE06FCw',
+                prompt: 'Where in your body is something trying to be born right now?',
+                gaelic: {
+                    text: 'Rèin-fhiadh',
+                    english: 'Reindeer',
+                    source: 'Scottish Gaelic Christmas Phrase'
+                }
+            },
+            {
+                day: 33,
+                date: 'December 17, 2025',
+                feast: 'Eunan’s bells over the sea',
+                theme: 'The veil thins; heaven touches earth.',
+                essay: 'St. Eunan’s cathedral, Raphoe – bells ring across the sea to Donegal Scots.',
+                prayer: 'Ring out, wild bells!',
+                hymn: 'Eunan’s Bells.',
+                youtube: 'https://www.youtube.com/watch?v=iGmMpcARjVs',
+                prompt: 'Ring every bell in your house once. What memory rang back?',
+                gaelic: {
+                    text: 'Tìodhlac',
+                    english: 'Gift',
+                    source: 'Scottish Gaelic Christmas Phrase'
+                }
+            },
+            {
+                day: 34,
+                date: 'December 18, 2025',
+                feast: 'Yule log dragged in',
+                theme: 'The veil thins; heaven touches earth.',
+                essay: 'The Yule log dragged in – oak from the sacred grove.',
+                prayer: 'Burn bright, old king, new king comes.',
+                hymn: 'Yule Log Song.',
+                youtube: 'https://www.youtube.com/watch?v=RbB9gRhUUG4',
+                prompt: 'Carry one heavy object slowly across your room. Feel the old year’s weight.',
+                gaelic: {
+                    text: 'Sneachd',
+                    english: 'Snow',
+                    source: 'Scottish Gaelic Christmas Phrase'
+                }
+            },
+            {
+                day: 35,
+                date: 'December 19, 2025',
+                feast: 'Finnian’s night vigil',
+                theme: 'The veil thins; heaven touches earth.',
+                essay: 'St. Finnian’s monks keep night vigil at Movilla.',
+                prayer: 'Keep Thou my soul awake.',
+                hymn: 'Finnian’s Vigil.',
+                youtube: 'https://www.youtube.com/watch?v=pb5OGBHii-M',
+                prompt: 'Stay awake 40 minutes past your usual bedtime. What did the dark tell you?',
+                gaelic: {
+                    text: 'Ìosa',
+                    english: 'Jesus',
+                    source: 'Scottish Gaelic Christmas Phrase'
+                }
+            },
+            {
+                day: 36,
+                date: 'December 20, 2025',
+                feast: 'Sun stands still',
+                theme: 'The veil thins; heaven touches earth.',
+                essay: 'The sun stands still at Newgrange (felt in Scots isles too).',
+                prayer: 'Sun of Righteousness, rise with healing!',
+                hymn: 'Solstice Hymn.',
+                youtube: 'https://www.youtube.com/watch?v=LsREsamcVJ4',
+                prompt: 'Stand still at noon. Feel the Pennsylvania sun halt just for you.',
+                gaelic: {
+                    text: 'Nollaig Chridheil agus Bliadhna Mhath Ùr!',
+                    english: 'Merry Christmas and Happy New Year!',
+                    source: 'Scottish Gaelic Christmas Phrase'
+                }
+            },
+            {
+                day: 37,
+                date: 'December 21, 2025',
+                feast: 'Fourth Sunday of Advent – Light all candles',
+                theme: 'Love.',
+                essay: 'Emmanuel\'s arrival in flesh and frost, echoing Scottish tales of divine love woven into the clan\'s hearth and the earth\'s embrace.',
+                prayer: 'Hail to Thee, loving Christ… (full Week 4 prayer from original plan)',
+                hymn: 'In Christ Alone – Celtic Worship.',
+                youtube: 'https://www.youtube.com/watch?v=8kvBkEJurR4',
+                prompt: 'Love is a scent – what smelled like love in your house today?',
+                gaelic: {
+                    text: 'Tha gaol agam ort.',
+                    english: 'I love you.',
+                    source: 'Scottish Gaelic Expression of Love'
+                }
+            },
+            {
+                day: 38,
+                date: 'December 22, 2025',
+                feast: 'Great O – Virgin of virgins',
+                theme: 'The veil thins; heaven touches earth.',
+                essay: 'St. MARY’S O – greatest antiphon.',
+                prayer: 'O Virgin of virgins… come!',
+                hymn: 'Rhapsody on a Gaelic Carol.',
+                youtube: 'https://www.youtube.com/watch?v=qwtB5APz3gE',
+                prompt: 'Draw a door on this page. Who is about to knock?',
+                gaelic: {
+                    text: 'Mo ghaol ort.',
+                    english: 'My love (is) with you.',
+                    source: 'Scottish Gaelic Expression of Love'
+                }
+            },
+            {
+                day: 39,
+                date: 'December 23, 2025',
+                feast: 'Banshee keens old year out',
+                theme: 'The veil thins; heaven touches earth.',
+                essay: 'The banshee keens – old souls make way for the new.',
+                prayer: 'Let the old year die in peace.',
+                hymn: 'Bean Shìth – lament.',
+                youtube: 'https://youtu.be/T0pc_EAHZCo?autoplay=1',
+                prompt: 'Write a farewell letter to 2025’s hardest moment. Burn it tomorrow.',
+                gaelic: {
+                    text: 'Mo ghràdh bithbhuan.',
+                    english: 'My love forever.',
+                    source: 'Scottish Gaelic Expression of Love'
+                }
+            },
+            {
+                day: 40,
+                date: 'December 24, 2025',
+                feast: 'Christmas Eve midnight',
+                theme: 'The veil thins; heaven touches earth.',
+                essay: 'Christmas Eve: First Mass at midnight in the Hebrides.',
+                prayer: 'Hail to Thee, loving Christ, Child of the stable and the stars… (full Christmas Eve prayer).',
+                hymn: 'Tàladh Chrìosda – full 14 verses with clàrsach.',
+                youtube: 'https://www.youtube.com/watch?v=-oVIXmABikY',
+                prompt: 'Walk outside at 11:11 pm. Write what the stars sang over Palmerton.',
+                gaelic: {
+                    text: 'Oidhche na Nollaig',
+                    english: 'Christmas Eve',
+                    source: 'Scottish Gaelic Christmas Phrase'
+                }
+            },
+            {
+                day: 'Christmas',
+                date: 'December 25, 2025',
+                feast: 'Dawn Christ-candle',
+                theme: '',
+                essay: 'The circle of Advent closes, yet the wild love endures.',
+                prayer: 'The peace of the running wave to you… (full benediction).',
+                hymn: 'In the Bleak Midwinter – dark Isle arrangement.',
+                youtube: 'https://www.youtube.com/watch?v=CmdWWbzQ7PQ',
+                prompt: 'Open your cairn-bowl. Count 40 stones. What story do they tell together?',
+                gaelic: {
+                    text: 'Nollaig Chridheil agus Bliadhna Mhath Ùr!',
+                    english: 'Merry Christmas and Happy New Year!',
+                    source: 'Scottish Gaelic Christmas Phrase'
+                }
+            }
+        ];
+
+        const calendar = document.getElementById('calendar');
+        const modal = document.getElementById('modal');
+        const modalContent = document.getElementById('modalContent');
+        const journalEntry = document.getElementById('journalEntry');
+        const saveEntry = document.getElementById('saveEntry');
+        const closeModal = document.getElementById('closeModal');
+        const resetProgress = document.getElementById('resetProgress');
+        const resetJournal = document.getElementById('resetJournal');
+
+        let currentDay = null;
+
+        function getStoredCompleted() {
+            return JSON.parse(localStorage.getItem('completed') || '[]');
+        }
+
+        function setStoredCompleted(completed) {
+            localStorage.setItem('completed', JSON.stringify(completed));
+        }
+
+        function getStoredJournal() {
+            return JSON.parse(localStorage.getItem('journal') || '{}');
+        }
+
+        function setStoredJournal(journal) {
+            localStorage.setItem('journal', JSON.stringify(journal));
+        }
+
+        function renderCalendar() {
+            calendar.innerHTML = '';
+            const completed = getStoredCompleted();
+            days.forEach((dayData, index) => {
+                const dayDiv = document.createElement('div');
+                dayDiv.classList.add('day');
+                dayDiv.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="50" height="50">
+                        <path d="M10 50 Q10 10 50 10 Q90 10 90 50 Q90 90 50 90 Q10 90 10 50" fill="none" stroke="#006400" stroke-width="5" />
+                        <path d="M50 10 Q10 10 10 50 Q10 90 50 90 Q90 90 90 50 Q90 10 50 10" fill="none" stroke="#006400" stroke-width="5" stroke-dasharray="10 5" />
+                    </svg>
+                    <div class="date">${dayData.date}</div>
+                    <input type="checkbox" ${completed.includes(index) ? 'checked' : ''}>
+                `;
+                dayDiv.addEventListener('click', () => openDay(index));
+                const checkbox = dayDiv.querySelector('input[type="checkbox"]');
+                checkbox.addEventListener('change', () => {
+                    const comp = getStoredCompleted();
+                    if (checkbox.checked) {
+                        if (!comp.includes(index)) comp.push(index);
+                    } else {
+                        const i = comp.indexOf(index);
+                        if (i > -1) comp.splice(i, 1);
+                    }
+                    setStoredCompleted(comp);
+                });
+                calendar.appendChild(dayDiv);
+            });
+        }
+
+        function openDay(index) {
+            currentDay = index;
+            const day = days[index];
+            let gaelicHtml = '';
+            if (day.gaelic) {
+                gaelicHtml = `
+                    <div class="gaelic-section">
+                        <p><strong>Gaelic Phrase:</strong> ${day.gaelic.text}</p>
+                        <p><strong>English Translation:</strong> ${day.gaelic.english}</p>
+                        <p><strong>Source:</strong> ${day.gaelic.source}</p>
+                    </div>
+                `;
+            }
+            modalContent.innerHTML = `
+                <h2>Day ${day.day}: ${day.date}</h2>
+                <p><strong>Feast/Saint:</strong> ${day.feast}</p>
+                <p><strong>Theme:</strong> ${day.theme}</p>
+                <p><strong>Daily Rhythm:</strong> 1. Rise (or pause at dusk) and face east. 2. Light the “lòn solais” (one beeswax candle – add one more every Sunday). 3. Read the essay aloud. 4. Say the prayer three times. 5. Sing or listen to the hymn. 6. Mark a pebble or oatcake with a cross and place it in a bowl – your growing “cairn of days”. 7. End with the circling blessing.</p>
+                <p><strong>Essay Snippet:</strong> ${day.essay}</p>
+                <p><strong>Prayer:</strong> ${day.prayer}</p>
+                <p><strong>Hymn:</strong> ${day.hymn} <a href="${day.youtube}" target="_blank" class="youtube-link">Listen on YouTube</a></p>
+                <p><strong>Journal Prompt:</strong> ${day.prompt}</p>
+                ${gaelicHtml}
+            `;
+            const journal = getStoredJournal();
+            journalEntry.value = journal[index] || '';
+            modal.style.display = 'flex';
+        }
+
+        saveEntry.addEventListener('click', () => {
+            if (currentDay !== null) {
+                const journal = getStoredJournal();
+                journal[currentDay] = journalEntry.value;
+                setStoredJournal(journal);
+                alert('Journal entry saved!');
+            }
+        });
+
+        closeModal.addEventListener('click', () => {
+            modal.style.display = 'none';
+            currentDay = null;
+        });
+
+        resetProgress.addEventListener('click', () => {
+            if (confirm('Reset all progress?')) {
+                setStoredCompleted([]);
+                renderCalendar();
+            }
+        });
+
+        resetJournal.addEventListener('click', () => {
+            if (confirm('Reset all journal entries?')) {
+                setStoredJournal({});
+            }
+        });
+
+        // Initial render
+        renderCalendar();
+    </script>
+</body>
+</html>
+```

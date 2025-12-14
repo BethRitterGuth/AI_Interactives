@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>American Romantic Literature Jeopardy</title>
+    <style>
+        /* Basic Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            background: linear-gradient(to bottom right, #b3e5fc, #e1bee7); /* Light blue to light purple gradient */
+        }
+
+        h1 {
+            color: #4a148c; /* Dark Purple */
+            text-shadow: 1px 1px 2px #aaa;
+            margin-bottom: 20px;
+        }
+
+        /* Scoreboard */
+        #scoreboard {
+            display: flex;
+            justify-content: space-around;
+            width: 80%;
+            max-width: 800px;
+            margin-bottom: 20px;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .team-score {
+            text-align: center;
+            font-size: 1.2em;
+            color: #311b92; /* Deep Indigo */
+        }
+
+        .team-score span {
+            display: block;
+            font-weight: bold;
+            font-size: 1.5em;
+            margin-top: 5px;
+            color: #5e35b1; /* Deep Purple */
+        }
+
+        /* Game Board Table */
+        #game-board {
+            border-collapse: collapse;
+            margin: 20px auto;
+            background-color: #311b92; /* Dark blue/purple base */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            overflow: hidden; /* Ensures borders fit within radius */
+        }
+
+        #game-board th,
+        #game-board td {
+            border: 2px solid #fff;
+            min-width: 150px;
+            height: 100px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        #game-board th {
+            background-color: #4a148c; /* Dark Purple */
+            color: #fff;
+            padding: 15px 10px;
+            font-size: 1.1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #game-board td {
+            background-color: #5e35b1; /* Deep Purple */
+            color: #ffd700; /* Gold */
+            font-size: 2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        #game-board td:hover {
+            background-color: #7e57c2; /* Lighter Purple */
+            transform: scale(1.03);
+        }
+
+        #game-board td.answered {
+            background-color: #757575; /* Grey */
+            color: #bdbdbd;
+            cursor: default;
+            pointer-events: none; /* Disable clicking */
+            text-shadow: none;
+            font-size: 1.8em; /* Slightly smaller */
+        }
+
+        #game-board td.answered:hover {
+             transform: none;
+        }
+
+        /* Clue Modal */
+        #clue-modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6); /* Dim background */
+            justify-content: center;
+            align-items: center;
+        }
+
+        #modal-content {
+            background-color: #fff;
+            margin: auto;
+            padding: 30px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+             background: linear-gradient(to top left, #e1bee7, #fff); /* Light purple tint */
+        }
+
+        #clue-text {
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            color: #333;
+            min-height: 100px; /* Ensure space for text */
+        }
+
+         #clue-answer-display {
+            font-size: 1.2em;
+            color: #4a148c;
+            font-style: italic;
+            margin-top: 15px;
+            display: none; /* Hidden until revealed */
+         }
+
+        .modal-buttons button, #reset-game {
+            background-color: #5e35b1; /* Deep Purple */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .modal-buttons button.correct { background-color: #4caf50; } /* Green */
+        .modal-buttons button.incorrect { background-color: #f44336; } /* Red */
+        .modal-buttons button.reveal { background-color: #ff9800; } /* Orange */
+        #reset-game { background-color: #78909c; margin-top: 20px;} /* Blue Grey */
+
+
+        .modal-buttons button:hover, #reset-game:hover {
+            opacity: 0.9;
+        }
+         .modal-buttons button.correct:hover { background-color: #388e3c; }
+        .modal-buttons button.incorrect:hover { background-color: #d32f2f; }
+        .modal-buttons button.reveal:hover { background-color: #f57c00; }
+        #reset-game:hover { background-color: #546e7a; }
+
+
+        #close-modal {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #close-modal:hover,
+        #close-modal:focus {
+            color: black;
+            text-decoration: none;
+        }
+
+    </style>
+<link rel="stylesheet" href="https://templates.lcs.brightspace.com/lib/assets/css/styles.min.css"></head><body><h1>American Romantic Literature Jeopardy</h1>
+<div id="scoreboard">
+<div class="team-score">Team 1<span id="team1-score">0</span></div>
+<div class="team-score">Team 2<span id="team2-score">0</span></div>
+<div class="team-score">Team 3<span id="team3-score">0</span></div>
+</div>
+<table id="game-board">
+<thead>
+<tr id="categories"></tr>
+</thead>
+<tbody id="clues"></tbody>
+</table>
+<p><button id="reset-game">Reset Game</button></p>
+<div id="clue-modal">
+<div id="modal-content"><span id="close-modal">×</span>
+<p id="clue-text"></p>
+<p id="clue-answer-display">Answer: <span id="clue-answer"></span></p>
+<div class="modal-buttons"><button id="correct-team1" class="correct">Correct Team 1</button> <button id="correct-team2" class="correct">Correct Team 2</button> <button id="correct-team3" class="correct">Correct Team 3</button> <button id="incorrect" class="incorrect">Incorrect</button> <button id="reveal-answer" class="reveal">Reveal Answer</button></div>
+</div>
+</div>
+<p><script>
+        const gameData = {
+            "Transcendentalists": [
+                { value: 100, clue: "This essayist urged readers toward 'Self-Reliance' and trusting intuition.", answer: "Ralph Waldo Emerson" },
+                { value: 200, clue: "He spent two years living simply at Walden Pond and wrote about the experience.", answer: "Henry David Thoreau" },
+                { value: 300, clue: "This influential journal, edited by Margaret Fuller and Emerson, published key Transcendentalist works.", answer: "The Dial" },
+                { value: 400, clue: "This concept, central to Transcendentalism, suggests an inherent goodness in both humans and nature.", answer: "The Over-Soul (or Divine Soul/Spirit)" },
+                { value: 500, clue: "Thoreau's essay advocating nonviolent protest, later influencing Gandhi and MLK Jr.", answer: "Civil Disobedience (or Resistance to Civil Government)" }
+            ],
+            "Dark Romantics": [
+                { value: 100, clue: "His short story features a talking bird lamenting a lost love, 'Nevermore'.", answer: "Edgar Allan Poe" },
+                { value: 200, clue: "Author of 'The Scarlet Letter', exploring sin and guilt in Puritan New England.", answer: "Nathaniel Hawthorne" },
+                { value: 300, clue: "His epic novel follows Captain Ahab's obsessive hunt for a white whale.", answer: "Herman Melville" },
+                { value: 400, clue: "This Poe story involves a premature burial and a decaying family mansion.", answer: "The Fall of the House of Usher" },
+                { value: 500, clue: "Hawthorne's tale where a young man attends a witches' sabbath in the forest.", answer: "Young Goodman Brown" }
+            ],
+            "Key Works & Characters": [
+                { value: 100, clue: "The protagonist of 'The Scarlet Letter', forced to wear a symbol of her adultery.", answer: "Hester Prynne" },
+                { value: 200, clue: "The narrator of 'Moby-Dick' famously begins, 'Call me...'", answer: "Ishmael" },
+                { value: 300, clue: "Poe's detective character who solves mysteries through 'ratiocination'.", answer: "C. Auguste Dupin" },
+                { value: 400, clue: "This collection of Whitman's poetry celebrated democracy, nature, and the individual self.", answer: "Leaves of Grass" },
+                { value: 500, clue: "Hawthorne's allegory about characters named Faith, Goodman Brown, and a mysterious old man with a staff.", answer: "Young Goodman Brown" }
+            ],
+            "Poetry & Poets": [
+                { value: 100, clue: "Known for unconventional capitalization and dashes, this poet wrote 'Because I could not stop for Death'.", answer: "Emily Dickinson" },
+                { value: 200, clue: "The 'Bard of Democracy' who wrote expansive free verse poems like 'Song of Myself'.", answer: "Walt Whitman" },
+                { value: 300, clue: "Master of the macabre in verse, author of 'The Raven' and 'Annabel Lee'.", answer: "Edgar Allan Poe" },
+                { value: 400, clue: "This Fireside Poet wrote 'Paul Revere's Ride' and 'The Song of Hiawatha'.", answer: "Henry Wadsworth Longfellow" },
+                { value: 500, clue: "Dickinson's poem that begins 'Hope is the thing with feathers'.", answer: "'Hope' is the thing with feathers" }
+            ],
+             "Themes & Concepts": [
+                { value: 100, clue: "A core Romantic belief emphasizing feelings, intuition, and imagination over logic.", answer: "Individualism / Emotion / Intuition" },
+                { value: 200, clue: "The philosophical and literary movement emphasizing intuition, nature, and self-reliance.", answer: "Transcendentalism" },
+                { value: 300, clue: "A subgenre exploring the darker side of humanity: sin, guilt, madness, and the supernatural.", answer: "Dark Romanticism (or Gothic Literature)" },
+                { value: 400, clue: "Romantics often saw this as a source of truth, beauty, and spiritual insight, contrasting it with corrupt civilization.", answer: "Nature" },
+                { value: 500, clue: "The literary technique of using symbols to signify ideas and qualities, heavily used by Hawthorne.", answer: "Symbolism / Allegory" }
+            ]
+        };
+
+        const categories = Object.keys(gameData);
+        const maxQuestionsPerCategory = 5; // Assuming 5 value levels (100-500)
+
+        // DOM Elements
+        const categoriesRow = document.getElementById('categories');
+        const cluesBody = document.getElementById('clues');
+        const clueModal = document.getElementById('clue-modal');
+        const modalContent = document.getElementById('modal-content');
+        const clueText = document.getElementById('clue-text');
+        const closeBtn = document.getElementById('close-modal');
+        const teamScores = [
+            document.getElementById('team1-score'),
+            document.getElementById('team2-score'),
+            document.getElementById('team3-score')
+        ];
+        const correctButtons = [
+            document.getElementById('correct-team1'),
+            document.getElementById('correct-team2'),
+            document.getElementById('correct-team3')
+        ];
+        const incorrectButton = document.getElementById('incorrect');
+        const revealAnswerButton = document.getElementById('reveal-answer');
+        const clueAnswerDisplay = document.getElementById('clue-answer-display');
+        const clueAnswerSpan = document.getElementById('clue-answer');
+        const resetButton = document.getElementById('reset-game');
+
+
+        let currentClue = null; // To store { category, value, clue, answer, element }
+        let scores = [0, 0, 0];
+
+        // --- Functions ---
+
+        function updateScore(teamIndex, amount) {
+            scores[teamIndex] += amount;
+            teamScores[teamIndex].textContent = scores[teamIndex];
+        }
+
+        function showClue(category, valueData, cellElement) {
+            currentClue = {
+                category: category,
+                value: valueData.value,
+                clue: valueData.clue,
+                answer: valueData.answer,
+                element: cellElement
+            };
+            clueText.textContent = currentClue.clue;
+            clueAnswerSpan.textContent = currentClue.answer; // Set answer text
+            clueAnswerDisplay.style.display = 'none'; // Hide answer initially
+            clueModal.style.display = 'flex'; // Use flex to center content
+        }
+
+        function hideClueModal() {
+            clueModal.style.display = 'none';
+            currentClue = null; // Clear current clue
+        }
+
+        function markClueAsAnswered(cellElement) {
+             if (cellElement) {
+                cellElement.textContent = '✓'; // Or keep empty: cellElement.innerHTML = '';
+                cellElement.classList.add('answered');
+                // Remove event listener if not using pointer-events:none
+                // cellElement.removeEventListener('click', handleClueClick);
+             }
+        }
+
+        function handleClueClick(event) {
+            const cell = event.target;
+            if (cell.tagName !== 'TD' || cell.classList.contains('answered')) {
+                return; // Ignore clicks on non-cells or answered cells
+            }
+
+            const category = cell.dataset.category;
+            const value = parseInt(cell.dataset.value);
+
+            // Find the clue data
+            const categoryData = gameData[category];
+            const valueData = categoryData.find(item => item.value === value);
+
+            if (valueData) {
+                showClue(category, valueData, cell);
+            }
+        }
+
+        function setupBoard() {
+            // Clear existing board (for reset)
+            categoriesRow.innerHTML = '';
+            cluesBody.innerHTML = '';
+            scores = [0, 0, 0];
+            teamScores.forEach(span => span.textContent = '0');
+
+
+            // Add Categories
+            categories.forEach(cat => {
+                const th = document.createElement('th');
+                th.textContent = cat;
+                categoriesRow.appendChild(th);
+            });
+
+            // Add Clue Cells
+            for (let i = 0; i < maxQuestionsPerCategory; i++) {
+                const tr = document.createElement('tr');
+                categories.forEach(cat => {
+                    const td = document.createElement('td');
+                    const clueData = gameData[cat][i];
+                    if (clueData) {
+                        td.textContent = `$${clueData.value}`;
+                        td.dataset.category = cat;
+                        td.dataset.value = clueData.value;
+                        td.addEventListener('click', handleClueClick); // Add listener here
+                    } else {
+                        td.textContent = '-'; // Placeholder if data missing
+                        td.classList.add('answered'); // Mark as unusable
+                    }
+                    tr.appendChild(td);
+                });
+                cluesBody.appendChild(tr);
+            }
+        }
+
+        // --- Event Listeners ---
+
+        closeBtn.addEventListener('click', hideClueModal);
+
+        // Close modal if clicking outside the content
+        clueModal.addEventListener('click', (event) => {
+            if (event.target === clueModal) {
+                hideClueModal();
+            }
+        });
+
+        correctButtons.forEach((button, index) => {
+            button.addEventListener('click', () => {
+                if (currentClue) {
+                    updateScore(index, currentClue.value);
+                    markClueAsAnswered(currentClue.element);
+                    hideClueModal();
+                }
+            });
+        });
+
+        incorrectButton.addEventListener('click', () => {
+            if (currentClue) {
+                // Optional: Deduct points - Jeopardy rules vary here.
+                // Let's just mark as answered without score change for simplicity.
+                // If deducting, you'd need to decide which team buzzed incorrectly.
+                // updateScore(teamIndex, -currentClue.value);
+                markClueAsAnswered(currentClue.element);
+                hideClueModal();
+            }
+        });
+
+         revealAnswerButton.addEventListener('click', () => {
+             if (currentClue) {
+                clueAnswerDisplay.style.display = 'block'; // Show the answer
+             }
+         });
+
+        resetButton.addEventListener('click', () => {
+             if (confirm("Are you sure you want to reset the game and scores?")) {
+                setupBoard();
+             }
+        });
+
+
+        // --- Initialize Game ---
+        setupBoard();
+
+    </script></p></body></html>

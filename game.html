@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frank Norris Literature Adventure</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .game-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            border-top: 5px solid #6366f1;
+        }
+
+        h1 {
+            color: #6366f1;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+
+        .score-board {
+            display: table;
+            width: 100%;
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: #6366f1;
+            border-radius: 8px;
+            color: white;
+        }
+
+        .score-item {
+            display: table-cell;
+            text-align: center;
+            width: 50%;
+        }
+
+        .score-label {
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .score-value {
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .start-screen {
+            text-align: center;
+        }
+
+        .book-icon {
+            font-size: 60px;
+            margin: 20px 0;
+        }
+
+        .btn {
+            background-color: #6366f1;
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            font-size: 1.1em;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 10px;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background-color: #4f46e5;
+        }
+
+        .btn:active {
+            background-color: #4338ca;
+        }
+
+        .question-container {
+            margin: 25px 0;
+        }
+
+        .question-text {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        .options {
+            margin-top: 15px;
+        }
+
+        .option {
+            background-color: #f9fafb;
+            border: 2px solid #e5e7eb;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        .option:hover {
+            background-color: #f3f4f6;
+            border-color: #6366f1;
+        }
+
+        .option.selected {
+            background-color: #6366f1;
+            color: white;
+            border-color: #6366f1;
+        }
+
+        .option.correct {
+            background-color: #10b981;
+            color: white;
+            border-color: #10b981;
+        }
+
+        .option.incorrect {
+            background-color: #ef4444;
+            color: white;
+            border-color: #ef4444;
+        }
+
+        .option.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1em;
+            display: none;
+            line-height: 1.5;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background-color: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid #10b981;
+        }
+
+        .feedback.incorrect {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid #ef4444;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background-color: #e5e7eb;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: #6366f1;
+            border-radius: 10px;
+            width: 0%;
+        }
+
+        .results-screen {
+            text-align: center;
+        }
+
+        .trophy {
+            font-size: 80px;
+            margin: 20px 0;
+        }
+
+        .final-score {
+            font-size: 2.5em;
+            color: #6366f1;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .grade {
+            font-size: 1.4em;
+            color: #7c3aed;
+            margin-bottom: 20px;
+        }
+
+        .works-list {
+            text-align: left;
+            background-color: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .works-list h3 {
+            color: #6366f1;
+            margin-bottom: 12px;
+            margin-top: 0;
+        }
+
+        .works-list ul {
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+        }
+
+        .works-list li {
+            padding: 6px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .works-list li:before {
+            content: '📖';
+            position: absolute;
+            left: 0;
+        }
+
+        .next-btn-container {
+            text-align: center;
+            margin-top: 25px;
+            display: none;
+        }
+
+        .next-btn-container.show {
+            display: block;
+        }
+
+        .info-text {
+            margin: 20px 0;
+            color: #666;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div id="startScreen" class="screen active">
+            <h1>Frank Norris Literature Adventure</h1>
+            <p class="subtitle">Test your knowledge of American Naturalist literature!</p>
+            <div class="book-icon">📚</div>
+            <div class="works-list">
+                <h3>Featured Works:</h3>
+                <ul>
+                    <li>A Bargain with Peg-Leg</li>
+                    <li>Two Hearts that Beat as One</li>
+                    <li>The Dual Personalities of Slick Dick Nickerson</li>
+                    <li>A Memorandum of Sudden Death</li>
+                </ul>
+            </div>
+            <p class="info-text">
+                Journey through Frank Norris's captivating stories and discover the themes, characters, 
+                and literary techniques of this influential American naturalist writer.
+            </p>
+            <button class="btn" onclick="gameStart()">Begin Adventure</button>
+        </div>
+
+        <div id="gameScreen" class="screen">
+            <div class="score-board">
+                <div class="score-item">
+                    <div class="score-label">Score</div>
+                    <div class="score-value" id="score">0</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-label">Question</div>
+                    <div class="score-value" id="questionNumber">1/12</div>
+                </div>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-text" id="questionText"></div>
+                <div class="options" id="optionsContainer"></div>
+                <div class="feedback" id="feedback"></div>
+            </div>
+
+            <div class="next-btn-container" id="nextBtnContainer">
+                <button class="btn" onclick="gameNext()">Next Question →</button>
+            </div>
+        </div>
+
+        <div id="resultsScreen" class="screen">
+            <h1>Adventure Complete!</h1>
+            <div class="trophy" id="trophyIcon">🏆</div>
+            <div class="final-score" id="finalScore"></div>
+            <div class="grade" id="grade"></div>
+            <p class="info-text" id="resultMessage"></p>
+            <button class="btn" onclick="gameRestart()">Play Again</button>
+        </div>
+    </div>
+
+    <script>
+        var gameQuestions = [
+            {
+                question: "Which Frank Norris story features a character with a wooden leg?",
+                options: [
+                    "A Bargain with Peg-Leg",
+                    "The Dual Personalities of Slick Dick Nickerson",
+                    "Two Hearts that Beat as One",
+                    "A Memorandum of Sudden Death"
+                ],
+                correct: 0,
+                explanation: "The title 'A Bargain with Peg-Leg' directly references a character with a wooden leg (peg-leg)."
+            },
+            {
+                question: "What literary movement is Frank Norris most associated with?",
+                options: [
+                    "Romanticism",
+                    "Naturalism",
+                    "Transcendentalism",
+                    "Modernism"
+                ],
+                correct: 1,
+                explanation: "Frank Norris was a leading figure in American Naturalism, a literary movement that emphasized environmental and hereditary factors in shaping human character."
+            },
+            {
+                question: "Which story title suggests a tale about love or romance?",
+                options: [
+                    "A Memorandum of Sudden Death",
+                    "The Dual Personalities of Slick Dick Nickerson",
+                    "Two Hearts that Beat as One",
+                    "A Bargain with Peg-Leg"
+                ],
+                correct: 2,
+                explanation: "'Two Hearts that Beat as One' is a romantic phrase commonly used to describe lovers whose feelings are in perfect harmony."
+            },
+            {
+                question: "The title 'The Dual Personalities of Slick Dick Nickerson' suggests the story explores what theme?",
+                options: [
+                    "Time travel",
+                    "Identity and duality",
+                    "Political corruption",
+                    "Family relationships"
+                ],
+                correct: 1,
+                explanation: "The mention of 'dual personalities' indicates a story about split identity, duality, or conflicting aspects of character."
+            },
+            {
+                question: "Which story title has the most ominous or dark tone?",
+                options: [
+                    "Two Hearts that Beat as One",
+                    "A Bargain with Peg-Leg",
+                    "A Memorandum of Sudden Death",
+                    "The Dual Personalities of Slick Dick Nickerson"
+                ],
+                correct: 2,
+                explanation: "'A Memorandum of Sudden Death' directly references death, giving it the darkest and most ominous tone of the four titles."
+            },
+            {
+                question: "What characteristic nickname is given to the character in one of Norris's stories?",
+                options: [
+                    "Honest Abe",
+                    "Slick Dick",
+                    "Lucky Luke",
+                    "Happy Harry"
+                ],
+                correct: 1,
+                explanation: "'Slick Dick' is the nickname of Dick Nickerson in 'The Dual Personalities of Slick Dick Nickerson,' suggesting a smooth or cunning character."
+            },
+            {
+                question: "Based on the title 'A Bargain with Peg-Leg,' what type of story element is suggested?",
+                options: [
+                    "A romantic subplot",
+                    "A deal or agreement",
+                    "A family reunion",
+                    "A natural disaster"
+                ],
+                correct: 1,
+                explanation: "The word 'bargain' in the title suggests a deal, agreement, or transaction between characters."
+            },
+            {
+                question: "Frank Norris was influenced by which French naturalist writer?",
+                options: [
+                    "Victor Hugo",
+                    "Alexandre Dumas",
+                    "Émile Zola",
+                    "Honoré de Balzac"
+                ],
+                correct: 2,
+                explanation: "Émile Zola was a major influence on Frank Norris. Norris applied Zola's naturalist principles to American literature."
+            },
+            {
+                question: "Which title uses alliteration (repetition of consonant sounds)?",
+                options: [
+                    "A Memorandum of Sudden Death",
+                    "The Dual Personalities of Slick Dick Nickerson",
+                    "Two Hearts that Beat as One",
+                    "A Bargain with Peg-Leg"
+                ],
+                correct: 1,
+                explanation: "'The Dual Personalities of Slick Dick Nickerson' uses alliteration with the 'D' sound in 'Dual,' 'Dick,' and the repetition of sounds in 'Dick Nickerson.'"
+            },
+            {
+                question: "What does the term 'memorandum' in the title 'A Memorandum of Sudden Death' suggest?",
+                options: [
+                    "A romantic letter",
+                    "A written record or note",
+                    "A verbal agreement",
+                    "A musical composition"
+                ],
+                correct: 1,
+                explanation: "A memorandum is a written message or record, often used in business or formal contexts, suggesting documentation of an event."
+            },
+            {
+                question: "Naturalist literature often focuses on which aspects of human experience?",
+                options: [
+                    "Supernatural events and magic",
+                    "Environmental and hereditary forces",
+                    "Religious salvation",
+                    "Political idealism"
+                ],
+                correct: 1,
+                explanation: "Naturalism emphasizes that human behavior is determined by environmental factors, heredity, and natural forces beyond individual control."
+            },
+            {
+                question: "Which of these stories most likely involves a character with a complex or hidden nature?",
+                options: [
+                    "Two Hearts that Beat as One",
+                    "A Memorandum of Sudden Death",
+                    "The Dual Personalities of Slick Dick Nickerson",
+                    "A Bargain with Peg-Leg"
+                ],
+                correct: 2,
+                explanation: "The phrase 'dual personalities' explicitly indicates a character with two sides or a hidden nature, making this the most obvious choice."
+            }
+        ];
+
+        var currentQ = 0;
+        var gameScore = 0;
+        var answered = 0;
+
+        function gameStart() {
+            currentQ = 0;
+            gameScore = 0;
+            answered = 0;
+            showGameScreen('gameScreen');
+            loadGameQuestion();
+        }
+
+        function showGameScreen(screenId) {
+            document.getElementById('startScreen').className = 'screen';
+            document.getElementById('gameScreen').className = 'screen';
+            document.getElementById('resultsScreen').className = 'screen';
+            document.getElementById(screenId).className = 'screen active';
+        }
+
+        function loadGameQuestion() {
+            var question = gameQuestions[currentQ];
+            document.getElementById('questionText').textContent = question.question;
+            document.getElementById('questionNumber').textContent = (currentQ + 1) + '/' + gameQuestions.length;
+            document.getElementById('progressFill').style.width = ((currentQ / gameQuestions.length) * 100) + '%';
+            
+            var optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            for (var i = 0; i < question.options.length; i++) {
+                var optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                optionDiv.textContent = question.options[i];
+                optionDiv.setAttribute('data-index', i);
+                optionDiv.setAttribute('onclick', 'selectGameAnswer(' + i + ')');
+                optionsContainer.appendChild(optionDiv);
+            }
+
+            var feedback = document.getElementById('feedback');
+            feedback.className = 'feedback';
+            
+            var nextContainer = document.getElementById('nextBtnContainer');
+            nextContainer.className = 'next-btn-container';
+        }
+
+        function selectGameAnswer(selectedIndex) {
+            if (answered > currentQ) return;
+
+            var question = gameQuestions[currentQ];
+            var options = document.querySelectorAll('.option');
+            var feedback = document.getElementById('feedback');
+            
+            answered++;
+            
+            for (var i = 0; i < options.length; i++) {
+                options[i].className = 'option disabled';
+                options[i].removeAttribute('onclick');
+                
+                if (i === question.correct) {
+                    options[i].className = 'option disabled correct';
+                } else if (i === selectedIndex) {
+                    options[i].className = 'option disabled incorrect';
+                }
+            }
+
+            if (selectedIndex === question.correct) {
+                gameScore += 10;
+                document.getElementById('score').textContent = gameScore;
+                feedback.className = 'feedback correct show';
+                feedback.innerHTML = '<strong>Correct! ✓</strong><br>' + question.explanation;
+            } else {
+                feedback.className = 'feedback incorrect show';
+                feedback.innerHTML = '<strong>Not quite! ✗</strong><br>' + question.explanation;
+            }
+
+            document.getElementById('nextBtnContainer').className = 'next-btn-container show';
+        }
+
+        function gameNext() {
+            currentQ++;
+            if (currentQ < gameQuestions.length) {
+                loadGameQuestion();
+            } else {
+                showGameResults();
+            }
+        }
+
+        function showGameResults() {
+            showGameScreen('resultsScreen');
+            document.getElementById('finalScore').textContent = gameScore + ' / ' + (gameQuestions.length * 10);
+            
+            var percentage = (gameScore / (gameQuestions.length * 10)) * 100;
+            var grade, message, trophy;
+            
+            if (percentage >= 90) {
+                grade = 'Outstanding Scholar!';
+                message = 'You have mastered Frank Norris\'s works! Your understanding of naturalist literature is exceptional.';
+                trophy = '🏆';
+            } else if (percentage >= 80) {
+                grade = 'Excellent Work!';
+                message = 'You have a strong grasp of Frank Norris\'s stories and themes. Keep up the great work!';
+                trophy = '🎖️';
+            } else if (percentage >= 70) {
+                grade = 'Good Job!';
+                message = 'You\'re developing a solid understanding of Frank Norris\'s literature. Review the stories for even better results!';
+                trophy = '⭐';
+            } else if (percentage >= 60) {
+                grade = 'Keep Learning!';
+                message = 'You\'re on the right track! Spend more time with the texts to deepen your understanding.';
+                trophy = '📖';
+            } else {
+                grade = 'Time to Review';
+                message = 'Don\'t give up! Read through Frank Norris\'s works again and try the game once more.';
+                trophy = '💪';
+            }
+            
+            document.getElementById('grade').textContent = grade;
+            document.getElementById('resultMessage').textContent = message;
+            document.getElementById('trophyIcon').textContent = trophy;
+        }
+
+        function gameRestart() {
+            gameStart();
+        }
+    </script>
+</body>
+</html>

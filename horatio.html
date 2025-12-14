@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz: American Literary Movements - Realism, Naturalism, and the Horatio Alger Myth</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        #start-screen, #quiz-screen, #result-screen {
+            display: none;
+        }
+        #start-screen {
+            display: block;
+            text-align: center;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        button:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+        .question {
+            margin-bottom: 30px;
+            font-size: 18px;
+        }
+        .options {
+            margin: 15px 0;
+        }
+        .option {
+            display: block;
+            padding: 10px;
+            margin: 10px 0;
+            background: #ecf0f1;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .option:hover {
+            background: #bdc3c7;
+        }
+        .option.selected {
+            background: #3498db;
+            color: white;
+        }
+        #feedback {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        #next-btn {
+            display: none;
+        }
+        #progress {
+            text-align: center;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        #final-score {
+            font-size: 24px;
+            text-align: center;
+        }
+        #email-form {
+            margin-top: 30px;
+            text-align: center;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 300px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>American Literary Movements Quiz</h1>
+        <p>Test your knowledge of Realism, Naturalism, and the Horatio Alger Myth!</p>
+
+        <div id="start-screen">
+            <p>This quiz has 20 multiple-choice questions. You can answer each question only once.<br>
+            After each answer, you'll get immediate feedback.<br>
+            At the end, submit your score via email.</p>
+            <button onclick="startQuiz()">Start Quiz</button>
+        </div>
+
+        <div id="quiz-screen">
+            <div id="progress"></div>
+            <div id="question-container"></div>
+            <div id="feedback"></div>
+            <button id="next-btn" onclick="nextQuestion()">Next Question</button>
+        </div>
+
+        <div id="result-screen">
+            <h2>Quiz Complete!</h2>
+            <p id="final-score"></p>
+            <div id="email-form">
+                <p>Enter your name (optional) and click to email your score:</p>
+                <input type="text" id="student-name" placeholder="Your name">
+                <button onclick="sendScore()">Email Score to Instructor</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "What historical period is primarily associated with the rise of American Realism?",
+                options: ["Post-Civil War (late 19th century)", "Pre-Civil War (early 19th century)", "Great Depression era", "World War II era"],
+                answer: 0
+            },
+            {
+                question: "Realism in literature aimed to:",
+                options: ["Depict life as it actually is, with ordinary characters and events", "Focus on heroic figures and idealized romance", "Explore supernatural and fantastical elements", "Emphasize emotional extremes and imagination"],
+                answer: 0
+            },
+            {
+                question: "Which author is a key figure in American Realism, known for works like The Adventures of Huckleberry Finn?",
+                options: ["Mark Twain", "Stephen Crane", "Jack London", "Horatio Alger"],
+                answer: 0
+            },
+            {
+                question: "Naturalism can be seen as an extension of Realism, but it emphasizes:",
+                options: ["Scientific determinism, heredity, and environmental forces", "Free will and moral choices", "Romantic ideals and heroism", "Abstract symbolism"],
+                answer: 0
+            },
+            {
+                question: "In Naturalism, characters are often portrayed as controlled by:",
+                options: ["Forces like heredity, environment, and instinct", "Their own heroic decisions", "Supernatural powers", "Government policies alone"],
+                answer: 0
+            },
+            {
+                question: "Which work by Stephen Crane is a classic example of Naturalism?",
+                options: ["The Open Boat", "Ragged Dick", "The Awakening", "Daisy Miller"],
+                answer: 0
+            },
+            {
+                question: "The Horatio Alger myth is commonly associated with:",
+                options: ["Rags-to-riches stories through hard work and virtue", "Pessimistic views of inescapable fate", "Idealized romantic love", "Supernatural adventures"],
+                answer: 0
+            },
+            {
+                question: "Horatio Alger's stories typically end with heroes achieving:",
+                options: ["Middle-class respectability, not extreme wealth", "Great fortunes overnight", "Tragic downfall", "Royal nobility"],
+                answer: 0
+            },
+            {
+                question: "A key difference between Realism and Naturalism is that Naturalism is more:",
+                options: ["Pessimistic and deterministic", "Optimistic and focused on free will", "Romantic and emotional", "Abstract and symbolic"],
+                answer: 0
+            },
+            {
+                question: "Which author wrote The Jungle, a Naturalist exposé of the meatpacking industry?",
+                options: ["Upton Sinclair", "Henry James", "William Dean Howells", "Horatio Alger"],
+                answer: 0
+            },
+            {
+                question: "Realism reacted against which earlier movement?",
+                options: ["Romanticism", "Modernism", "Transcendentalism only", "Postmodernism"],
+                answer: 0
+            },
+            {
+                question: "In Horatio Alger stories, success often comes from:",
+                options: ["Hard work, honesty, and a bit of luck", "Inheritance or lottery wins", "Criminal activities", "Political connections alone"],
+                answer: 0
+            },
+            {
+                question: "Naturalist writers were influenced by:",
+                options: ["Scientific ideas, including Darwin's theories", "Medieval folklore", "Religious mysticism", "Futuristic technology"],
+                answer: 0
+            },
+            {
+                question: "Which is NOT a typical theme in Naturalism?",
+                options: ["The triumph of individual free will", "Survival and violence", "Indifference of the universe", "Struggle against nature"],
+                answer: 0
+            },
+            {
+                question: "The Horatio Alger myth has been criticized for:",
+                options: ["Overlooking systemic barriers and oversimplifying success", "Being too pessimistic", "Promoting laziness", "Ignoring hard work"],
+                answer: 0
+            },
+            {
+                question: "Edith Wharton is associated with which movement?",
+                options: ["Realism", "Pure Romanticism", "Surrealism", "Beat Generation"],
+                answer: 0
+            },
+            {
+                question: "Jack London's works, like The Call of the Wild, exemplify:",
+                options: ["Naturalism", "Horatio Alger-style optimism", "Psychological Realism only", "Fantasy"],
+                answer: 0
+            },
+            {
+                question: "In Realism, characters are often:",
+                options: ["Ordinary people in everyday situations", "God-like heroes", "Animals with human traits", "Ghosts and spirits"],
+                answer: 0
+            },
+            {
+                question: "The Horatio Alger myth aligns closely with the idea of:",
+                options: ["The American Dream", "Social Darwinism exclusively", "Communism", "Feudalism"],
+                answer: 0
+            },
+            {
+                question: "A common criticism of Naturalism is its:",
+                options: ["Pessimistic view and lack of emphasis on free will", "Overly optimistic tone", "Focus on wealthy elites", "Use of magical elements"],
+                answer: 0
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+
+        function startQuiz() {
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('quiz-screen').style.display = 'block';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            answered = false;
+            const q = questions[currentQuestion];
+            document.getElementById('progress').innerHTML = `Question ${currentQuestion + 1} of ${questions.length}`;
+            document.getElementById('question-container').innerHTML = `
+                <div class="question">${q.question}</div>
+                <div class="options">
+                    ${q.options.map((opt, i) => `
+                        <div class="option" onclick="selectOption(${i})">${opt}</div>
+                    `).join('')}
+                </div>
+            `;
+            document.getElementById('feedback').innerHTML = '';
+            document.getElementById('next-btn').style.display = 'none';
+            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+        }
+
+        function selectOption(selected) {
+            if (answered) return;
+            answered = true;
+            const q = questions[currentQuestion];
+            const options = document.querySelectorAll('.option');
+            options[selected].classList.add('selected');
+
+            let feedback = '';
+            if (selected === q.answer) {
+                score++;
+                feedback = 'Correct! Great job – keep up the excellent work!';
+            } else {
+                feedback = `Incorrect. The correct answer is: "${q.options[q.answer]}". Don't worry, you're learning!`;
+            }
+            document.getElementById('feedback').innerHTML = feedback;
+            document.getElementById('next-btn').style.display = 'block';
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                showQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quiz-screen').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+            document.getElementById('final-score').innerHTML = `Your final score: ${score} out of ${questions.length} (${Math.round((score / questions.length) * 100)}%)`;
+        }
+
+        function sendScore() {
+            const name = document.getElementById('student-name').value.trim() || 'Anonymous Student';
+            const subject = encodeURIComponent(`Quiz Score - American Literary Movements`);
+            const body = encodeURIComponent(`Hello,\n\n${name} completed the quiz on Realism, Naturalism, and the Horatio Alger Myth.\n\nScore: ${score} out of ${questions.length} (${Math.round((score / questions.length) * 100)}%)\n\nDate: ${new Date().toLocaleString()}\n\nBest regards,\nQuiz App`);
+            window.location.href = `mailto:beth.ritter-guth@desales.edu?subject=${subject}&body=${body}`;
+        }
+    </script>
+</body>
+</html>

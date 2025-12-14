@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-gray-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ionnsaich Gàidhlig | Learn Gaelic</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Inter font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Custom styles for the app */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Styles for each view panel */
+        .view {
+            display: none; /* Hidden by default */
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .view.active {
+            display: block; /* Shown when active */
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Styles for the 3D flashcard flip */
+        .flip-card {
+            background-color: transparent;
+            width: 100%;
+            max-width: 500px;
+            height: 300px;
+            perspective: 1000px;
+            margin: 0 auto;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flip-card.is-flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden; /* Safari */
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .flip-card-front {
+            background-color: white;
+            color: #374151; /* gray-700 */
+        }
+        .flip-card-back {
+            background-color: #3730a3; /* indigo-800 */
+            color: white;
+            transform: rotateY(180deg);
+        }
+        
+        /* Custom radio button styles for quiz */
+        .quiz-option {
+            display: block;
+            position: relative;
+            padding: 12px 12px 12px 40px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            user-select: none;
+            border: 2px solid #e5e7eb; /* gray-200 */
+            border-radius: 8px;
+            transition: border-color 0.3s;
+        }
+        .quiz-option:hover {
+            border-color: #6366f1; /* indigo-500 */
+        }
+        .quiz-option input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .quiz-checkmark {
+            position: absolute;
+            top: 50%;
+            left: 12px;
+            transform: translateY(-50%);
+            height: 20px;
+            width: 20px;
+            background-color: #eee;
+            border-radius: 50%;
+        }
+        .quiz-option:hover input ~ .quiz-checkmark {
+            background-color: #ccc;
+        }
+        .quiz-option input:checked ~ .quiz-checkmark {
+            background-color: #6366f1; /* indigo-500 */
+        }
+        .quiz-checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+            top: 6px;
+            left: 6px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: white;
+        }
+        .quiz-option input:checked ~ .quiz-checkmark:after {
+            display: block;
+        }
+        
+        /* Quiz Feedback */
+        #quiz-feedback.correct {
+            color: #16a34a; /* green-600 */
+            font-weight: 600;
+        }
+        #quiz-feedback.incorrect {
+            color: #dc2626; /* red-600 */
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col">
+
+    <!-- Header & Navigation -->
+    <header class="bg-indigo-700 text-white shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-2xl font-bold">Ionnsaich Gàidhlig</h1>
+                </div>
+                <div class="flex space-x-4">
+                    <button id="nav-home" class="nav-btn px-3 py-2 rounded-md text-sm font-medium bg-indigo-800" aria-current="page">Dachaigh (Home)</button>
+                    <button id="nav-review" class="nav-btn px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-600">Lèirmheas (Review)</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="container mx-auto p-4 sm:p-6 lg:p-8 flex-grow">
+
+        <!-- View 1: Home / Category Select -->
+        <div id="home-view" class="view active">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Fàilte! (Welcome!)</h2>
+            <p class="text-gray-600 mb-6">Tagh roinn-seòrsa airson tòiseachadh. (Choose a category to begin.)</p>
+            <div id="category-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Categories will be dynamically inserted here -->
+            </div>
+            
+            <div id="quiz-prompt" class="hidden mt-8 p-4 bg-sky-100 border border-sky-300 text-sky-800 rounded-lg">
+                <h3 class="font-bold text-lg mb-2">Ceasnachadh Deiseil! (Quiz Ready!)</h3>
+                <p class="mb-3">Tha thu air dà roinn a chrìochnachadh. A bheil thu deiseil airson ceasnachadh? (You've finished two categories. Ready for a quiz?)</p>
+                <button id="start-quiz-btn" class="px-4 py-2 bg-sky-600 text-white rounded-md shadow hover:bg-sky-700 transition-colors">Tòisich air a' Cheasnachadh (Start Quiz)</button>
+            </div>
+        </div>
+
+        <!-- View 2: Flashcards -->
+        <div id="flashcard-view" class="view">
+            <div class="flex justify-between items-center mb-4">
+                <button id="back-to-home-btn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md shadow hover:bg-gray-300">&larr; Air Ais (Back)</button>
+                <h2 id="flashcard-category-title" class="text-2xl font-semibold text-gray-800"></h2>
+                <div id="flashcard-progress" class="text-lg font-medium text-gray-500"></div>
+            </div>
+
+            <!-- Flashcard -->
+            <div id="flashcard-container" class="flip-card">
+                <div class="flip-card-inner rounded-lg">
+                    <div id="card-front" class="flip-card-front">
+                        <!-- Front content here -->
+                    </div>
+                    <div id="card-back" class="flip-card-back">
+                        <!-- Back content here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Flashcard Controls -->
+            <div class="flex justify-center items-center space-x-4 mt-6">
+                <button id="prev-card-btn" class="px-5 py-2 bg-gray-200 text-gray-700 rounded-md shadow hover:bg-gray-300 transition-colors disabled:opacity-50">Previous</button>
+                <button id="flip-card-btn" class="px-6 py-3 bg-indigo-600 text-white rounded-md shadow-lg hover:bg-indigo-700 transition-colors text-lg font-semibold">Flip</button>
+                <button id="next-card-btn" class="px-5 py-2 bg-gray-200 text-gray-700 rounded-md shadow hover:bg-gray-300 transition-colors">Next</button>
+            </div>
+        </div>
+
+        <!-- View 3: Quiz -->
+        <div id="quiz-view" class="view">
+            <h2 id="quiz-title" class="text-2xl font-semibold text-gray-800 mb-2">Ceasnachadh (Quiz)</h2>
+            <p id="quiz-progress" class="text-lg text-gray-600 mb-6"></p>
+
+            <div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
+                <h3 id="quiz-question" class="text-xl font-medium text-gray-900 mb-5"></h3>
+                
+                <div id="quiz-options" class="space-y-3">
+                    <!-- Quiz options will be dynamically inserted here -->
+                </div>
+                
+                <div id="quiz-feedback" class="mt-4 h-6 text-lg"></div>
+                
+                <button id="submit-quiz-btn" class="w-full mt-6 px-6 py-3 bg-indigo-600 text-white rounded-md shadow hover:bg-indigo-700 transition-colors text-lg font-semibold disabled:opacity-50">Submit</button>
+            </div>
+        </div>
+
+        <!-- View 4: Review -->
+        <div id="review-view" class="view">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">Lèirmheas (Review)</h2>
+            
+            <!-- Quiz Results Section -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold text-gray-700 mb-4 border-b pb-2">Toraidhean Ceasnachaidh (Quiz Results)</h3>
+                <div id="quiz-results-list" class="space-y-2">
+                    <p class="text-gray-500">Cha do rinn thu ceasnachadh fhathast. (You haven't completed any quizzes yet.)</p>
+                    <!-- Quiz results will be inserted here -->
+                </div>
+            </div>
+
+            <!-- Learned Words Section -->
+            <div>
+                <h3 class="text-xl font-semibold text-gray-700 mb-4 border-b pb-2">Faclan a dh'ionnsaich (Words Learned)</h3>
+                <div id="review-word-list" class="space-y-4">
+                    <p class="text-gray-500">Cha do chrìochnaich thu roinn-seòrsa fhathast. (You haven't completed any categories yet.)</p>
+                    <!-- Learned words will be inserted here -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- DATA ---
+            // The core vocabulary data for the app
+            const vocabData = {
+                categories: [
+                    {
+                        id: 'weather',
+                        name: 'An t-Sìde (Weather)',
+                        words: [
+                            { gaelic: 'uisge', gaelic_sentence: 'Tha an t-uisge ann.', english_sentence: 'It is raining.' },
+                            { gaelic: 'grian', gaelic_sentence: 'Tha a’ ghrian a’ deàrrsadh.', english_sentence: 'The sun is shining.' },
+                            { gaelic: 'gaoth', gaelic_sentence: 'Tha a’ ghaoth làidir an-diugh.', english_sentence: 'The wind is strong today.' },
+                            { gaelic: 'sneachd', gaelic_sentence: 'Tha an sneachd a’ tuiteam.', english_sentence: 'The snow is falling.' },
+                            { gaelic: 'teth', gaelic_sentence: 'Tha i glè theth.', english_sentence: 'It is very hot.' }
+                        ]
+                    },
+                    {
+                        id: 'clothing',
+                        name: 'Aodach (Clothing)',
+                        words: [
+                            { gaelic: 'lèine', gaelic_sentence: 'Tha lèine ghorm orm.', english_sentence: 'I am wearing a blue shirt.' },
+                            { gaelic: 'briogais', gaelic_sentence: 'Feumaidh mi briogais ùr.', english_sentence: 'I need new trousers.' },
+                            { gaelic: 'brògan', gaelic_sentence: 'Tha mo bhrògan fliuch.', english_sentence: 'My shoes are wet.' },
+                            { gaelic: 'seacaid', gaelic_sentence: 'Cuir ort an seacaid agad.', english_sentence: 'Put on your jacket.' },
+                            { gaelic: 'ad', gaelic_sentence: 'Càit a bheil an ad agam?', english_sentence: 'Where is my hat?' }
+                        ]
+                    },
+                    {
+                        id: 'travel',
+                        name: 'Siubhal (Travel)',
+                        words: [
+                            { gaelic: 'càr', gaelic_sentence: 'Tha mi a’ dol anns a’ chàr.', english_sentence: 'I am going in the car.' },
+                            { gaelic: 'bus', gaelic_sentence: 'Tha am bus fadalach.', english_sentence: 'The bus is late.' },
+                            { gaelic: 'plèana', gaelic_sentence: 'Bha mi air a’ phlèana.', english_sentence: 'I was on the plane.' },
+                            { gaelic: 'trèana', gaelic_sentence: 'Thig an trèana aig dhà uair.', english_sentence: 'The train comes at two o\'clock.' },
+                            { gaelic: 'bàta', gaelic_sentence: 'Chaidh sinn air a’ bhàta.', english_sentence: 'We went on the boat.' }
+                        ]
+                    },
+                    {
+                        id: 'food',
+                        name: 'Biadh (Food)',
+                        words: [
+                            { gaelic: 'aran', gaelic_sentence: 'Is toil leam aran blàth.', english_sentence: 'I like warm bread.' },
+                            { gaelic: 'càise', gaelic_sentence: 'Tha an càise seo math.', english_sentence: 'This cheese is good.' },
+                            { gaelic: 'ubhal', gaelic_sentence: 'Dh’ith mi ubhal dearg.', english_sentence: 'I ate a red apple.' },
+                            { gaelic: 'bainne', gaelic_sentence: 'Tha mi ag iarraidh bainne.', english_sentence: 'I want milk.' },
+                            { gaelic: 'iasg', gaelic_sentence: 'Bha iasg againn airson dìnnear.', english_sentence: 'We had fish for dinner.' }
+                        ]
+                    }
+                ]
+            };
+            
+            const allWords = vocabData.categories.flatMap(cat => cat.words);
+
+            // --- STATE ---
+            // Manages the application's current state
+            let state = {
+                currentView: 'home',
+                currentCategoryIndex: null,
+                currentCardIndex: 0,
+                completedCategories: [], // Array of category IDs
+                quizQueue: [], // Array of category IDs for the next quiz
+                currentQuiz: {
+                    words: [],
+                    currentQuestion: 0,
+                    score: 0,
+                    categoryNames: ''
+                },
+                quizScores: {}, // e.g., {'weather-clothing': '4/5'}
+                wordsLearned: [] // Array of word objects
+            };
+
+            // --- SELECTORS ---
+            // Get references to all major UI elements
+            const views = document.querySelectorAll('.view');
+            const navButtons = {
+                home: document.getElementById('nav-home'),
+                review: document.getElementById('nav-review')
+            };
+            const homeView = {
+                categoryList: document.getElementById('category-list'),
+                quizPrompt: document.getElementById('quiz-prompt'),
+                startQuizBtn: document.getElementById('start-quiz-btn')
+            };
+            const flashcardView = {
+                title: document.getElementById('flashcard-category-title'),
+                progress: document.getElementById('flashcard-progress'),
+                container: document.getElementById('flashcard-container'),
+                cardFront: document.getElementById('card-front'),
+                cardBack: document.getElementById('card-back'),
+                flipBtn: document.getElementById('flip-card-btn'),
+                nextBtn: document.getElementById('next-card-btn'),
+                prevBtn: document.getElementById('prev-card-btn'),
+                backToHomeBtn: document.getElementById('back-to-home-btn')
+            };
+            const quizView = {
+                title: document.getElementById('quiz-title'),
+                progress: document.getElementById('quiz-progress'),
+                question: document.getElementById('quiz-question'),
+                options: document.getElementById('quiz-options'),
+                feedback: document.getElementById('quiz-feedback'),
+                submitBtn: document.getElementById('submit-quiz-btn')
+            };
+            const reviewView = {
+                quizResultsList: document.getElementById('quiz-results-list'),
+                wordList: document.getElementById('review-word-list')
+            };
+
+            // --- NAVIGATION ---
+            
+            /**
+             * Main navigation function. Hides all views and shows the requested one.
+             * @param {string} viewId - The ID of the view to show (e.g., 'home-view').
+             */
+            function navigateTo(viewId) {
+                views.forEach(view => view.classList.remove('active'));
+                document.getElementById(viewId).classList.add('active');
+                state.currentView = viewId;
+                updateNavButtons(viewId);
+                
+                // Specific render functions for views that need dynamic content
+                if (viewId === 'home-view') {
+                    renderHomeView();
+                } else if (viewId === 'review-view') {
+                    renderReviewView();
+                }
+            }
+            
+            /**
+             * Updates the active state styling for navigation buttons.
+             * @param {string} viewId - The ID of the currently active view.
+             */
+            function updateNavButtons(viewId) {
+                Object.values(navButtons).forEach(btn => {
+                    btn.classList.remove('bg-indigo-800');
+                    btn.classList.add('hover:bg-indigo-600');
+                });
+                if (viewId === 'home-view') {
+                    navButtons.home.classList.add('bg-indigo-800');
+                    navButtons.home.classList.remove('hover:bg-indigo-600');
+                } else if (viewId === 'review-view') {
+                    navButtons.review.classList.add('bg-indigo-800');
+                    navButtons.review.classList.remove('hover:bg-indigo-600');
+                }
+            }
+
+            // --- HOME VIEW ---
+            
+            /**
+             * Renders the category list on the home view.
+             */
+            function renderHomeView() {
+                homeView.categoryList.innerHTML = ''; // Clear existing list
+                vocabData.categories.forEach((category, index) => {
+                    const isCompleted = state.completedCategories.includes(category.id);
+                    const button = document.createElement('button');
+                    button.className = `p-6 text-left rounded-lg shadow transition-all ${
+                        isCompleted 
+                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
+                        : 'bg-white hover:shadow-md hover:scale-[1.02]'
+                    }`;
+                    button.innerHTML = `
+                        <h3 class="text-lg font-semibold text-indigo-700">${category.name}</h3>
+                        <p class="text-sm text-gray-600">${category.words.length} faclan (words)</p>
+                        ${isCompleted ? '<span class="mt-2 inline-block text-sm font-semibold text-green-700">Crìochnaichte (Completed)</span>' : ''}
+                    `;
+                    if (!isCompleted) {
+                        button.onclick = () => startCategory(index);
+                    }
+                    button.disabled = isCompleted;
+                    homeView.categoryList.appendChild(button);
+                });
+                
+                // Check if a quiz is ready
+                if (state.quizQueue.length > 0) {
+                    homeView.quizPrompt.classList.remove('hidden');
+                } else {
+                    homeView.quizPrompt.classList.add('hidden');
+                }
+            }
+            
+            // --- FLASHCARD VIEW ---
+            
+            /**
+             * Starts a flashcard session for a given category.
+             * @param {number} categoryIndex - The index of the category in vocabData.
+             */
+            function startCategory(categoryIndex) {
+                state.currentCategoryIndex = categoryIndex;
+                state.currentCardIndex = 0;
+                flashcardView.title.textContent = vocabData.categories[categoryIndex].name;
+                navigateTo('flashcard-view');
+                renderCurrentCard();
+            }
+            
+            /**
+             * Renders the current flashcard based on state.
+             */
+            function renderCurrentCard() {
+                const category = vocabData.categories[state.currentCategoryIndex];
+                const word = category.words[state.currentCardIndex];
+                
+                // Unflip the card
+                flashcardView.container.classList.remove('is-flipped');
+                
+                // Set card content
+                flashcardView.cardFront.innerHTML = `<h2 class="text-4xl font-bold">${word.gaelic}</h2>`;
+                flashcardView.cardBack.innerHTML = `
+                    <div class="text-center">
+                        <p class="text-xl mb-4 italic">"${word.gaelic_sentence}"</p>
+                        <p class="text-lg opacity-90">"${word.english_sentence}"</p>
+                    </div>
+                `;
+                
+                // Update progress
+                flashcardView.progress.textContent = `Facal ${state.currentCardIndex + 1} / ${category.words.length}`;
+                
+                // Update button states
+                flashcardView.prevBtn.disabled = state.currentCardIndex === 0;
+                flashcardView.nextBtn.textContent = (state.currentCardIndex === category.words.length - 1) ? 'Finish' : 'Next';
+            }
+            
+            function flipCard() {
+                flashcardView.container.classList.toggle('is-flipped');
+            }
+            
+            function nextCard() {
+                const category = vocabData.categories[state.currentCategoryIndex];
+                if (state.currentCardIndex < category.words.length - 1) {
+                    state.currentCardIndex++;
+                    renderCurrentCard();
+                } else {
+                    // Finished category
+                    finishCategory();
+                }
+            }
+            
+            function prevCard() {
+                if (state.currentCardIndex > 0) {
+                    state.currentCardIndex--;
+                    renderCurrentCard();
+                }
+            }
+
+            /**
+             * Handles logic for when a category is completed.
+             */
+            function finishCategory() {
+                const category = vocabData.categories[state.currentCategoryIndex];
+                
+                // Add to completed list if not already there
+                if (!state.completedCategories.includes(category.id)) {
+                    state.completedCategories.push(category.id);
+                    
+                    // Add words to learned list
+                    category.words.forEach(word => {
+                        if (!state.wordsLearned.find(w => w.gaelic === word.gaelic)) {
+                            state.wordsLearned.push(word);
+                        }
+                    });
+                    
+                    // Add to quiz queue
+                    state.quizQueue.push(category.id);
+                }
+                
+                // Check if it's time for a quiz (after 2 categories)
+                if (state.quizQueue.length >= 2) {
+                    // Prompt for quiz on home screen
+                }
+                
+                navigateTo('home-view');
+            }
+
+            // --- QUIZ VIEW ---
+            
+            /**
+             * Sets up and starts the quiz.
+             */
+            function startQuiz() {
+                const catId1 = state.quizQueue[0];
+                const catId2 = state.quizQueue[1];
+                
+                const cat1 = vocabData.categories.find(c => c.id === catId1);
+                const cat2 = vocabData.categories.find(c => c.id === catId2);
+                
+                const quizWords = [...cat1.words, ...cat2.words];
+                
+                state.currentQuiz = {
+                    words: shuffleArray(quizWords),
+                    currentQuestion: 0,
+                    score: 0,
+                    categoryNames: `${cat1.name} & ${cat2.name}`,
+                    categoryKey: `${cat1.id}-${cat2.id}`
+                };
+                
+                // Clear the queue
+                state.quizQueue.splice(0, 2); 
+                
+                navigateTo('quiz-view');
+                renderQuizQuestion();
+            }
+
+            /**
+             * Renders the current quiz question.
+             */
+            function renderQuizQuestion() {
+                quizView.feedback.textContent = '';
+                quizView.submitBtn.disabled = true;
+                
+                if (state.currentQuiz.currentQuestion >= state.currentQuiz.words.length) {
+                    showQuizResults();
+                    return;
+                }
+                
+                const currentWord = state.currentQuiz.words[state.currentQuiz.currentQuestion];
+                const options = generateQuizOptions(currentWord);
+                
+                quizView.title.textContent = `Ceasnachadh: ${state.currentQuiz.categoryNames}`;
+                quizView.progress.textContent = `Ceist ${state.currentQuiz.currentQuestion + 1} / ${state.currentQuiz.words.length}`;
+                quizView.question.textContent = `Dè a' Ghàidhlig a th' air... (What is the Gaelic for...)\n"${currentWord.english_sentence}"`;
+                
+                quizView.options.innerHTML = '';
+                options.forEach((option, index) => {
+                    const optionId = `option-${index}`;
+                    const label = document.createElement('label');
+                    label.className = 'quiz-option bg-white hover:bg-gray-50';
+                    label.setAttribute('for', optionId);
+                    
+                    const input = document.createElement('input');
+                    input.type = 'radio';
+                    input.id = optionId;
+                    input.name = 'quiz-option';
+                    input.value = option.gaelic;
+                    input.onchange = () => { quizView.submitBtn.disabled = false; };
+                    
+                    const checkmark = document.createElement('span');
+                    checkmark.className = 'quiz-checkmark';
+                    
+                    label.appendChild(input);
+                    label.appendChild(document.createTextNode(option.gaelic));
+                    label.appendChild(checkmark);
+                    
+                    quizView.options.appendChild(label);
+                });
+            }
+
+            /**
+             * Generates 4 multiple-choice options (1 correct, 3 distractors).
+             * @param {object} correctWord - The correct word object.
+             * @returns {Array} An array of 4 shuffled word objects.
+             */
+            function generateQuizOptions(correctWord) {
+                let options = [correctWord];
+                let distractors = [];
+                
+                // Get 3 unique distractors
+                while (distractors.length < 3) {
+                    const randomWord = allWords[Math.floor(Math.random() * allWords.length)];
+                    if (randomWord.gaelic !== correctWord.gaelic && !distractors.find(d => d.gaelic === randomWord.gaelic)) {
+                        distractors.push(randomWord);
+                    }
+                }
+                
+                return shuffleArray([...options, ...distractors]);
+            }
+            
+            /**
+             * Checks the submitted quiz answer.
+             */
+            function checkQuizAnswer() {
+                const selectedInput = document.querySelector('input[name="quiz-option"]:checked');
+                if (!selectedInput) return;
+                
+                const selectedAnswer = selectedInput.value;
+                const correctAnswer = state.currentQuiz.words[state.currentQuiz.currentQuestion].gaelic;
+                
+                quizView.submitBtn.disabled = true;
+                
+                if (selectedAnswer === correctAnswer) {
+                    quizView.feedback.textContent = 'Ceart! (Correct!)';
+                    quizView.feedback.className = 'mt-4 h-6 text-lg correct';
+                    state.currentQuiz.score++;
+                } else {
+                    quizView.feedback.textContent = `Ceàrr. B' e am freagairt cheart "${correctAnswer}". (Wrong. The correct answer was "${correctAnswer}".)`;
+                    quizView.feedback.className = 'mt-4 h-6 text-lg incorrect';
+                }
+                
+                // Move to next question after a delay
+                setTimeout(() => {
+                    state.currentQuiz.currentQuestion++;
+                    renderQuizQuestion();
+                }, 2000);
+            }
+
+            /**
+             * Displays the final quiz results.
+             */
+            function showQuizResults() {
+                const score = state.currentQuiz.score;
+                const total = state.currentQuiz.words.length;
+                const key = state.currentQuiz.categoryKey;
+                
+                // Store score
+                state.quizScores[key] = {
+                    name: state.currentQuiz.categoryNames,
+                    score: `${score}/${total}`
+                };
+                
+                // Display final message
+                quizView.title.textContent = 'Crìochnaichte! (Finished!)';
+                quizView.progress.textContent = `An sgòr agad: ${score} / ${total}`;
+                quizView.question.textContent = (score / total) > 0.7 
+                    ? 'Glè mhath! (Very good!)' 
+                    : 'Cum ort a’ dol! (Keep going!)';
+                quizView.options.innerHTML = '';
+                quizView.feedback.textContent = '';
+                quizView.submitBtn.textContent = 'Air Ais chun Dachaigh (Back to Home)';
+                quizView.submitBtn.disabled = false;
+                quizView.submitBtn.onclick = () => {
+                    quizView.submitBtn.textContent = 'Submit'; // Reset button
+                    quizView.submitBtn.onclick = checkQuizAnswer; // Reset listener
+                    navigateTo('home-view');
+                };
+            }
+
+            // --- REVIEW VIEW ---
+            
+            /**
+             * Renders the review page with learned words and quiz scores.
+             */
+            function renderReviewView() {
+                // Render Quiz Results
+                const scores = Object.values(state.quizScores);
+                if (scores.length === 0) {
+                    reviewView.quizResultsList.innerHTML = `<p class="text-gray-500">Cha do rinn thu ceasnachadh fhathast. (You haven't completed any quizzes yet.)</p>`;
+                } else {
+                    reviewView.quizResultsList.innerHTML = '';
+                    scores.forEach(result => {
+                        const div = document.createElement('div');
+                        div.className = 'p-3 bg-white rounded-md shadow-sm flex justify-between items-center';
+                        div.innerHTML = `
+                            <span class="font-medium text-gray-700">${result.name}</span>
+                            <span class="font-bold text-indigo-600 text-lg">${result.score}</span>
+                        `;
+                        reviewView.quizResultsList.appendChild(div);
+                    });
+                }
+                
+                // Render Learned Words
+                if (state.wordsLearned.length === 0) {
+                    reviewView.wordList.innerHTML = `<p class="text-gray-500">Cha do chrìochnaich thu roinn-seòrsa fhathast. (You haven't completed any categories yet.)</p>`;
+                } else {
+                    reviewView.wordList.innerHTML = '';
+                    state.wordsLearned.forEach(word => {
+                        const div = document.createElement('div');
+                        div.className = 'p-4 bg-white rounded-md shadow-sm';
+                        div.innerHTML = `
+                            <h4 class="text-lg font-semibold text-indigo-700">${word.gaelic}</h4>
+                            <p class="text-gray-600 italic">"${word.gaelic_sentence}"</p>
+                            <p class="text-gray-500">"${word.english_sentence}"</p>
+                        `;
+                        reviewView.wordList.appendChild(div);
+                    });
+                }
+            }
+            
+            // --- UTILITY FUNCTIONS ---
+            
+            /**
+             * Shuffles an array in place.
+             * @param {Array} array - The array to shuffle.
+             * @returns {Array} The shuffled array.
+             */
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            // --- EVENT LISTENERS ---
+            
+            // Main Navigation
+            navButtons.home.onclick = () => navigateTo('home-view');
+            navButtons.review.onclick = () => navigateTo('review-view');
+            
+            // Home View
+            homeView.startQuizBtn.onclick = startQuiz;
+            
+            // Flashcard View
+            flashcardView.flipBtn.onclick = flipCard;
+            flashcardView.nextBtn.onclick = nextCard;
+            flashcardView.prevBtn.onclick = prevCard;
+            flashcardView.backToHomeBtn.onclick = () => navigateTo('home-view');
+            
+            // Quiz View
+            quizView.submitBtn.onclick = checkQuizAnswer;
+
+            // --- INITIALIZATION ---
+            navigateTo('home-view'); // Start on the home screen
+        });
+    </script>
+</body>
+</html>

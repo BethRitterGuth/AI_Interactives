@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-R-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Journey of St. Andrew</title>
+    
+    <style>
+        body {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            background-color: #f0e8d9; /* Parchment color */
+            color: #3b2f2f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4a3c3c;
+            border-bottom: 2px solid #8b7a6b;
+            padding-bottom: 10px;
+        }
+
+        #game-container {
+            width: 100%;
+            max-width: 700px;
+            background-color: #fffaf0; /* Creamy white */
+            border: 3px solid #6b4c34; /* Dark brown border */
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        #scene-graphic {
+            width: 100%;
+            height: 200px;
+            background-color: #e0e7f0; /* Light sky/water blue */
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+
+        #scene-graphic svg {
+            width: 150px;
+            height: 150px;
+        }
+
+        #story-text {
+            font-size: 1.1em;
+            line-height: 1.6;
+            min-height: 100px;
+            padding: 10px;
+            background: #fdfdfd;
+            border-radius: 5px;
+            border: 1px dashed #dcdcdc;
+        }
+
+        #choices-container {
+            margin-top: 20px;
+            display: grid;
+            gap: 10px;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 12px 15px;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-size: 1em;
+            color: #ffffff;
+            background-color: #3d5a80; /* Deep blue */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+            border-bottom: 2px solid #2a3f5a;
+        }
+
+        button:hover {
+            background-color: #2e4764;
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="game-container">
+        <h1>The Journey of St. Andrew</h1>
+        
+        <div id="scene-graphic"></div>
+
+        <div id="story-text">Loading your adventure...</div>
+        
+        <div id="choices-container"></div>
+    </div>
+
+    <script>
+        // Wait for the document to load before starting the game
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // Get references to the HTML elements
+            const graphicDiv = document.getElementById('scene-graphic');
+            const textDiv = document.getElementById('story-text');
+            const choicesDiv = document.getElementById('choices-container');
+
+            // --- All Graphics (as self-contained SVGs) ---
+            const graphics = {
+                boat: `
+                    <svg viewBox="0 0 100 100">
+                        <path d="M 10 80 Q 50 70 90 80 L 80 90 L 20 90 Z" fill="#6b4c34"/>
+                        <path d="M 48 20 L 52 20 L 52 80 L 48 80 Z" fill="#6b4c34"/>
+                        <path d="M 50 25 L 70 45 L 50 45 Z" fill="#f0f0f0"/>
+                        <path d="M 10 85 Q 50 95 90 85" stroke="#3d5a80" stroke-width="2" fill="none"/>
+                        <path d="M 5 90 Q 50 100 95 90" stroke="#3d5a80" stroke-width="2" fill="none"/>
+                    </svg>`,
+                river: `
+                    <svg viewBox="0 0 100 100">
+                        <path d="M 40 10 C 20 30, 20 70, 40 90" stroke="#3d5a80" stroke-width="5" fill="none"/>
+                        <path d="M 60 10 C 80 30, 80 70, 60 90" stroke="#3d5a80" stroke-width="5" fill="none"/>
+                        <circle cx="20" cy="20" r="5" fill="#f0e8d9"/>
+                        <circle cx="80" cy="70" r="5" fill="#f0e8d9"/>
+                        <circle cx="25" cy="50" r="3" fill="#f0e8d9"/>
+                    </svg>`,
+                map: `
+                    <svg viewBox="0 0 100 100">
+                        <rect x="10" y="10" width="80" height="80" fill="#f0e8d9" stroke="#6b4c34" stroke-width="2"/>
+                        <path d="M 20 20 Q 40 40 70 30" stroke="#8b7a6b" fill="none" stroke-dasharray="3 3"/>
+                        <path d="M 30 70 Q 50 50 80 60" stroke="#8b7a6b" fill="none" stroke-dasharray="3 3"/>
+                        <circle cx="70" cy="30" r="3" fill="red"/>
+                        <text x="70" y="28" font-size="5">Patras</text>
+                        <circle cx="30" cy="70"r="3" fill="red"/>
+                        <text x="30" y="68" font-size="5">Galilee</text>
+                        <path d="M 75 75 L 80 80 L 75 85 L 70 80 Z" fill="#333"/>
+                        <text x="74" y="73" font-size="5" fill="#fff">N</text>
+                    </svg>`,
+                saltire: `
+                    <svg viewBox="0 0 100 100">
+                        <rect x="0" y="0" width="100" height="100" fill="#a0a0a0"/>
+                        <path d="M 10 10 L 90 90" stroke="#ffffff" stroke-width="15"/>
+                        <path d="M 10 90 L 90 10" stroke="#ffffff" stroke-width="15"/>
+                    </svg>`,
+                scotland: `
+                    <svg viewBox="0 0 100 100">
+                        <rect x="0" y="0" width="100" height="100" fill="#005eb8"/>
+                        <path d="M 0 0 L 100 100" stroke="#ffffff" stroke-width="20"/>
+                        <path d="M 0 100 L 100 0" stroke="#ffffff" stroke-width="20"/>
+                    </svg>`,
+                relics: `
+                    <svg viewBox="0 0 100 100">
+                        <path d="M 30 40 L 70 40 L 70 80 L 30 80 Z" fill="#d4c8b0" stroke="#6b4c34" stroke-width="2"/>
+                        <path d="M 25 40 L 75 40 L 70 30 L 30 30 Z" fill="#b0a088" stroke="#6b4c34" stroke-width="2"/>
+                        <path d="M 45 50 L 55 60" stroke="#6b4c34" stroke-width="3"/>
+                        <path d="M 55 50 L 45 60" stroke="#6b4c34" stroke-width="3"/>
+                    </svg>`,
+                shipwreck: `
+                    <svg viewBox="0 0 100 100">
+                        <path d="M 20 80 Q 30 70 40 80" stroke="#6b4c34" stroke-width="3" fill="none"/>
+                        <path d="M 30 90 L 50 70" stroke="#6b4c34" stroke-width="3" fill="none"/>
+                        <path d="M 10 85 Q 50 95 90 85" stroke="#3d5a80" stroke-width="4" fill="none"/>
+                        <path d="M 5 90 Q 50 100 95 90" stroke="#3d5a80" stroke-width="4" fill="none"/>
+                        <path d="M 15 80 Q 50 90 85 80" stroke="#3d5a80" stroke-width="4" fill="none"/>
+                    </svg>`
+            };
+
+            // --- The Game's Story and Logic ---
+            const scenes = {
+                start: {
+                    graphic: graphics.boat,
+                    text: "You are Andrew, a fisherman on the Sea of Galilee. Your nets are empty, and the sun is high. Your brother, Peter, is grumbling beside you.",
+                    choices: [
+                        { text: "Keep fishing. We need the money.", nextScene: "keepFishing" },
+                        { text: "Let's go to the river to hear that preacher, John the Baptist.", nextScene: "seeJohn" }
+                    ]
+                },
+                keepFishing: {
+                    graphic: graphics.boat,
+                    text: "You cast your nets all day with no luck. As evening falls, you hear a crowd gathering by the river. Your curiosity gets the better of you.",
+                    choices: [
+                        { text: "Investigate the crowd.", nextScene: "seeJohn" }
+                    ]
+                },
+                seeJohn: {
+                    graphic: graphics.river,
+                    text: "At the river, you listen to John the Baptist. He points to a man walking by and declares, 'Behold, the Lamb of God!' You feel a powerful pull to follow this man.",
+                    choices: [
+                        { text: "Follow the man, Jesus.", nextScene: "followJesus" },
+                        { text: "Stay with John. This new man is unknown.", nextScene: "stayJohn" }
+                    ]
+                },
+                stayJohn: {
+                    graphic: graphics.river,
+                    text: "You stay, but your gaze follows Jesus. John smiles and says, 'Go. You must follow him.' You nod and run to catch up.",
+                    choices: [
+                        { text: "Follow Jesus.", nextScene: "followJesus" }
+                    ]
+                },
+                followJesus: {
+                    graphic: graphics.boat,
+                    text: "You spend the day with Jesus and are convinced He is the Messiah. You are his **first disciple**. What is your first act?",
+                    choices: [
+                        { text: "I must tell my brother, Peter!", nextScene: "getPeter" },
+                        { text: "I will keep this glorious secret to myself.", nextScene: "keepSecret" }
+                    ]
+                },
+                keepSecret: {
+                    graphic: graphics.boat,
+                    text: "You try, but your joy is too great. You find Peter mending his nets and can't help but shout, 'We have found the Messiah!'",
+                    choices: [
+                        { text: "Bring Peter to Jesus.", nextScene: "getPeter" }
+                    ]
+                },
+                getPeter: {
+                    graphic: graphics.boat,
+                    text: "You find Peter and bring him to Jesus. This simple act will change the world. You and Peter become two of the 12 Apostles, learning and traveling with Jesus.",
+                    choices: [
+                        { text: "Continue the journey...", nextScene: "postAscension" }
+                    ]
+                },
+                postAscension: {
+                    graphic: graphics.map,
+                    text: "After Jesus's ascension, the Apostles are tasked with spreading his message. You are filled with the Holy Spirit and ready to travel.",
+                    choices: [
+                        { text: "Travel north, to the lands of Scythia (modern-day Ukraine/Russia).", nextScene: "travelScythia" },
+                        { text: "Travel west, to the heart of philosophy in Greece.", nextScene: "travelGreece" }
+                    ]
+                },
+                travelScythia: {
+                    graphic: graphics.map,
+                    text: "You brave the cold and preach to the fierce tribes of Scythia. You establish many churches and become the **patron saint of Ukraine and Romania**. Your work is fruitful, and you live a long life as a missionary.",
+                    choices: [
+                        { text: "Your journey ends here, but your legacy lives on.", nextScene: "endScythia" }
+                    ]
+                },
+                endScythia: {
+                    graphic: graphics.map,
+                    text: "You lived a long and faithful life, spreading the message to the far reaches of the known world. (This is a possible end to your story... but not the one history remembers most.)",
+                    choices: [
+                        { text: "Play again?", nextScene: "start" }
+                    ]
+                },
+                travelGreece: {
+                    graphic: graphics.map,
+                    text: "You arrive in Patras, Greece. Your preaching is powerful, and many convert, including the wife of the Roman governor, Aegeas.",
+                    choices: [
+                        { text: "Continue preaching openly.", nextScene: "confrontation" }
+                    ]
+                },
+                confrontation: {
+                    graphic: graphics.saltire,
+                    text: "Governor Aegeas is furious. He orders you to stop preaching and to sacrifice to the Roman gods. You refuse.",
+                    choices: [
+                        { text: "I will not deny my Lord.", nextScene: "martyrdom" },
+                        { text: "Perhaps I can reason with him.", nextScene: "martyrdom" }
+                    ]
+                },
+                martyrdom: {
+                    graphic: graphics.saltire,
+                    text: "Aegeas, enraged, sentences you to death by crucifixion. You make one last request: 'I am not worthy to be crucified on the same cross as my Lord.'",
+                    choices: [
+                        { text: "Face your destiny.", nextScene: "saltireCross" }
+                    ]
+                },
+                saltireCross: {
+                    graphic: graphics.saltire,
+                    text: "You are bound, not nailed, to a *crux decussata* - an X-shaped cross - to prolong your suffering. For two days, you hang there, preaching to the crowds until you die.",
+                    choices: [
+                        { text: "Your life on Earth ends, but your legacy begins...", nextScene: "legacyChoice" }
+                    ]
+                },
+                // --- NEW STORY BRANCH START ---
+                legacyChoice: {
+                    graphic: graphics.relics,
+                    text: "Your body is laid to rest in Patras. But your journey is not over. Centuries later, a Greek monk, St. Rule (or Regulus), has a vision. An angel tells him to take your relics to the 'ends of the Earth' for safekeeping, as a great emperor will soon move them to Constantinople.",
+                    choices: [
+                        { text: "Follow the journey of your relics.", nextScene: "stRuleJourney" },
+                        { text: "Watch your spiritual legacy grow from afar.", nextScene: "epilogue" }
+                    ]
+                },
+                stRuleJourney: {
+                    graphic: graphics.shipwreck,
+                    text: "St. Rule gathers your bones—a tooth, a kneecap, and arm bones—and sets sail. He is caught in a terrible storm and travels for weeks, finally shipwrecking on the coast of Fife, in the Pictish kingdom of Alba (modern-day Scotland).",
+                    choices: [
+                        { text: "Continue the relics' story...", nextScene: "standrewsTown" }
+                    ]
+                },
+                standrewsTown: {
+                    graphic: graphics.relics,
+                    text: "St. Rule brings your relics ashore at a small settlement called Kilrymont. The Pictish King, Óengus I, is so grateful for this holy arrival that he grants the land for a church. The site becomes a major center of pilgrimage.",
+                    choices: [
+                        { text: "What does this place become?", nextScene: "standrewsToday" }
+                    ]
+                },
+                standrewsToday: {
+                    graphic: graphics.scotland,
+                    text: "Kilrymont is renamed... **St. Andrews**. It becomes the spiritual heart of the new nation of Scotland, and you are adopted as its patron saint. But your most famous sign is yet to come...",
+                    choices: [
+                        { text: "What is the sign?", nextScene: "epilogue" }
+                    ]
+                },
+                // --- END OF NEW BRANCH (merges with original epilogue) ---
+                epilogue: {
+                    graphic: graphics.scotland,
+                    text: "Generations later, in 832 AD, a new king, Angus II, leads a combined force of Picts and Scots. He is outnumbered by a massive army of Angles. On the eve of battle, he prays for your help.",
+                    choices: [
+                        { text: "Continue...", nextScene: "epilogue2" }
+                    ]
+                },
+                epilogue2: {
+                    graphic: graphics.scotland,
+                    text: "As dawn breaks, he and his men see a miraculous sight: white clouds forming a perfect X-shaped cross—your cross—against the brilliant blue sky. Taking it as a divine sign, they charge into battle.",
+                    choices: [
+                        { text: "And the result...?", nextScene: "saltirePurpose" }
+                    ]
+                },
+                // --- NEW SCENE explaining the Saltire's purpose ---
+                saltirePurpose: {
+                    graphic: graphics.scotland,
+                    text: "They win a stunning victory. In honor of this miracle, the 'Saltire' becomes the national flag of Scotland. **Its purpose** is to be a symbol of your protection, a declaration of Scottish identity and independence, and a rallying cry for its people for over a thousand years.",
+                    choices: [
+                        { text: "Congratulations! You've completed the journey of St. Andrew.", nextScene: "endGame" }
+                    ]
+                },
+                endGame: {
+                    graphic: graphics.scotland,
+                    text: "From a humble fisherman to the patron saint of a nation, your work of faith, courage, and evangelism echoes through history. Thank you for playing!",
+                    choices: [
+                        { text: "Play Again", nextScene: "start" }
+                    ]
+                }
+            };
+
+            // --- The Game Engine ---
+            
+            /**
+             * Updates the game display to show the specified scene.
+             * @param {string} sceneId - The key of the scene to display from the 'scenes' object.
+             */
+            function showScene(sceneId) {
+                // Get the scene object from the main 'scenes' collection
+                const scene = scenes[sceneId];
+
+                if (!scene) {
+                    console.error(`Scene "${sceneId}" not found!`);
+                    return;
+                }
+
+                // Update the graphic
+                graphicDiv.innerHTML = scene.graphic || '';
+
+                // Update the story text
+                textDiv.textContent = scene.text;
+
+                // Clear out the old choice buttons
+                choicesDiv.innerHTML = '';
+
+                // Create and display the new choice buttons
+                scene.choices.forEach(choice => {
+                    const button = document.createElement('button');
+                    button.textContent = choice.text;
+                    button.addEventListener('click', () => {
+                        // When a button is clicked, show the scene it links to
+                        showScene(choice.nextScene);
+                    });
+                    choicesDiv.appendChild(button);
+                });
+            }
+
+            // --- Start the Game ---
+            // Show the very first scene ('start') when the page loads
+            showScene('start');
+        });
+    </script>
+
+</body>
+</html>

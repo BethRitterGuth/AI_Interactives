@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kate Chopin & Charlotte Perkins Gilman: Women Writing Freedom Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #4a148c;
+        }
+        #quiz-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .question {
+            margin-bottom: 30px;
+            display: none;
+        }
+        .question.active {
+            display: block;
+        }
+        .options label {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #e8eaf6;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .options input[type="radio"] {
+            margin-right: 10px;
+        }
+        button {
+            background-color: #7b1fa2;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #4a148c;
+        }
+        #feedback {
+            margin-top: 20px;
+            font-weight: bold;
+            text-align: center;
+            min-height: 50px;
+        }
+        #start-screen, #end-screen {
+            text-align: center;
+        }
+        #progress {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        #name-input {
+            padding: 10px;
+            width: 300px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="quiz-container">
+        <h1>Kate Chopin & Charlotte Perkins Gilman: Women Writing Freedom</h1>
+        <h2>20-Question Quiz</h2>
+
+        <div id="start-screen">
+            <p>Please enter your name to begin the quiz:</p>
+            <input type="text" id="name-input" placeholder="Your name">
+            <br><br>
+            <button onclick="startQuiz()">Start Quiz</button>
+        </div>
+
+        <div id="quiz-content" style="display:none;">
+            <div id="progress">Question 1 of 20</div>
+            <div id="question-container"></div>
+            <div id="feedback"></div>
+            <div style="text-align:center; margin-top:30px;">
+                <button id="next-btn" onclick="nextQuestion()" disabled>Next Question</button>
+            </div>
+        </div>
+
+        <div id="end-screen" style="display:none; text-align:center;">
+            <h2>Quiz Complete!</h2>
+            <p id="score-message"></p>
+            <p>Thank you for taking the quiz!</p>
+            <p>Your score has been emailed to the instructor.</p>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "In what year was Kate Chopin born?",
+                options: ["1850", "1860", "1840", "1870"],
+                correct: 0,
+                explanation: "Kate Chopin was born in 1850 in St. Louis."
+            },
+            {
+                question: "What caused Louise Mallard to die in 'The Story of an Hour'?",
+                options: ["Seeing her husband alive", "Grief over her husband's death", "Her heart trouble worsening from joy", "An accident"],
+                correct: 0,
+                explanation: "Louise dies from the shock of seeing her husband alive, losing her newfound sense of freedom. The doctors ironically say 'of joy that kills'."
+            },
+            {
+                question: "Who reveals that they have Black ancestry in 'Désirée's Baby'?",
+                options: ["Désirée", "Armand Aubigny", "The baby", "Madame Valmondé"],
+                correct: 1,
+                explanation: "Armand discovers letters proving his own mother had Black ancestry."
+            },
+            {
+                question: "In 'A Respectable Woman', what does Mrs. Baroda ultimately decide regarding Gouvernail?",
+                options: ["She wants him to visit again", "She never wants to see him again", "She confesses her feelings to her husband", "She leaves her husband"],
+                correct: 0,
+                explanation: "Mrs. Baroda says she has 'overcome everything' and wants Gouvernail to visit again, leaving the resolution ambiguous."
+            },
+            {
+                question: "What famous novel by Kate Chopin was condemned for its treatment of female sexuality?",
+                options: ["At Fault", "The Awakening", "Bayou Folk", "A Night in Acadie"],
+                correct: 1,
+                explanation: "The Awakening (1899) was widely criticized as morbid and vulgar."
+            },
+            {
+                question: "In what year was Charlotte Perkins Gilman born?",
+                options: ["1850", "1860", "1870", "1880"],
+                correct: 1,
+                explanation: "Charlotte Perkins Gilman was born in 1860 in Hartford, Connecticut."
+            },
+            {
+                question: "What treatment did the narrator in 'The Yellow Wallpaper' undergo?",
+                options: ["The rest cure", "Electrotherapy", "Travel abroad", "Writing therapy"],
+                correct: 0,
+                explanation: "She was prescribed S. Weir Mitchell's 'rest cure', involving complete bed rest and no intellectual activity."
+            },
+            {
+                question: "What does the narrator see trapped behind the yellow wallpaper?",
+                options: ["A woman", "Her husband", "Patterns of bars", "Her child"],
+                correct: 0,
+                explanation: "She sees a woman creeping and shaking the bars, symbolizing her own imprisonment."
+            },
+            {
+                question: "Why did Gilman write 'The Yellow Wallpaper'?",
+                options: ["To protest the rest cure and save others from madness", "As pure fiction", "To describe her happy marriage", "For entertainment"],
+                correct: 0,
+                explanation: "Gilman wrote it to protest the rest cure that nearly drove her mad and to highlight its dangers."
+            },
+            {
+                question: "In 'When I Was a Witch', what does the narrator use her powers for?",
+                options: ["To reform society's injustices against women", "Personal wealth", "Revenge on men", "To become famous"],
+                correct: 0,
+                explanation: "She reforms everyday injustices, like eliminating corsets and improving conditions for women."
+            },
+            {
+                question: "What major nonfiction work by Gilman argued for women's economic independence?",
+                options: ["The Yellow Wallpaper", "Women and Economics", "Herland", "Human Work"],
+                correct: 1,
+                explanation: "Women and Economics (1898) argued that women's dependence on men stunted evolution."
+            },
+            {
+                question: "Which theme is shared by both Chopin and Gilman?",
+                options: ["Marriage as imprisonment", "The joys of motherhood", "Women's superiority over men", "Rural life"],
+                correct: 0,
+                explanation: "Both explore how marriage limits female selfhood and agency."
+            },
+            {
+                question: "What symbolizes the narrator's imprisonment in 'The Yellow Wallpaper'?",
+                options: ["The barred windows", "The yellow color", "The bed", "The journal"],
+                correct: 0,
+                explanation: "The barred windows represent her imprisonment within domestic and medical authority."
+            },
+            {
+                question: "Louise Mallard repeats which phrase upon realizing her freedom?",
+                options: ["'Free! Body and soul free!'", "'At last!'", "'Independent!'", "'Alive!'"],
+                correct: 0,
+                explanation: "She whispers 'Free! Body and soul free!'"
+            },
+            {
+                question: "What real-life doctor prescribed the rest cure to Gilman?",
+                options: ["S. Weir Mitchell", "John", "Brently Mallard", "Oscar Chopin"],
+                correct: 0,
+                explanation: "S. Weir Mitchell prescribed the rest cure to Gilman after her postpartum depression."
+            },
+            {
+                question: "In 'Désirée's Baby', what destroys the family?",
+                options: ["Obsession with racial purity", "Financial ruin", "Infidelity", "Illness"],
+                correct: 0,
+                explanation: "Armand's obsession with racial purity leads to tragedy."
+            },
+            {
+                question: "Both authors use which literary technique prominently?",
+                options: ["Psychological realism", "Historical accuracy", "Adventure plots", "Humor"],
+                correct: 0,
+                explanation: "They focus on interior consciousness and emotional truth."
+            },
+            {
+                question: "What happens to the narrator at the end of 'The Yellow Wallpaper'?",
+                options: ["She creeps over her fainted husband", "She escapes the room", "She recovers fully", "Her husband frees her"],
+                correct: 0,
+                explanation: "She creeps around the room, stepping over her fainted husband."
+            },
+            {
+                question: "Kate Chopin moved to Louisiana after marrying whom?",
+                options: ["Oscar Chopin", "Brently Mallard", "Armand Aubigny", "Gouvernail"],
+                correct: 0,
+                explanation: "She married Oscar Chopin and moved to Louisiana, where she had six children."
+            },
+            {
+                question: "A common theme in both authors' works is:",
+                options: ["Male misreading of women's needs", "The benefits of traditional marriage", "Women's lack of intelligence", "Urban life"],
+                correct: 0,
+                explanation: "Husbands and doctors consistently misunderstand women's inner lives."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let studentName = '';
+        let answered = false;
+
+        function startQuiz() {
+            studentName = document.getElementById('name-input').value.trim() || 'Student';
+            if (studentName === '') studentName = 'Student';
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('quiz-content').style.display = 'block';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            if (currentQuestion >= questions.length) {
+                endQuiz();
+                return;
+            }
+            const q = questions[currentQuestion];
+            document.getElementById('progress').innerText = `Question ${currentQuestion + 1} of ${questions.length}`;
+            let html = `<p><strong>${q.question}</strong></p><div class="options">`;
+            q.options.forEach((opt, i) => {
+                html += `<label><input type="radio" name="q${currentQuestion}" value="${i}"> ${opt}</label>`;
+            });
+            html += `</div>`;
+            document.getElementById('question-container').innerHTML = html;
+            document.getElementById('feedback').innerHTML = '';
+            document.getElementById('next-btn').disabled = true;
+            answered = false;
+
+            // Add event listeners to radios
+            document.querySelectorAll(`input[name="q${currentQuestion}"]`).forEach(radio => {
+                radio.addEventListener('change', checkAnswer);
+            });
+        }
+
+        function checkAnswer(e) {
+            if (answered) return;
+            answered = true;
+            const selected = parseInt(e.target.value);
+            const q = questions[currentQuestion];
+            const radios = document.querySelectorAll(`input[name="q${currentQuestion}"]`);
+            radios.forEach(r => r.disabled = true);
+
+            let feedback = '';
+            if (selected === q.correct) {
+                score++;
+                const encouragements = ["Great job!", "Excellent!", "Well done!", "Fantastic!", "You're on fire!", "Superb answer!"];
+                feedback = `<span style="color:green;">Correct! ${encouragements[Math.floor(Math.random() * encouragements.length)]}</span>`;
+            } else {
+                feedback = `<span style="color:red;">Incorrect. The correct answer is: ${q.options[q.correct]}.<br>${q.explanation}</span>`;
+            }
+            document.getElementById('feedback').innerHTML = feedback;
+            document.getElementById('next-btn').disabled = false;
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            showQuestion();
+        }
+
+        function endQuiz() {
+            document.getElementById('quiz-content').style.display = 'none';
+            document.getElementById('end-screen').style.display = 'block';
+            document.getElementById('score-message').innerText = `${studentName}, you scored ${score} out of ${questions.length}!`;
+
+            // Simulate emailing the score (using mailto link)
+            const subject = encodeURIComponent(`Quiz Score: Kate Chopin & Charlotte Perkins Gilman`);
+            const body = encodeURIComponent(`Student Name: ${studentName}\nScore: ${score}/${questions.length}\nDate: ${new Date().toLocaleDateString()}`);
+            const mailtoLink = `mailto:beth.ritter-guth@desales.edu?subject=${subject}&body=${body}`;
+            window.location.href = mailtoLink;
+        }
+    </script>
+</body>
+</html>
