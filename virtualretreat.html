@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Celtic Spirituality Retreat - 10 Days of Sacred Journey</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 50%, #1a472a 100%);
+            color: #f5f5dc;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(20, 30, 20, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #2d5a3d, #1a472a);
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 3px solid #d4af37;
+        }
+
+        h1 {
+            font-size: 2.2em;
+            color: #d4af37;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .subtitle {
+            color: #a8d5ba;
+            font-style: italic;
+            font-size: 1.1em;
+        }
+
+        nav {
+            background: rgba(30, 40, 30, 0.8);
+            padding: 15px 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            border-bottom: 2px solid #2d5a3d;
+        }
+
+        .day-btn {
+            background: #2d5a3d;
+            color: #f5f5dc;
+            border: 2px solid #3d6a4d;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            font-family: 'Georgia', serif;
+        }
+
+        .day-btn:hover {
+            background: #3d7a5d;
+            border-color: #d4af37;
+            transform: translateY(-2px);
+        }
+
+        .day-btn.active {
+            background: #d4af37;
+            color: #1a472a;
+            border-color: #d4af37;
+            font-weight: bold;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .day-content {
+            display: none;
+        }
+
+        .day-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: #d4af37;
+            font-size: 2em;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #3d6a4d;
+            padding-bottom: 10px;
+        }
+
+        .day-subtitle {
+            color: #a8d5ba;
+            font-style: italic;
+            font-size: 1.2em;
+            margin-bottom: 25px;
+        }
+
+        .study-passage {
+            background: rgba(45, 90, 61, 0.3);
+            padding: 25px;
+            border-left: 4px solid #d4af37;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .study-passage p {
+            margin-bottom: 15px;
+        }
+
+        h3 {
+            color: #d4af37;
+            font-size: 1.5em;
+            margin: 30px 0 15px 0;
+            border-left: 4px solid #3d6a4d;
+            padding-left: 15px;
+        }
+
+        .resources {
+            background: rgba(30, 50, 40, 0.4);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .resource-link {
+            display: block;
+            color: #a8d5ba;
+            text-decoration: none;
+            padding: 12px;
+            margin: 8px 0;
+            background: rgba(45, 90, 61, 0.4);
+            border-radius: 5px;
+            border-left: 3px solid #d4af37;
+            transition: all 0.3s ease;
+        }
+
+        .resource-link:hover {
+            background: rgba(45, 90, 61, 0.6);
+            padding-left: 20px;
+            border-left-color: #a8d5ba;
+        }
+
+        .resource-link::before {
+            content: "🔗 ";
+            color: #d4af37;
+        }
+
+        .journal-section {
+            background: rgba(20, 30, 20, 0.6);
+            padding: 25px;
+            border-radius: 8px;
+            border: 2px solid #3d6a4d;
+        }
+
+        .journal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            background: rgba(10, 20, 15, 0.8);
+            color: #f5f5dc;
+            border: 2px solid #3d6a4d;
+            border-radius: 8px;
+            font-family: 'Georgia', serif;
+            font-size: 1em;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #d4af37;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: #3d6a4d;
+            color: #f5f5dc;
+            border: 2px solid #4d7a5d;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #4d8a6d;
+            transform: translateY(-2px);
+        }
+
+        .save-btn {
+            background: #d4af37;
+            color: #1a472a;
+            border-color: #d4af37;
+            font-weight: bold;
+        }
+
+        .save-btn:hover {
+            background: #e4bf47;
+        }
+
+        .reset-btn {
+            background: #8b4513;
+            border-color: #a0522d;
+        }
+
+        .reset-btn:hover {
+            background: #a0522d;
+        }
+
+        .save-message {
+            color: #a8d5ba;
+            font-style: italic;
+            margin-top: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .save-message.show {
+            opacity: 1;
+        }
+
+        footer {
+            background: rgba(20, 30, 20, 0.8);
+            padding: 20px;
+            text-align: center;
+            border-top: 2px solid #3d6a4d;
+            color: #a8d5ba;
+            font-size: 0.9em;
+        }
+
+        .celtic-knot {
+            text-align: center;
+            font-size: 2em;
+            color: #d4af37;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            h2 {
+                font-size: 1.6em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            nav {
+                padding: 10px;
+            }
+
+            .day-btn {
+                font-size: 0.85em;
+                padding: 8px 12px;
+            }
+
+            .journal-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🍀 Celtic Spirituality Retreat 🍀</h1>
+            <p class="subtitle">A 10-Day Journey Through Sacred Traditions & Peregrini Principles</p>
+        </header>
+
+        <nav id="navigation">
+            <!-- Navigation buttons will be generated by JavaScript -->
+        </nav>
+
+        <div class="content" id="content">
+            <!-- Day content will be dynamically loaded here -->
+        </div>
+
+        <footer>
+            <p>✨ May you walk in the light of the Celtic saints ✨</p>
+            <p style="margin-top: 10px; font-size: 0.85em;">Download this file to save your journal entries permanently</p>
+        </footer>
+    </div>
+
+    <script>
+        // Retreat data structure
+        const retreatDays = [
+            {
+                day: 1,
+                title: "St. Brigid of Kildare",
+                subtitle: "The Mary of the Gael - Fire, Hospitality, and Sacred Flame",
+                passage: `St. Brigid of Kildare (c. 451-525 CE) stands as one of Ireland's most beloved saints, second only to St. Patrick in reverence. Known as "Muire na nGael" (Mary of the Gael), Brigid embodies the beautiful synthesis of pre-Christian Celtic goddess tradition and Christian sanctity. Born at sunrise, neither inside nor outside her home, she was said to have been fed on the milk of a sacred white cow, marking her as extraordinary from birth.
+
+Brigid founded the monastery of Kildare, which became a double monastery housing both men and women, unprecedented for its time. Here she kept a perpetual flame, a Christian echo of the sacred fires tended by druidesses in ancient Ireland. This flame, tended by nineteen nuns, burned for centuries until the Reformation, and was rekindled in 1993, still burning today.
+
+Her spirituality centered on radical hospitality, care for the poor, and connection to the land. Stories tell of her giving away her father's sword to a beggar, of multiplying butter and milk for the needy, and of her profound gentleness with all creatures. She wove the first St. Brigid's Cross from rushes to explain Christianity to a dying pagan chieftain, creating a symbol that adorns Irish homes to this day.
+
+Brigid represents the peregrini spirit through her commitment to serving others in place, transforming ordinary spaces into thin places where heaven and earth touch. Her feast day, Imbolc (February 1st), marks the beginning of spring, renewal, and new light emerging from darkness.`,
+                resources: [
+                    { title: "St. Brigid's Life and Legacy - Irish Central", url: "https://www.irishcentral.com/roots/history/who-was-st-brigid" },
+                    { title: "Brigid of Kildare - Celtic Christianity", url: "https://www.celt.dias.ie/publications/cat/Brigid.html" },
+                    { title: "The Perpetual Flame of Brigid - Sacred Destinations", url: "https://www.iona.org.uk/celtic-spirituality.php" }
+                ]
+            },
+            {
+                day: 2,
+                title: "St. Patrick",
+                subtitle: "The Apostle of Ireland - Missionary, Prophet, and Former Slave",
+                passage: `St. Patrick (c. 385-461 CE) lived the peregrini journey in its most dramatic form. Born in Roman Britain to a Christian family, he was captured by Irish raiders at sixteen and enslaved for six years as a shepherd on Slemish Mountain. In his captivity, Patrick turned to God, praying up to one hundred times daily, transforming his exile into a spiritual awakening.
+
+After escaping and returning home, Patrick experienced a vision of the Irish people calling him back: "We beg you, holy boy, to come and walk among us again." Despite having every reason to avoid Ireland, Patrick answered this impossible call, returning to the land of his suffering as a missionary bishop. This voluntary return to the place of his trauma exemplifies the peregrini principle of radical obedience to divine calling over personal comfort.
+
+Patrick's "Confession" and "Letter to Coroticus" reveal a man of deep humility, who saw himself as "the least of all believers." He confronted druidic power with courage, used the shamrock to explain the Trinity, and established monasteries throughout Ireland that became centers of learning and mission. His famous "Lorica" (Breastplate prayer) demonstrates his integration of Celtic awareness of nature with Christian theology.
+
+Patrick embodied pilgrimage not as wandering but as purposeful mission—going where God called, whether into slavery, exile, or back to the place of suffering. His legacy shows how past wounds can become future ministry, and how exile can prepare us for extraordinary service.`,
+                resources: [
+                    { title: "St. Patrick's Confessio - Original Text Translation", url: "https://www.confessio.ie/etexts/confessio_english" },
+                    { title: "The Historical Patrick - BBC History", url: "https://www.bbc.co.uk/history/british/uk_prehistory/st_patrick_01.shtml" },
+                    { title: "Celtic Christianity and St. Patrick - Iona Community", url: "https://iona.org.uk/about-us/celtic-spirituality/" }
+                ]
+            },
+            {
+                day: 3,
+                title: "St. Columba (Columcille)",
+                subtitle: "Dove of the Church - Exile, Manuscript Illumination, and Island Mission",
+                passage: `St. Columba (521-597 CE), whose name means "dove," experienced the peregrini path through both choice and consequence. Born into Irish nobility, he could have lived a comfortable life, but instead pursued monastic calling with fierce passion. A scholar, scribe, and poet, Columba loved books with such intensity that it led to Ireland's first copyright dispute and, ultimately, to his exile.
+
+The story goes that Columba secretly copied a psalter belonging to St. Finnian. When discovered, King Diarmait ruled, "To every cow belongs her calf, and to every book its copy"—the book belonged to Finnian. This dispute escalated into the Battle of Cúl Dreimhne, where thousands died. Wracked with guilt, Columba accepted exile as penance, vowing to never again see Ireland and to win as many souls for Christ as had died in battle.
+
+At age 42, Columba sailed to Iona, a small island off Scotland's coast, establishing a monastery that became the light of Western Europe during the Dark Ages. From Iona, missionaries spread throughout Scotland and Northern England, founding Lindisfarne and other great centers. Columba's scriptorium produced magnificent illuminated manuscripts, understanding that beauty in God's service was itself a form of worship.
+
+Columba's exile transformed into mission, his punishment into purpose. He showed that pilgrimage sometimes means leaving forever what we love most, trusting that God will use our wandering for divine purposes we cannot imagine. His feast day (June 9th) celebrates the power of creative penance and redemptive exile.`,
+                resources: [
+                    { title: "St. Columba and Iona Abbey - Historic Environment Scotland", url: "https://www.historicenvironment.scot/visit-a-place/places/iona-abbey-and-nunnery/" },
+                    { title: "Life of St. Columba by Adomnán - CELT Project", url: "https://celt.ucc.ie/published/T201040/" },
+                    { title: "The Iona Community - Modern Celtic Spirituality", url: "https://iona.org.uk/" }
+                ]
+            },
+            {
+                day: 4,
+                title: "The Dagda",
+                subtitle: "The Good God - Father Figure, Provider, and Lord of Life and Death",
+                passage: `The Dagda, whose name means "the good god" (good in the sense of skilled at everything), represents the ancient Celtic understanding of divine sovereignty and abundance. Leader of the Tuatha Dé Danann, the Dagda embodies the paradoxes central to Celtic spirituality: he is simultaneously fierce warrior and gentle protector, wise druid and rustic figure, lord of life and shepherd of the dead.
+
+The Dagda's most famous possessions reveal his character: his cauldron (the Coire Ansic) could feed any number of people without emptying, symbolizing inexhaustible divine provision. His club could kill with one end and bring the dead back to life with the other, demonstrating power over both death and resurrection. His harp (Uaithne) could play three strains—grief, joy, and sleep—controlling the emotional landscape of all who heard it. These magical items represent the fullness of divine power over sustenance, life, emotion, and destiny.
+
+Despite his great power, the Dagda appears in myths as earthy and approachable, often dressed in a short tunic and dragging his club behind him. His appetite—both for food and for life—is legendary. Before the Second Battle of Moytura, he ate an enormous porridge prepared by his enemies, displaying both his vulnerability and his indomitable nature. His relationship with the Morrigan, consummated at Samhain while she stood astride a river, secured victory for the Tuatha Dé Danann.
+
+For peregrini pilgrims, the Dagda reminds us that the divine is both transcendent and immanent, that sacred power can come in unexpected forms, and that true sovereignty includes both giving and taking away, birth and death, feast and famine—all as necessary parts of life's wholeness.`,
+                resources: [
+                    { title: "The Dagda - Ancient Irish Gods", url: "https://www.worldhistory.org/Dagda/" },
+                    { title: "Irish Mythology - Celtic Gods", url: "https://www.ireland-calling.com/irish-gods/" },
+                    { title: "Tuatha Dé Danann - Mythological Cycle", url: "https://www.duchas.ie/en/cbes" }
+                ]
+            },
+            {
+                day: 5,
+                title: "Brigid the Goddess",
+                subtitle: "Triple Goddess - Poetry, Healing, and Smithcraft",
+                passage: `Before St. Brigid the saint, there was Brigid the goddess—a triple deity of poetry (eloquence and wisdom), healing (herbs and fertility), and smithcraft (transformation through fire). Daughter of the Dagda, Brigid represents the creative and sustaining forces of the universe, the fire that illuminates, transforms, and renews. Her worship at the festival of Imbolc marked the return of light and the lactation of ewes, celebrating life's renewal after winter's darkness.
+
+Brigid's triple nature reflects the Celtic understanding that divinity operates in multiple dimensions simultaneously. As patroness of poets and bards (the filid), she governed inspiration, prophecy, and the sacred power of words. As goddess of healing, she knew the properties of every herb and spring, and wells dedicated to her throughout Ireland were (and are) sites of pilgrimage for those seeking healing. As mistress of the forge, she ruled over transformative fire—the flame that turns ore into tools, chaos into order, potential into actuality.
+
+The goddess Brigid was so deeply beloved that early Christian missionaries chose synthesis over suppression, transforming her into St. Brigid rather than demonizing her. This remarkable continuity shows the permeability of Celtic spirituality, its recognition that truth can wear different faces in different eras. The perpetual flame at Kildare, whether tended by druidesses or nuns, represents the same eternal principle: divine fire that neither consumes nor can be extinguished.
+
+For pilgrims, Brigid teaches that creativity, healing, and transformation are sacred acts. She reminds us that the work of our hands, the words of our mouths, and our care for others are all forms of divine service, and that fire—whether in forge or heart—is the agent of holy change.`,
+                resources: [
+                    { title: "Brigid: Goddess and Saint - Celtic Mythology", url: "https://www.ancient-origins.net/myths-legends-europe/goddess-brigid-0014045" },
+                    { title: "Imbolc and Brigid - Irish Pagan Traditions", url: "https://www.aliisaac.com/brigid-goddess-to-saint/" },
+                    { title: "Sacred Wells of Brigid - Pilgrimage Sites", url: "https://www.sacredsites.com/europe/ireland/sacred_wells.html" }
+                ]
+            },
+            {
+                day: 6,
+                title: "St. Brendan the Navigator",
+                subtitle: "The Voyager - Seeking Paradise, Trusting Providence",
+                passage: `St. Brendan of Clonfert (c. 484-577 CE) represents the peregrini spirit at its most adventurous. His legendary "Navigatio," or voyage in search of the Isle of the Blessed (Tír na nÓg), embodies the Celtic Christian understanding of pilgrimage as radical trust in divine providence. Setting sail with seventeen monks in a curragh (a leather boat), Brendan embarked on a seven-year journey that some historians believe may have reached North America—a thousand years before Columbus.
+
+The "Navigatio Sancti Brendani" describes encounters with whale-sized fish (on whose back they celebrated Easter Mass), crystal pillars (possibly icebergs), and islands of giant sheep, singing birds, and silent monks. Whether literal travelogue or spiritual allegory, the voyage illustrates the peregrini principle of peregrinatio pro Christo—pilgrimage for Christ's sake, accepting whatever God provides, trusting wind and wave to guide the faithful.
+
+Brendan's journey was not mere wanderlust but purposeful seeking: he sought the earthly paradise described in Celtic tradition where heaven touches earth. This quest for "thin places"—locations where the veil between worlds grows gossamer—drove countless Irish monks to sea. They practiced "white martyrdom," surrendering home, family, and certainty to follow Christ into the unknown, trusting that God would provide island after island, each teaching its own lesson.
+
+For contemporary pilgrims, Brendan challenges us: What would we risk to find paradise? Can we trust divine providence enough to leave the shore? His voyage reminds us that pilgrimage isn't about the destination but about the transformation that occurs when we surrender control and accept the journey itself as prayer.`,
+                resources: [
+                    { title: "The Voyage of St. Brendan - Medieval Text", url: "https://www.lib.rochester.edu/camelot/teams/brendan.htm" },
+                    { title: "St. Brendan the Navigator - Historical Evidence", url: "https://www.smithsonianmag.com/history/the-brendan-voyage-117015986/" },
+                    { title: "Irish Curraghs and Sea Pilgrimage", url: "https://www.worldhistory.org/Brendan_the_Navigator/" }
+                ]
+            },
+            {
+                day: 7,
+                title: "The Morrigan",
+                subtitle: "Phantom Queen - Sovereignty, Battle, and Transformation",
+                passage: `The Morrigan ("Phantom Queen" or "Great Queen") embodies the fierce, untamed aspects of Celtic divinity that Christianity struggled to reconcile. A triple goddess appearing as Badb (crow), Macha (sovereignty), and Nemain (frenzy), the Morrigan presides over war, fate, death, and—paradoxically—fertility and the land's sovereignty. She is both terrifying and essential, reminding us that destruction and creation are inseparable aspects of the sacred cycle.
+
+The Morrigan appears in the Ulster Cycle, most famously in her complex relationship with Cú Chulainn. She offers him her love and aid; when he rejects her, she opposes him in battle, taking the forms of eel, wolf, and heifer. Yet even in opposition, she serves the greater pattern, teaching that some divine forces will challenge us whether we accept or reject them. In the end, she appears as a washerwoman at the ford, cleansing the hero's bloody garments—a prophecy of his death—showing her sovereignty over life's ultimate transition.
+
+Her union with the Dagda at Samhain (standing astride the River Unius) secured victory for the Tuatha Dé Danann, demonstrating that even the fiercest goddess contains generative power. She is often depicted as a crow or raven, haunting battlefields, choosing who lives and who dies—not cruelly, but as executor of fate's necessary patterns. Her cry can unnerve armies or inspire warriors to transcendent courage.
+
+For pilgrims, the Morrigan teaches that shadow work is sacred work, that we cannot know light without darkness, and that transformation often comes through crisis and conflict. She asks: Can we accept the fierce feminine, the destroyer who makes room for new growth? Can we honor death as part of life's wholeness?`,
+                resources: [
+                    { title: "The Morrigan - Irish War Goddess", url: "https://www.worldhistory.org/Morrigan/" },
+                    { title: "Celtic Goddesses of War and Sovereignty", url: "https://www.ancient-origins.net/myths-legends/morrigan-0013126" },
+                    { title: "The Morrigan in Irish Literature", url: "https://www.irelandseye.com/articles/history/mythology/morrigan.shtm" }
+                ]
+            },
+            {
+                day: 8,
+                title: "St. Aidan of Lindisfarne",
+                subtitle: "The Apostle of Northumbria - Gentleness, Poverty, and Mission",
+                passage: `St. Aidan (died 651 CE) brought Celtic monasticism from Iona to England, establishing Lindisfarne as "Holy Island" and demonstrating that gentleness and humility could convert kingdoms more effectively than force. When the fiery monk Corman failed to evangelize Northumbria, Aidan succeeded by walking among the people, learning their language, sharing their bread, and meeting them where they were—spiritually and literally, as he refused to ride horses, preferring to walk among common folk.
+
+King Oswald of Northumbria, who had lived in exile among the Irish monks, invited Aidan to bring Celtic Christianity to his kingdom. Aidan chose Lindisfarne, a tidal island accessible at low tide but cut off at high tide, creating a literal "thin place" between land and sea, solitude and community. Here he established a monastery following Columba's rule, training English missionaries while maintaining Irish traditions of learning, art, and prayer.
+
+Aidan's approach to mission was revolutionary: he lived in radical poverty, immediately giving away any gifts he received from nobles to the poor. He refused to condemn or coerce but instead attracted through example. Bede, though preferring Roman practices, wrote of Aidan with profound respect: "He cultivated peace and love, purity and humility; he was above anger and greed, and despised pride." This gentleness did not mean weakness—Aidan confronted injustice and protected the vulnerable with courage.
+
+For peregrini pilgrims, Aidan models how exile becomes mission, how poverty becomes wealth, and how gentleness becomes strength. He teaches that true evangelism is not about winning arguments but about embodying love so completely that others want to know its source. His feast (August 31) reminds us that walking humbly among people is often more transformative than preaching above them.`,
+                resources: [
+                    { title: "St. Aidan and Lindisfarne - Bede's Account", url: "https://www.lindisfarne.org.uk/about/history/st-aidan" },
+                    { title: "Celtic Christianity in Northumbria", url: "https://www.english-heritage.org.uk/visit/places/lindisfarne-priory/history-and-stories/history/" },
+                    { title: "The Lindisfarne Gospels - Celtic Art", url: "https://www.bl.uk/collection-items/lindisfarne-gospels" }
+                ]
+            },
+            {
+                day: 9,
+                title: "Cernunnos",
+                subtitle: "The Horned God - Lord of Animals, Wilderness, and Mystery",
+                passage: `Cernunnos, the horned god of ancient Celtic tradition, sits cross-legged in eternal meditation, antlers rising like branches, surrounded by animals both wild and tame. Though his name is known from only one inscription, his image appears throughout Celtic Europe, most famously on the Gundestrup Cauldron. He represents the wild, untamable aspect of divinity—the god of forests, animals, fertility, and the underworld, the masculine complement to the earth goddess.
+
+Unlike anthropomorphic deities who rule from thrones, Cernunnos sits on the ground, at eye level with stag and serpent, wolf and ram. He holds a torc (sacred neck ring) in one hand and a ram-horned serpent in the other, symbols of both civilization and wildness, suggesting his role as mediator between human and natural worlds. His antlers, which grow and shed with the seasons, mark him as a god of cycles, regeneration, and the eternal return.
+
+Cernunnos governs the liminal spaces—the edge of the forest, the boundary between village and wilderness, the threshold between the domesticated self and the wild soul. He is the shadow side of pastoral religion, reminding us that not all of nature is gentle, that the sacred includes both predator and prey, that death feeds life, that decay enables growth. His realm is not evil but essential—the composting ground where transformation happens.
+
+For pilgrims seeking wholeness, Cernunnos asks: Can we honor the wild parts of ourselves? Can we sit with the untamed aspects of God? Can we accept that holiness includes wilderness, that the sacred appears not only in churches but in forests, not only in prayers but in the hunt, the rut, the primal rhythms of nature? He invites us to remove our shoes and feel the earth, to remember that we are animals too, sacred precisely because we are embodied, not despite it.`,
+                resources: [
+                    { title: "Cernunnos - The Horned God", url: "https://www.worldhistory.org/Cernunnos/" },
+                    { title: "The Gundestrup Cauldron", url: "https://www.natmus.dk/en/historical-knowledge/denmark/prehistoric-period-until-1050-ad/the-bronze-age/the-gundestrup-cauldron/" },
+                    { title: "Celtic Nature Worship and Deities", url: "https://www.ancient-origins.net/myths-legends/cernunnos-0015320" }
+                ]
+            },
+            {
+                day: 10,
+                title: "Thin Places & Integration",
+                subtitle: "Where Heaven and Earth Touch - Bringing It All Home",
+                passage: `The Celtic concept of "thin places"—locations where the boundary between heaven and earth becomes permeable—provides the perfect lens through which to integrate this retreat. These are spots where the veil grows gossamer: ancient holy wells, windswept islands, stone circles, but also moments of profound prayer, experiences of art, encounters with beauty so piercing it aches. Thin places remind us that the sacred is not distant but immediate, not absent but hidden, waiting to be noticed.
+
+The Celtic saints didn't create thin places; they recognized them. Patrick at Croagh Patrick, Columba on Iona, Brendan on the open sea, Aidan at Lindisfarne—each found or created spaces where prayer came more easily, where God's presence felt closer. But the deeper truth is that the peregrini transformed themselves into thin places, so attuned to divine presence that they carried holy ground within them, consecrating wherever they walked.
+
+This is the ultimate teaching of Celtic spirituality: pilgrimage is not primarily about going somewhere but about becoming someone—someone so permeable to grace that earth and heaven meet in your very body. The external journey serves the internal transformation. You've spent nine days encountering saints, gods, and goddesses, each representing different facets of sacred life. Now comes the integration: How will you carry these teachings forward? What practices will you maintain? Which figures spoke most deeply to you?
+
+Celtic Christianity survived because it synthesized, finding Christ in Brigid's flame, seeing resurrection in the Dagda's club, recognizing divine providence in Brendan's voyage. Your integration won't look like anyone else's—it will be uniquely yours, shaped by your wounds and your gifts, your losses and your hopes. The question isn't "What did you learn?" but "Who will you become?" May you walk forward as your own thin place, making heaven accessible wherever you go.`,
+                resources: [
+                    { title: "Thin Places - Celtic Spirituality Explained", url: "https://www.soulsalt.com/thin-places/" },
+                    { title: "Contemporary Celtic Christianity", url: "https://iona.org.uk/" },
+                    { title: "Celtic Christian Practices for Daily Life", url: "https://www.explorefaith.org/Celtic/celtic.html" }
+                ]
+            }
+        ];
+
+        let currentDay = 1;
+
+        // Initialize the retreat
+        function init() {
+            renderNavigation();
+            loadDay(currentDay);
+            loadAllJournalEntries();
+        }
+
+        // Render navigation buttons
+        function renderNavigation() {
+            const nav = document.getElementById('navigation');
+            nav.innerHTML = retreatDays.map(day => 
+                `<button class="day-btn" data-day="${day.day}" onclick="loadDay(${day.day})">Day ${day.day}</button>`
+            ).join('');
+        }
+
+        // Load specific day content
+        function loadDay(dayNum) {
+            currentDay = dayNum;
+            const day = retreatDays.find(d => d.day === dayNum);
+            
+            // Update active navigation button
+            document.querySelectorAll('.day-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseInt(btn.dataset.day) === dayNum) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Render day content
+            const content = document.getElementById('content');
+            content.innerHTML = `
+                <div class="day-content active">
+                    <h2>Day ${day.day}: ${day.title}</h2>
+                    <p class="day-subtitle">${day.subtitle}</p>
+                    
+                    <div class="celtic-knot">☘️ ✨ ☘️</div>
+                    
+                    <div class="study-passage">
+                        ${formatPassage(day.passage)}
+                    </div>
+                    
+                    <h3>📚 Recommended Resources</h3>
+                    <div class="resources">
+                        ${day.resources.map(r => 
+                            `<a href="${r.url}" class="resource-link" target="_blank" rel="noopener noreferrer">${r.title}</a>`
+                        ).join('')}
+                    </div>
+                    
+                    <h3>✍️ Daily Journal Reflection</h3>
+                    <div class="journal-section">
+                        <div class="journal-header">
+                            <h4 style="color: #d4af37; margin: 0;">Your Reflections for Day ${day.day}</h4>
+                            <div class="btn-group">
+                                <button class="save-btn" onclick="saveJournal(${day.day})">💾 Save Entry</button>
+                                <button class="reset-btn" onclick="resetJournal(${day.day})">🔄 Clear</button>
+                            </div>
+                        </div>
+                        <textarea 
+                            id="journal-${day.day}" 
+                            placeholder="Reflect on today's teaching... What resonates with you? What challenges you? How might this wisdom transform your spiritual journey?"
+                        ></textarea>
+                        <div id="save-msg-${day.day}" class="save-message"></div>
+                    </div>
+                </div>
+            `;
+
+            // Load saved journal entry
+            loadJournalEntry(dayNum);
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Format passage with paragraphs
+        function formatPassage(passage) {
+            return passage.split('\n\n').map(p => `<p>${p}</p>`).join('');
+        }
+
+        // Save journal entry
+        function saveJournal(dayNum) {
+            const textarea = document.getElementById(`journal-${dayNum}`);
+            const message = document.getElementById(`save-msg-${dayNum}`);
+            const content = textarea.value;
+            
+            try {
+                localStorage.setItem(`retreat-day-${dayNum}`, content);
+                showMessage(message, '✓ Journal entry saved successfully');
+            } catch (e) {
+                showMessage(message, '⚠ Could not save (download file to enable saving)');
+            }
+        }
+
+        // Load journal entry
+        function loadJournalEntry(dayNum) {
+            const textarea = document.getElementById(`journal-${dayNum}`);
+            try {
+                const saved = localStorage.getItem(`retreat-day-${dayNum}`);
+                if (saved) {
+                    textarea.value = saved;
+                }
+            } catch (e) {
+                console.log('localStorage not available');
+            }
+        }
+
+        // Load all journal entries (for initialization)
+        function loadAllJournalEntries() {
+            retreatDays.forEach(day => {
+                try {
+                    const saved = localStorage.getItem(`retreat-day-${day.day}`);
+                    // Entries will be loaded when each day is displayed
+                } catch (e) {
+                    console.log('localStorage not available');
+                }
+            });
+        }
+
+        // Reset journal entry
+        function resetJournal(dayNum) {
+            if (confirm('Are you sure you want to clear this journal entry? This cannot be undone.')) {
+                const textarea = document.getElementById(`journal-${dayNum}`);
+                const message = document.getElementById(`save-msg-${dayNum}`);
+                textarea.value = '';
+                
+                try {
+                    localStorage.removeItem(`retreat-day-${dayNum}`);
+                    showMessage(message, '✓ Journal entry cleared');
+                } catch (e) {
+                    showMessage(message, '✓ Journal entry cleared');
+                }
+            }
+        }
+
+        // Show save message
+        function showMessage(element, text) {
+            element.textContent = text;
+            element.classList.add('show');
+            setTimeout(() => {
+                element.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize on page load
+        window.onload = init;
+    </script>
+</body>
+</html>

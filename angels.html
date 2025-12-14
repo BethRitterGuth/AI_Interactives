@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archangels Study Guide - Seven Days of Divine Messengers</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Main container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        /* Header section */
+        header {
+            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        /* Tab navigation */
+        .tab-navigation {
+            display: flex;
+            background: #f7fafc;
+            border-bottom: 3px solid #e2e8f0;
+            overflow-x: auto;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 15px 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            color: #4a5568;
+            transition: all 0.3s ease;
+            position: relative;
+            min-width: 120px;
+        }
+
+        .tab-button:hover {
+            background: #edf2f7;
+            color: #2d3748;
+        }
+
+        .tab-button.active {
+            background: white;
+            color: #667eea;
+        }
+
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #667eea;
+        }
+
+        /* Content area */
+        .content-area {
+            padding: 40px;
+            min-height: 500px;
+        }
+
+        /* Day content styling */
+        .day-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .day-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .archangel-name {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .day-label {
+            font-size: 1.2em;
+            color: #718096;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .description {
+            background: #f7fafc;
+            padding: 20px;
+            border-left: 4px solid #667eea;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+
+        .description h3 {
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        /* Resources section */
+        .resources {
+            margin-bottom: 30px;
+        }
+
+        .resources h3 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .resources ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .resources li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .resources li::before {
+            content: '🔗';
+            position: absolute;
+            left: 0;
+        }
+
+        .resources a {
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .resources a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        /* Prayer section */
+        .prayer {
+            background: linear-gradient(135deg, #fef5e7 0%, #fdebd0 100%);
+            padding: 25px;
+            border-radius: 10px;
+            border: 2px solid #f39c12;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .prayer h3 {
+            color: #d68910;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            text-align: center;
+        }
+
+        .prayer-text {
+            font-style: italic;
+            color: #7d6608;
+            line-height: 1.8;
+            text-align: center;
+        }
+
+        /* Footer */
+        footer {
+            background: #f7fafc;
+            padding: 20px;
+            text-align: center;
+            color: #718096;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .tab-button {
+                font-size: 0.9em;
+                padding: 12px 8px;
+            }
+
+            .content-area {
+                padding: 20px;
+            }
+
+            .archangel-name {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Main container for the study guide -->
+    <div class="container">
+        <!-- Header section with title and subtitle -->
+        <header>
+            <h1>✨ Archangels Study Guide ✨</h1>
+            <p>Seven Days, Seven Divine Messengers</p>
+        </header>
+
+        <!-- Tab navigation for each day/archangel -->
+        <nav class="tab-navigation" role="tablist">
+            <button class="tab-button active" data-day="sunday" role="tab" aria-selected="true">
+                Sunday<br><small>Michael</small>
+            </button>
+            <button class="tab-button" data-day="monday" role="tab" aria-selected="false">
+                Monday<br><small>Gabriel</small>
+            </button>
+            <button class="tab-button" data-day="tuesday" role="tab" aria-selected="false">
+                Tuesday<br><small>Chamuel</small>
+            </button>
+            <button class="tab-button" data-day="wednesday" role="tab" aria-selected="false">
+                Wednesday<br><small>Raphael</small>
+            </button>
+            <button class="tab-button" data-day="thursday" role="tab" aria-selected="false">
+                Thursday<br><small>Uriel</small>
+            </button>
+            <button class="tab-button" data-day="friday" role="tab" aria-selected="false">
+                Friday<br><small>Jophiel</small>
+            </button>
+            <button class="tab-button" data-day="saturday" role="tab" aria-selected="false">
+                Saturday<br><small>Zadkiel</small>
+            </button>
+        </nav>
+
+        <!-- Content area for archangel information -->
+        <main class="content-area">
+            <!-- Sunday - Archangel Michael -->
+            <article class="day-content active" id="sunday" role="tabpanel">
+                <h2 class="archangel-name">Archangel Michael</h2>
+                <p class="day-label">Sunday - The Day of Protection</p>
+                
+                <section class="description">
+                    <h3>Description</h3>
+                    <p>Archangel Michael, whose name means "Who is like God," is revered as the greatest of all angels and the leader of the heavenly armies. He is the warrior angel who fights against evil and protects the faithful. Michael is often depicted carrying a sword and shield, standing triumphant over Satan. He is the patron of soldiers, police officers, and all who protect others. In Scripture, he is mentioned in the Book of Daniel, Jude, and Revelation, where he leads the angelic forces against the dragon.</p>
+                </section>
+
+                <section class="resources">
+                    <h3>Further Reading</h3>
+                    <ul>
+                        <li><a href="https://www.newadvent.org/cathen/10275b.htm" target="_blank" rel="noopener">Catholic Encyclopedia - St. Michael the Archangel</a></li>
+                        <li><a href="https://www.britannica.com/topic/Michael-archangel" target="_blank" rel="noopener">Britannica - Michael (Archangel)</a></li>
+                        <li><a href="https://www.vatican.va/content/benedict-xvi/en/audiences/2011/documents/hf_ben-xvi_aud_20110511.html" target="_blank" rel="noopener">Vatican - Pope Benedict XVI on St. Michael</a></li>
+                    </ul>
+                </section>
+
+                <section class="prayer">
+                    <h3>Prayer to Archangel Michael</h3>
+                    <p class="prayer-text">
+                        Saint Michael the Archangel, defend us in battle.<br>
+                        Be our protection against the wickedness and snares of the devil.<br>
+                        May God rebuke him, we humbly pray,<br>
+                        and do thou, O Prince of the heavenly host,<br>
+                        by the power of God, cast into hell Satan<br>
+                        and all the evil spirits who prowl about the world<br>
+                        seeking the ruin of souls. Amen.
+                    </p>
+                </section>
+            </article>
+
+            <!-- Monday - Archangel Gabriel -->
+            <article class="day-content" id="monday" role="tabpanel">
+                <h2 class="archangel-name">Archangel Gabriel</h2>
+                <p class="day-label">Monday - The Day of Revelation</p>
+                
+                <section class="description">
+                    <h3>Description</h3>
+                    <p>Archangel Gabriel, whose name means "God is my strength," is known as the messenger of God. Gabriel announced the birth of John the Baptist to Zechariah and, most famously, delivered the message of the Incarnation to the Virgin Mary at the Annunciation. In Islamic tradition, Gabriel (Jibril) revealed the Quran to Muhammad. Gabriel is often depicted holding a lily, symbolizing purity, or a trumpet, representing the announcement of divine messages. He is the patron of messengers, telecommunication workers, and postal employees.</p>
+                </section>
+
+                <section class="resources">
+                    <h3>Further Reading</h3>
+                    <ul>
+                        <li><a href="https://www.newadvent.org/cathen/06330a.htm" target="_blank" rel="noopener">Catholic Encyclopedia - St. Gabriel the Archangel</a></li>
+                        <li><a href="https://www.britannica.com/topic/Gabriel-archangel" target="_blank" rel="noopener">Britannica - Gabriel (Archangel)</a></li>
+                        <li><a href="https://www.biblegateway.com/passage/?search=Luke+1%3A26-38&version=NIV" target="_blank" rel="noopener">Bible Gateway - The Annunciation (Luke 1:26-38)</a></li>
+                    </ul>
+                </section>
+
+                <section class="prayer">
+                    <h3>Prayer to Archangel Gabriel</h3>
+                    <p class="prayer-text">
+                        Blessed Archangel Gabriel, messenger of the Most High,<br>
+                        help me to hear God's voice with clarity and joy.<br>
+                        Grant me the grace to receive divine messages<br>
+                        with the same humility and faith as Mary.<br>
+                        Guide my words that they may bring hope and truth,<br>
+                        and help me to announce God's love to all I meet.<br>
+                        Amen.
+                    </p>
+                </section>
+            </article>
+
+            <!-- Tuesday - Archangel Chamuel -->
+            <article class="day-content" id="tuesday" role="tabpanel">
+                <h2 class="archangel-name">Archangel Chamuel</h2>
+                <p class="day-label">Tuesday - The Day of Divine Love</p>
+                
+                <section class="description">
+                    <h3>Description</h3>
+                    <p>Archangel Chamuel, whose name means "He who sees God," is known as the archangel of peaceful relationships and pure love. Chamuel helps to find important things in life, whether that be God's love, inner peace, a life purpose, or even lost objects. He is associated with the comfort and compassion that comes from divine love. Chamuel is often invoked for help in building strong relationships, finding one's soulmate, or repairing damaged connections. His energy is one of gentle persistence and unconditional love.</p>
+                </section>
+
+                <section class="resources">
+                    <h3>Further Reading</h3>
+                    <ul>
+                        <li><a href="https://www.learnreligions.com/meet-archangel-chamuel-124092" target="_blank" rel="noopener">Learn Religions - Archangel Chamuel</a></li>
+                        <li><a href="https://www.angeltherapy.com/archangels/chamuel" target="_blank" rel="noopener">Angel Therapy - Archangel Chamuel</a></li>
+                        <li><a href="https://www.beliefnet.com/inspiration/angels/archangel-chamuel.aspx" target="_blank" rel="noopener">Beliefnet - Archangel Chamuel, Angel of Love</a></li>
+                    </ul>
+                </section>
+
+                <section class="prayer">
+                    <h3>Prayer to Archangel Chamuel</h3>
+                    <p class="prayer-text">
+                        Beloved Archangel Chamuel, angel of divine love,<br>
+                        help me to see God's presence in all creation.<br>
+                        Guide me to find what I seek, especially Your peace,<br>
+                        and fill my heart with compassion for all beings.<br>
+                        Help me to build relationships based on pure love,<br>
+                        and to recognize the sacred in every soul I encounter.<br>
+                        Amen.
+                    </p>
+                </section>
+            </article>
+
+            <!-- Wednesday - Archangel Raphael -->
+            <article class="day-content" id="wednesday" role="tabpanel">
+                <h2 class="archangel-name">Archangel Raphael</h2>
+                <p class="day-label">Wednesday - The Day of Healing</p>
+                
+                <section class="description">
+                    <h3>Description</h3>
+                    <p>Archangel Raphael, whose name means "God heals," is recognized as the angel of healing, both physical and spiritual. His story is beautifully told in the Book of Tobit, where he guides young Tobias on a journey and heals Tobit's blindness. Raphael is often depicted carrying a staff and a fish, referencing this biblical account. He is the patron of travelers, the blind, physicians, and nurses. Raphael is invoked for healing of body, mind, and spirit, and for protection during journeys. He brings wholeness and restoration to those who call upon him.</p>
+                </section>
+
+                <section class="resources">
+                    <h3>Further Reading</h3>
+                    <ul>
+                        <li><a href="https://www.newadvent.org/cathen/12640a.htm" target="_blank" rel="noopener">Catholic Encyclopedia - St. Raphael the Archangel</a></li>
+                        <li><a href="https://www.britannica.com/topic/Raphael-archangel" target="_blank" rel="noopener">Britannica - Raphael (Archangel)</a></li>
+                        <li><a href="https://www.biblegateway.com/passage/?search=Tobit+12%3A15&version=NRSVCE" target="_blank" rel="noopener">Bible Gateway - Book of Tobit (Raphael's Revelation)</a></li>
+                    </ul>
+                </section>
+
+                <section class="prayer">
+                    <h3>Prayer to Archangel Raphael</h3>
+                    <p class="prayer-text">
+                        Glorious Archangel Raphael, great prince of healing,<br>
+                        I place myself under your loving care.<br>
+                        Guide all physicians and healers in their work,<br>
+                        and bring wholeness to those who suffer.<br>
+                        Heal my body, mind, and spirit from all afflictions,<br>
+                        and be my companion on life's journey toward God.<br>
+                        Amen.
+                    </p>
+                </section>
+            </article>
+
+            <!-- Thursday - Archangel Uriel -->
+            <article class="day-content" id="thursday" role="tabpanel">
+                <h2 class="archangel-name">Archangel Uriel</h2>
+                <p class="day-label">Thursday - The Day of Wisdom</p>
+                
+                <section class="description">
+                    <h3>Description</h3>
+                    <p>Archangel Uriel, whose name means "God is my light" or "Fire of God," is known as the angel of wisdom and illumination. While not mentioned in the canonical Bible, Uriel appears in the Book of Enoch and other apocryphal texts, where he serves as a guide and teacher. He is often depicted carrying a book or scroll, representing divine wisdom, or a flame, symbolizing God's light. Uriel is invoked for intellectual pursuits, problem-solving, and spiritual enlightenment. He helps illuminate the path to truth and understanding, dispelling confusion and bringing clarity.</p>
+                </section>
+
+                <section class="resources">
+                    <h3>Further Reading</h3>
+                    <ul>
+                        <li><a href="https://www.britannica.com/topic/Uriel" target="_blank" rel="noopener">Britannica - Uriel (Archangel)</a></li>
+                        <li><a href="https://www.learnreligions.com/meet-archangel-uriel-124302" target="_blank" rel="noopener">Learn Religions - Archangel Uriel</a></li>
+                        <li><a href="https://www.jewishencyclopedia.com/articles/14557-uriel" target="_blank" rel="noopener">Jewish Encyclopedia - Uriel</a></li>
+                    </ul>
+                </section>
+
+                <section class="prayer">
+                    <h3>Prayer to Archangel Uriel</h3>
+                    <p class="prayer-text">
+                        Archangel Uriel, light of God and angel of wisdom,<br>
+                        illuminate my mind with divine understanding.<br>
+                        Help me to see truth clearly and to discern wisely,<br>
+                        that I may walk in the light of God's knowledge.<br>
+                        Guide my studies, inspire my thoughts,<br>
+                        and kindle in me the fire of holy wisdom.<br>
+                        Amen.
+                    </p>
+                </section>
+            </article>
+
+            <!-- Friday - Archangel Jophiel -->
+            <article class="day-content" id="friday" role="tabpanel">
+                <h2 class="archangel-name">Archangel Jophiel</h2>
+                <p class="day-label">Friday - The Day of Beauty</p>
+                
+                <section class="description">
+                    <h3>Description</h3>
+                    <p>Archangel Jophiel, whose name means "Beauty of God," is known as the patron angel of artists and the illuminator of beautiful thoughts. According to tradition, Jophiel was present at the Garden of Eden and helped to beautify the garden. This archangel helps people to see and appreciate the beauty in all of God's creation, both in the physical world and in ideas. Jophiel assists with creative projects, positive thinking, and environmental concerns. His energy helps to dispel negativity and ugliness, replacing them with beauty, joy, and inspiration.</p>
+                </section>
+
+                <section class="resources">
+                    <h3>Further Reading</h3>
+                    <ul>
+                        <li><a href="https://www.learnreligions.com/meet-archangel-jophiel-124093" target="_blank" rel="noopener">Learn Religions - Archangel Jophiel</a></li>
+                        <li><a href="https://www.beliefnet.com/inspiration/angels/archangel-jophiel.aspx" target="_blank" rel="noopener">Beliefnet - Archangel Jophiel, Angel of Beauty</a></li>
+                        <li><a href="https://www.angeltherapy.com/archangels/jophiel" target="_blank" rel="noopener">Angel Therapy - Archangel Jophiel</a></li>
+                    </ul>
+                </section>
+
+                <section class="prayer">
+                    <h3>Prayer to Archangel Jophiel</h3>
+                    <p class="prayer-text">
+                        Beautiful Archangel Jophiel, patron of artists and creators,<br>
+                        help me to see the beauty in God's creation.<br>
+                        Fill my mind with beautiful thoughts and positive visions,<br>
+                        and inspire creativity in all my endeavors.<br>
+                        Guide me to appreciate the divine artistry around me,<br>
+                        and to create beauty that reflects God's glory.<br>
+                        Amen.
+                    </p>
+                </section>
+            </article>
+
+            <!-- Saturday - Archangel Zadkiel -->
+            <article class="day-content" id="saturday" role="tabpanel">
+                <h2 class="archangel-name">Archangel Zadkiel</h2>
+                <p class="day-label">Saturday - The Day of Mercy</p>
+                
+                <section class="description">
+                    <h3>Description</h3>
+                    <p>Archangel Zadkiel, whose name means "Righteousness of God," is known as the angel of mercy, forgiveness, and benevolence. In Jewish tradition, Zadkiel is often identified as the angel who stayed Abraham's hand when he was about to sacrifice Isaac, demonstrating divine mercy. Zadkiel helps people to forgive themselves and others, to let go of painful memories, and to transform suffering into compassion. He is associated with freedom, joy, and emotional healing. Zadkiel reminds us of God's endless mercy and helps us to extend that same mercy to ourselves and to all beings.</p>
+                </section>
+
+                <section class="resources">
+                    <h3>Further Reading</h3>
+                    <ul>
+                        <li><a href="https://www.learnreligions.com/meet-archangel-zadkiel-124090" target="_blank" rel="noopener">Learn Religions - Archangel Zadkiel</a></li>
+                        <li><a href="https://www.jewishencyclopedia.com/articles/15185-zadkiel" target="_blank" rel="noopener">Jewish Encyclopedia - Zadkiel</a></li>
+                        <li><a href="https://www.beliefnet.com/inspiration/angels/archangel-zadkiel.aspx" target="_blank" rel="noopener">Beliefnet - Archangel Zadkiel, Angel of Mercy</a></li>
+                    </ul>
+                </section>
+
+                <section class="prayer">
+                    <h3>Prayer to Archangel Zadkiel</h3>
+                    <p class="prayer-text">
+                        Merciful Archangel Zadkiel, angel of forgiveness,<br>
+                        help me to embrace God's boundless mercy.<br>
+                        Teach me to forgive myself and others completely,<br>
+                        and to release all resentment and pain.<br>
+                        Transform my suffering into compassion,<br>
+                        and fill my heart with the joy of divine freedom.<br>
+                        Amen.
+                    </p>
+                </section>
+            </article>
+        </main>
+
+        <!-- Footer with attribution -->
+        <footer>
+            <p>May the blessings of the archangels guide and protect you throughout the week.</p>
+            <p><small>Study each day's archangel to deepen your spiritual journey.</small></p>
+        </footer>
+    </div>
+
+    <script>
+        // JavaScript for tab navigation and smooth transitions
+
+        // Get all tab buttons and content sections
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const dayContents = document.querySelectorAll('.day-content');
+
+        /**
+         * Switches the active tab and displays corresponding content
+         * @param {string} dayId - The ID of the day/archangel to display
+         */
+        function switchTab(dayId) {
+            // Remove active class from all content sections
+            dayContents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all tab buttons and update ARIA attributes
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
+                button.setAttribute('aria-selected', 'false');
+            });
+
+            // Add active class to selected content
+            const activeContent = document.getElementById(dayId);
+            if (activeContent) {
+                activeContent.classList.add('active');
+            }
+
+            // Add active class to selected button and update ARIA attribute
+            const activeButton = document.querySelector(`[data-day="${dayId}"]`);
+            if (activeButton) {
+                activeButton.classList.add('active');
+                activeButton.setAttribute('aria-selected', 'true');
+            }
+
+            // Scroll to top of content smoothly
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        /**
+         * Event listener for tab button clicks
+         * Handles the tab switching functionality
+         */
+        tabButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const dayId = this.getAttribute('data-day');
+                switchTab(dayId);
+            });
+        });
+
+        /**
+         * Keyboard navigation support
+         * Allows users to navigate tabs using arrow keys for accessibility
+         */
+        document.querySelector('.tab-navigation').addEventListener('keydown', function(e) {
+            const currentButton = document.activeElement;
+            
+            // Only proceed if a tab button has focus
+            if (!currentButton.classList.contains('tab-button')) return;
+            
+            const buttons = Array.from(tabButtons);
+            const currentIndex = buttons.indexOf(currentButton);
+            let newIndex;
+
+            // Right arrow or down arrow - move to next tab
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                e.preventDefault();
+                newIndex = (currentIndex + 1) % buttons.length;
+            }
+            // Left arrow or up arrow - move to previous tab
+            else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                e.preventDefault();
+                newIndex = (currentIndex - 1 + buttons.length) % buttons.length;
+            }
+            // Home key - move to first tab
+            else if (e.key === 'Home') {
+                e.preventDefault();
+                newIndex = 0;
+            }
+            // End key - move to last tab
+            else if (e.key === 'End') {
+                e.preventDefault();
+                newIndex = buttons.length - 1;
+            }
+
+            // Switch to new tab and set focus if index changed
+            if (newIndex !== undefined) {
+                const dayId = buttons[newIndex].getAttribute('data-day');
+                switchTab(dayId);
+                buttons[newIndex].focus();
+            }
+        });
+
+        // Initialize: Set Sunday (Michael) as the default active tab on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            switchTab('sunday');
+        });
+    </script>
+</body>
+</html>
