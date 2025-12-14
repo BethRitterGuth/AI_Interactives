@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>30-Day Carmina Gadelica Study Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Georgia, 'Times New Roman', serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .controls {
+            background: #ecf0f1;
+            padding: 20px 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            border-bottom: 3px solid #3498db;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .btn:focus {
+            outline: 3px solid #3498db;
+            outline-offset: 2px;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .day-item {
+            margin-bottom: 15px;
+            border: 2px solid #bdc3c7;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .day-item:hover {
+            border-color: #3498db;
+        }
+
+        .day-header {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s ease;
+        }
+
+        .day-header:hover {
+            background: linear-gradient(135deg, #2980b9 0%, #3498db 100%);
+        }
+
+        .day-header:focus {
+            outline: 3px solid #2c3e50;
+            outline-offset: -3px;
+        }
+
+        .day-header h2 {
+            font-size: 1.5em;
+        }
+
+        .day-content {
+            display: none;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+
+        .day-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .section h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+            font-size: 1.3em;
+        }
+
+        .poems-list, .resources-list {
+            margin-top: 15px;
+        }
+
+        .poems-list li, .resources-list li {
+            margin-bottom: 12px;
+            line-height: 1.8;
+        }
+
+        .poems-list a, .resources-list a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .poems-list a:hover, .resources-list a:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+
+        .discussion {
+            margin-top: 15px;
+            text-align: justify;
+        }
+
+        .discussion p {
+            margin-bottom: 15px;
+        }
+
+        .reflection-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #ecf0f1;
+            border-radius: 5px;
+            border-left: 4px solid #3498db;
+        }
+
+        .reflection-item label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+
+        .reflection-item textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 12px;
+            border: 2px solid #bdc3c7;
+            border-radius: 5px;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+
+        .reflection-item textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .activity-box {
+            padding: 20px;
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+
+        .activity-box h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .video-link-box {
+            padding: 15px;
+            background: #e8f4f8;
+            border-radius: 5px;
+            border-left: 4px solid #3498db;
+            margin-top: 15px;
+        }
+
+        .video-link-box p {
+            margin-bottom: 10px;
+        }
+
+        .video-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #e74c3c;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .video-btn:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .chevron {
+            transition: transform 0.3s ease;
+            font-size: 1.5em;
+        }
+
+        .chevron.active {
+            transform: rotate(180deg);
+        }
+
+        footer {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .section {
+                padding: 15px;
+            }
+
+            .day-header h2 {
+                font-size: 1.2em;
+            }
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #27ae60;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="toast" id="toast"></div>
+    
+    <div class="container">
+        <header>
+            <h1>🕊️ 30-Day Carmina Gadelica Study Guide</h1>
+            <p>A Journey Through Scottish Gaelic Prayers and Blessings</p>
+        </header>
+
+        <div class="controls">
+            <button class="btn btn-primary" onclick="saveAllData()" tabindex="0">💾 Save All Responses</button>
+            <button class="btn btn-success" onclick="expandAll()" tabindex="0">📖 Expand All Days</button>
+            <button class="btn btn-primary" onclick="collapseAll()" tabindex="0">📕 Collapse All Days</button>
+            <button class="btn btn-danger" onclick="resetAllData()" tabindex="0">🔄 Reset All Data</button>
+        </div>
+
+        <div class="content" id="studyContent">
+            <!-- Days will be generated by JavaScript -->
+        </div>
+
+        <footer>
+            <p>Carmina Gadelica - Hymns and Incantations collected by Alexander Carmichael (1832-1912)</p>
+            <p>Public Domain Resource | For Personal Study and Reflection</p>
+        </footer>
+    </div>
+
+    <script>
+        // Study plan data structure containing all 30 days
+        const studyPlan = [
+            {
+                day: 1,
+                theme: "Morning Blessings",
+                poems: [
+                    { title: "Morning Prayer", link: "https://sacred-texts.com/neu/celt/cg1/cg1034.htm" },
+                    { title: "The Kindling", link: "https://sacred-texts.com/neu/celt/cg1/cg1083.htm" },
+                    { title: "Smooring the Fire", link: "https://sacred-texts.com/neu/celt/cg1/cg1084.htm" }
+                ],
+                discussion: "The morning prayers in Carmina Gadelica reflect the Celtic Christian practice of sanctifying everyday tasks. These blessings transform routine activities like kindling the fire into sacred moments of connection with the divine. The integration of prayer into daily work demonstrates how the Celtic tradition saw no separation between the sacred and the mundane.\n\nThe morning blessing tradition emphasizes starting each day with gratitude and divine protection. These prayers often invoke the Trinity and ask for guidance through the day's challenges. The poetic language uses vivid imagery of light, fire, and warmth to symbolize spiritual awakening and divine presence.\n\nThese prayers were typically recited while performing household tasks, creating a rhythm of work and worship. The smooring prayer, said while banking the fire at night, bookends the day with prayer, showing the cyclical nature of Celtic spirituality.",
+                resources: [
+                    { title: "Celtic Christianity and Prayer", link: "https://www.iona.org.uk/" },
+                    { title: "Scottish Gaelic Culture", link: "https://www.scottishgaelicstudies.ed.ac.uk/" },
+                    { title: "Celtic Spirituality Resources", link: "https://www.northumbriacommunity.org/" }
+                ],
+                video: "https://www.youtube.com/watch?v=KqnTULyZUGc",
+                questions: [
+                    "How might incorporating a morning blessing change your daily routine?",
+                    "What elements of your morning could become sacred moments?",
+                    "How does viewing daily tasks as spiritual practice affect your perspective?"
+                ],
+                activity: "Create your own morning blessing incorporating elements of gratitude for the new day. Speak it aloud each morning this week while preparing breakfast or coffee."
+            },
+            {
+                day: 2,
+                theme: "Protection and Journey",
+                poems: [
+                    { title: "The Traveller's Prayer", link: "https://sacred-texts.com/neu/celt/cg1/cg1090.htm" },
+                    { title: "Encompassing", link: "https://sacred-texts.com/neu/celt/cg1/cg1053.htm" },
+                    { title: "God's Aid", link: "https://sacred-texts.com/neu/celt/cg1/cg1049.htm" }
+                ],
+                discussion: "Celtic Christians developed rich traditions of protection prayers, often called 'lorica' (breastplate) prayers. These prayers invoke divine protection for journeys, both physical and spiritual. The concept of God's encompassing presence creates an image of being surrounded by divine care, a powerful metaphor that appears throughout Celtic prayer.\n\nJourney prayers in the Carmina Gadelica collection often mention specific geographical features and natural elements, grounding the spiritual in the physical landscape. This reflects the Celtic understanding that God is present in creation and accompanies us through both literal and metaphorical journeys.\n\nThe practice of speaking protection prayers before travel continues in many Celtic Christian communities today. These prayers acknowledge human vulnerability while expressing trust in divine providence, creating a balance between self-reliance and faith.",
+                resources: [
+                    { title: "Celtic Pilgrimage Traditions", link: "https://www.stcolumbahotel.co.uk/iona-pilgrimage" },
+                    { title: "Thin Places Explained", link: "https://www.iona.org.uk/spirituality.php" },
+                    { title: "Celtic Way of Evangelism", link: "https://www.thegospelcoalition.org/reviews/celtic-way-evangelism/" }
+                ],
+                video: "https://www.youtube.com/watch?v=Dks6n7lxkbA",
+                questions: [
+                    "Where are you journeying (physically or spiritually) in your life right now?",
+                    "What fears or uncertainties do you carry when you travel?",
+                    "How can the concept of divine encompassing bring comfort to your daily life?"
+                ],
+                activity: "Before your next journey (even a commute), pause and speak a blessing of protection. Notice how this intention-setting affects your experience."
+            },
+            {
+                day: 3,
+                theme: "Blessing of Food and Provision",
+                poems: [
+                    { title: "Milking Croon", link: "https://sacred-texts.com/neu/celt/cg1/cg1274.htm" },
+                    { title: "Reaping Blessing", link: "https://sacred-texts.com/neu/celt/cg1/cg1291.htm" },
+                    { title: "Consecration of the Seed", link: "https://sacred-texts.com/neu/celt/cg1/cg1289.htm" }
+                ],
+                discussion: "Celtic tradition blesses every stage of food production, from planting seeds to preparing meals. These blessings acknowledge God as the source of all provision and express gratitude for the earth's bounty. The prayers often invoke saints alongside the Trinity, showing the Celtic understanding of a communion of saints participating in daily life.\n\nThe rhythmic, song-like quality of many food-related prayers suggests they were chanted while working. The milking croon, for instance, would have soothed both the cow and the milker while sanctifying the task. This demonstrates how Celtic spirituality integrated prayer into the physical rhythm of work.\n\nThese blessings also express an awareness of the interconnection between human labor, divine blessing, and natural cycles. They recognize that while humans must work, the ultimate fruitfulness depends on God's grace and nature's cooperation.",
+                resources: [
+                    { title: "Celtic Agricultural Traditions", link: "https://www.museum.scot/collections-research/our-research/highlights/farming-and-daily-life" },
+                    { title: "Sacred Meals and Celtic Spirituality", link: "https://www.iona.org.uk/worship.php" },
+                    { title: "Scottish Folk Traditions", link: "https://www.tobarandualchais.co.uk/" }
+                ],
+                video: "https://www.youtube.com/watch?v=67QZKN3eX1s",
+                questions: [
+                    "How often do you pause to acknowledge the source of your food?",
+                    "What would it mean to bless your work, whatever it may be?",
+                    "How does gratitude change your relationship with material provision?"
+                ],
+                activity: "This week, create a simple mealtime blessing and speak it before each meal. Notice how this practice affects your eating experience and gratitude."
+            },
+            {
+                day: 4,
+                theme: "Sleep and Evening Prayers",
+                poems: [
+                    { title: "Resting Blessing", link: "https://sacred-texts.com/neu/celt/cg1/cg1078.htm" },
+                    { title: "Soul Shrine", link: "https://sacred-texts.com/neu/celt/cg1/cg1077.htm" },
+                    { title: "Sleep Consecration", link: "https://sacred-texts.com/neu/celt/cg1/cg1076.htm" }
+                ],
+                discussion: "Evening prayers in Celtic tradition often focus on entrusting oneself to God's care through the vulnerable hours of sleep. The imagery of God as protector and guardian through the night reflects a deep trust in divine providence. These prayers acknowledge both the physical need for rest and the spiritual significance of the transition from waking to sleeping.\n\nThe concept of the soul as a sacred shrine appears frequently in Celtic prayers. This metaphor elevates the human person as a dwelling place for the divine, reinforcing the inherent dignity and sacredness of each individual. Evening prayers often include this theme as a reminder before sleep.\n\nMany Celtic sleep blessings include prayers for loved ones and the community, reflecting the communal nature of Celtic spirituality. Even in the private act of going to bed, there is an awareness of being part of a larger spiritual family.",
+                resources: [
+                    { title: "Celtic Night Prayer", link: "https://www.northumbriacommunity.org/offices/night-prayer/" },
+                    { title: "Contemplative Prayer Traditions", link: "https://www.contemplativeoutreach.org/" },
+                    { title: "Celtic Liturgy", link: "https://www.iona.org.uk/worship.php" }
+                ],
+                video: "https://www.youtube.com/watch?v=w3jNBiYsPC4",
+                questions: [
+                    "What anxieties or thoughts typically occupy your mind at bedtime?",
+                    "How might a sleep blessing help you release the day's concerns?",
+                    "What does it mean to you that God watches over you through the night?"
+                ],
+                activity: "Develop a brief evening blessing to speak before sleep. Include gratitude for the day and trust for the night ahead. Practice it for seven consecutive nights."
+            },
+            {
+                day: 5,
+                theme: "The Trinity and Celtic Symbolism",
+                poems: [
+                    { title: "The Trinity", link: "https://sacred-texts.com/neu/celt/cg1/cg1041.htm" },
+                    { title: "Invocation of the Graces", link: "https://sacred-texts.com/neu/celt/cg1/cg1039.htm" },
+                    { title: "The Three", link: "https://sacred-texts.com/neu/celt/cg1/cg1040.htm" }
+                ],
+                discussion: "The Trinity holds central importance in Celtic Christianity, reflected in the ubiquitous use of triadic structures in prayers and blessings. The Celtic knot, with its three-fold interlacing pattern, visually represents this theological concept. Prayers often invoke Father, Son, and Holy Spirit in rhythmic repetition, creating a meditative quality.\n\nCeltic Christians saw triadic patterns throughout creation, interpreting natural three-fold occurrences as echoes of the Trinity. This theological lens shaped how they understood and interacted with the world around them. The shamrock, famously used by St. Patrick, became a symbol of this three-in-one mystery.\n\nThe practical application of Trinitarian theology in Celtic prayers shows a lived theology rather than abstract doctrine. Each person of the Trinity is invoked for specific blessings and protection, demonstrating a personal relationship with each divine person while maintaining unity.",
+                resources: [
+                    { title: "Celtic Christianity History", link: "https://www.scottishchristian.com/features/celtic-christianity/" },
+                    { title: "Trinity in Celtic Art", link: "https://www.tcd.ie/library/manuscripts/book-of-kells.php" },
+                    { title: "Celtic Symbolism", link: "https://www.ancient-symbols.com/celtic-symbols" }
+                ],
+                video: "https://www.youtube.com/watch?v=DQECUj0FzpQ",
+                questions: [
+                    "How do you experience or understand the mystery of the Trinity?",
+                    "What three-fold patterns do you notice in your own life or faith?",
+                    "How might seeing nature through a Trinitarian lens change your perspective?"
+                ],
+                activity: "Go on a walk and look for patterns of three in nature (three petals, three branches, etc.). Reflect on how these might symbolize the Trinity's presence in creation."
+            },
+            {
+                day: 6,
+                theme: "Healing and Wholeness",
+                poems: [
+                    { title: "The Healing Prayer", link: "https://sacred-texts.com/neu/celt/cg1/cg1215.htm" },
+                    { title: "Charm for Rose", link: "https://sacred-texts.com/neu/celt/cg1/cg1195.htm" },
+                    { title: "Consecration of Medicinal Plants", link: "https://sacred-texts.com/neu/celt/cg1/cg1205.htm" }
+                ],
+                discussion: "Celtic healing prayers blend Christian faith with traditional knowledge of medicinal plants and natural remedies. These prayers invoke divine power while acknowledging the healing properties God placed in creation. The holistic approach treats physical ailments as interconnected with spiritual and emotional wellbeing.\n\nMany healing prayers in Carmina Gadelica invoke specific saints known for healing ministries, creating a bridge between the sufferer and the heavenly realm. The prayers often accompany the application of herbal remedies, blessing both the medicine and the one receiving it. This integration of prayer and practical care reflects Celtic Christianity's earthy spirituality.\n\nThe concept of healing extends beyond physical cure to include restoration of relationships, inner peace, and spiritual renewal. Celtic prayers often seek wholeness in all dimensions of life, recognizing that true health encompasses body, mind, and spirit.",
+                resources: [
+                    { title: "Celtic Healing Traditions", link: "https://www.celticwellspringonline.org/" },
+                    { title: "Holy Wells and Healing", link: "https://www.pilgrimageininscotland.com/holy-wells" },
+                    { title: "Celtic Saints and Healing", link: "https://www.christianitytoday.com/history/issues/issue-60/celtic-saints.html" }
+                ],
+                video: "https://www.youtube.com/watch?v=aKF2SFfv5sY",
+                questions: [
+                    "What areas of your life (physical, emotional, spiritual) need healing?",
+                    "How do you understand the relationship between faith and healing?",
+                    "What role does community play in your healing journey?"
+                ],
+                activity: "Light a candle and speak a prayer for someone you know who needs healing. Consider sending them a message of encouragement this week."
+            },
+            {
+                day: 7,
+                theme: "Blessing the Home",
+                poems: [
+                    { title: "House Blessing", link: "https://sacred-texts.com/neu/celt/cg1/cg1102.htm" },
+                    { title: "Threshold Blessing", link: "https://sacred-texts.com/neu/celt/cg1/cg1103.htm" },
+                    { title: "Hearth Blessing", link: "https://sacred-texts.com/neu/celt/cg1/cg1085.htm" }
+                ],
+                discussion: "The Celtic practice of blessing the home transforms domestic space into sacred space. These prayers invoke divine protection over the physical structure and all who dwell within. The hearth, as the center of the home, receives special attention as both a practical and symbolic heart of family life.\n\nThreshold blessings mark boundaries between the outside world and the sanctuary of home. These prayers often ask for protection from harmful influences while welcoming goodness and blessing. The doorway becomes a thin place where the spiritual and physical realms meet.\n\nHome blessings in Celtic tradition were typically renewed seasonally or when significant changes occurred in the household. This regular renewal maintained an atmosphere of prayer and divine presence, making the home itself a participant in the family's spiritual life.",
+                resources: [
+                    { title: "Celtic Home Blessings", link: "https://www.iona.org.uk/" },
+                    { title: "Sacred Domestic Space", link: "https://www.stcolumba.org.uk/" },
+                    { title: "Celtic Household Prayers", link: "https://www.northumbriacommunity.org/" }
+                ],
+                video: "https://www.youtube.com/watch?v=CtuM7ml6t58",
+                questions: [
+                    "What makes your home feel like a sacred or safe space?",
+                    "How might blessing different areas of your home change your experience of it?",
+                    "What 'thresholds' in your life need divine protection and blessing?"
+                ],
+                activity: "Walk through your home and speak a brief blessing over each room. Consider placing a small cross or meaningful symbol near your main entrance."
+            },
+            {
+                day: 8,
+                theme: "Work and Labor",
+                poems: [
+                    { title: "Blessing of the Kindling", link: "https://sacred-texts.com/neu/celt/cg1/cg1083.htm" },
+                    { title: "Weaving Blessing", link: "https://sacred-texts.com/neu/celt/cg1/cg1331.htm" },
+                    { title: "Fishing Blessing", link: "https://sacred-texts.com/neu/celt/cg1/cg1310.htm" }
+                ],
+                discussion: "Celtic prayers sanctify all forms of honest labor, from fishing to weaving to farming. This reflects a theology where no work is too humble to be offered to God. The prayers transform routine tasks into acts of worship, dignifying manual labor and practical skills.\n\nThe rhythmic quality of many work prayers suggests they helped maintain pace and focus during repetitive tasks. These prayers also fostered mindfulness, keeping the worker present to both the task and God's presence. The integration of prayer and work created a seamless spiritual practice throughout the day.\n\nCeltic work blessings often invoke specific saints associated with particular crafts or trades, creating patron-client relationships between workers and heavenly advocates. This connection provided spiritual support and encouragement in difficult or dangerous work.",
+                resources: [
+                    { title: "Celtic Labor Traditions", link: "https://www.tobarandualchais.co.uk/" },
+                    { title: "Benedictine Work and Prayer", link: "https://www.osb.org/gen/rule.html" },
+                    { title: "Sacred Work", link: "https://www.iona.org.uk/about.php" }
+                ],
+                video: "https://www.youtube.com/watch?v=weVB4LsrJBI",
+                questions: [
+                    "How do you currently view your daily work (paid or unpaid)?",
+                    "What would change if you saw your work as a form of prayer?",
+                    "How might blessing your work tools or workspace affect your attitude?"
+                ],
+                activity: "Choose one work task this week and intentionally offer it as prayer. Before beginning, speak a brief blessing and work with mindful presence."
+            },
+            {
+                day: 9,
+                theme: "Birth and New Beginnings",
+                poems: [
+                    { title: "Birth Baptism", link: "https://sacred-texts.com/neu/celt/cg1/cg1116.htm" },
+                    { title: "The Soul Peace", link: "https://sacred-texts.com/neu/celt/cg1/cg1117.htm" },
+                    { title: "Guardian Angel Blessing", link: "https://sacred-texts.com/neu/celt/cg1/cg1118.htm" }
+                ],
+                discussion: "Celtic birth blessings emphasize the sacredness of new life and the child's place in the community of faith. These prayers often invoke the Trinity and guardian angels, establishing spiritual protection from the moment of birth. The immediate blessing of the newborn reflects the Celtic understanding that every person is created in God's image.\n\nThe practice of emergency baptism by midwives shows the importance placed on ensuring children entered the covenant community. While waiting for formal church baptism, these birth blessings provided immediate spiritual care. The prayers recognize both the joy and vulnerability of new life.\n\nBeyond literal birth, Celtic prayers for new beginnings apply to any significant life transition. The themes of protection, blessing, and divine accompaniment extend to new ventures, relationships, or spiritual rebirths. This flexible application makes these ancient prayers relevant to modern transitions.",
+                resources: [
+                    { title: "Celtic Birth Customs", link: "https://www.museum.scot/national-museums-collection" },
+                    { title: "Christian Birth Blessings", link: "https://www.churchofscotland.org.uk/" },
+                    { title: "Life Transitions in Celtic Tradition", link: "https://www.iona.org.uk/" }
+                ],
+                video: "https://www.youtube.com/watch?v=TemjOUa00IU",
+                questions: [
+                    "What new beginnings are you experiencing in your life right now?",
+                    "How do you mark or honor significant transitions?",
+                    "What blessings do you need as you step into something new?"
+                ],
+                activity: "If you're facing a new beginning, create a simple ritual to mark it. Light a candle, speak a blessing, and write down your hopes and prayers for this transition."
+            },
+            {
+                day: 10,
+                theme: "Nature and Creation",
+                poems: [
+                    { title: "God's Aid", link: "https://sacred-texts.com/neu/celt/cg1/cg1049.htm" },
+                    { title: "Blessings of the Elements", link: "https://sacred-texts.com/neu/celt/cg1/cg1054.htm" },
+                    { title: "The Elements", link: "https://sacred-texts.com/neu/celt/cg1/cg1055.htm" }
+                ],
+                discussion: "Celtic Christianity maintains a profound reverence for creation, seeing nature as a manifestation of God's presence and creativity. Unlike traditions that sharply separate sacred and secular, Celtic spirituality recognizes the divine in mountains, seas, and storms. This sacramental view of nature influenced prayer, art, and daily life.\n\nThe four elements—earth, air, fire, and water—receive specific blessings in Celtic tradition. Each element is seen as a gift from God with both practical and spiritual significance. Prayers invoke these elements as mediators of divine power and blessing, showing an integrated cosmology.\n\nCeltic prayers often personalize natural phenomena, addressing them directly as God's creatures. This intimate relationship with nature reflects the Celtic experience of living close to the land and depending on natural cycles. The prayers express both appreciation and humble recognition of nature's power.",
+                resources: [
+                    { title: "Celtic View of Nature", link: "https://www.iona.org.uk/spirituality.php" },
+                    { title: "Celtic Creation Spirituality", link: "https://www.celticchristianity.org/" },
+                    { title: "Scottish Natural Heritage", link: "https://www.nature.scot/" }
+                ],
+                video: "https://www.youtube.com/watch?v=3z67Q4MLIlU",
+                questions: [
+                    "Where do you most clearly sense God's presence in nature?",
+                    "How might your relationship with creation change if you saw it as sacred?",
+                    "What natural element (earth, air, fire, water) resonates most with your spiritual journey?"
+                ],
+                activity: "Spend 30 minutes in nature this week without distractions. Practice contemplative observation and offer prayers of gratitude for creation's beauty and complexity."
+            },
+            {
+                day: 11,
+                theme: "Saints and Soul Friends",
+                poems: [
+                    { title: "Invocation of Brigit", link: "https://sacred-texts.com/neu/celt/cg1/cg1120.htm" },
+                    { title: "Columba's Herding", link: "https://sacred-texts.com/neu/celt/cg1/cg1267.htm" },
+                    { title: "Michael's Protection", link: "https://sacred-texts.com/neu/celt/cg1/cg1056.htm" }
+                ],
+                discussion: "Celtic Christianity developed a rich tradition of saint veneration, particularly of local saints who brought the Gospel to Celtic lands. Saints like Brigit, Columba, and Patrick appear frequently in prayers as intercessors and spiritual guides. The Celtic concept of 'anam cara' (soul friend) extended to include heavenly companions.\n\nUnlike some Christian traditions that emphasize individual spirituality, Celtic practice assumes we need spiritual friendship and guidance. The prayers to saints acknowledge our need for help and the communion of saints as an active reality. Saints are seen as cloud of witnesses actively praying for those still on earthly pilgrimage.\n\nEach saint brings particular gifts and is invoked for specific needs—Brigit for hospitality and healing, Columba for learning and mission, Michael for protection. This specialized intercession makes the communion of saints practical and personal rather than merely doctrinal.",
+                resources: [
+                    { title: "Celtic Saints", link: "https://www.christianitytoday.com/history/issues/issue-60/celtic-christianity.html" },
+                    { title: "Soul Friends Tradition", link: "https://www.anamcarabooks.com/about-anam-cara/" },
+                    { title: "St. Columba and Iona", link: "https://www.historicenvironment.scot/visit-a-place/places/iona-abbey/" }
+                ],
+                video: "https://www.youtube.com/watch?v=PoiuGAF50Rs",
+                questions: [
+                    "Who are your spiritual mentors or 'soul friends' (living or deceased)?",
+                    "What qualities of Celtic saints inspire you?",
+                    "How might asking for saints' prayers strengthen your spiritual life?"
+                ],
+                activity: "Research one Celtic saint this week. Learn their story and consider how their life and gifts might guide you. Speak a prayer asking for their intercession."
+            },
+            {
+                day: 12,
+                theme: "Light and Darkness",
+                poems: [
+                    { title: "Kindling the Fire", link: "https://sacred-texts.com/neu/celt/cg1/cg1083.htm" },
+                    { title: "Light Prayer", link: "https://sacred-texts.com/neu/celt/cg1/cg1086.htm" },
+                    { title: "Sun Prayer", link: "https://sacred-texts.com/neu/celt/cg1/cg1031.htm" }
+                ],
+                discussion: "Light symbolism permeates Celtic Christian prayer, reflecting both the practical importance of fire and light in northern climates and the theological understanding of Christ as light of the world. The daily ritual of kindling the fire becomes a spiritual practice, symbolizing the illumination of faith.\n\nCeltic prayers don't demonize darkness but recognize it as part of God's creation and natural rhythm. Evening prayers embrace the darkness as time for rest and reflection, trusting God's protection through the night. This balanced view acknowledges life's shadows while affirming light's ultimate victory.\n\nThe sun features prominently in Celtic prayers, not as an object of worship but as God's gift providing warmth and life. Solar imagery connects to Christ as 'sun of righteousness' and reflects Celtic Christians' attunement to natural cycles and seasonal changes.",
+                resources: [
+                    { title: "Celtic Sun Prayers", link: "https://www.iona.org.uk/" },
+                    { title: "Light in Celtic Art", link: "https://www.tcd.ie/library/manuscripts/book-of-kells.php" },
+                    { title: "Fire Festivals", link: "https://www.scotland.org/about-scotland/scottish-culture/celtic-connections" }
+                ],
+                video: "https://www.youtube.com/watch?v=2voW3W1SfmA",
+                questions: [
+                    "What darkness in your life needs Christ's light?",
+                    "How do you experience God's presence differently in light versus darkness?",
+                    "What practices help you maintain spiritual light during difficult times?"
+                ],
+                activity: "Practice a daily candle-lighting prayer this week. Each morning or evening, light a candle and pray for illumination in a specific area of need."
+            },
+            {
+                day: 13,
+                theme: "Hospitality and Welcome",
+                poems: [
+                    { title: "Rune of Hospitality", link: "https://sacred-texts.com/neu/celt/cg1/cg1105.htm" },
+                    { title: "The Welcome", link: "https://sacred-texts.com/neu/celt/cg1/cg1104.htm" },
+                    { title: "Blessing of the Guest", link: "https://sacred-texts.com/neu/celt/cg1/cg1106.htm" }
+                ],
+                discussion: "Celtic hospitality traditions make welcoming strangers a sacred duty and spiritual practice. The famous 'Rune of Hospitality' reflects the belief that Christ might come disguised as a guest, echoing Jesus's teaching that serving others is serving Him. This transforms hospitality from mere social custom to spiritual discipline.\n\nCeltic monasteries became renowned for their hospitality, offering shelter, food, and spiritual care to travelers. This practice emerged from both Christian teaching and older Celtic customs that honored the guest. The prayers blessing both host and guest recognize hospitality as mutual blessing.\n\nThreshold and hearth prayers establish the home as a place of welcome, where strangers are received as potential bearers of blessing. This openness requires both trust in God's protection and willingness to share resources, embodying Gospel generosity in practical terms.",
+                resources: [
+                    { title: "Celtic Hospitality", link: "https://www.iona.org.uk/about.php" },
+                    { title: "Monastic Guest Houses", link: "https://www.northumbriacommunity.org/" },
+                    { title: "Christian Hospitality", link: "https://www.churchofscotland.org.uk/" }
+                ],
+                video: "https://www.youtube.com/watch?v=pzYFidwSEn8",
+                questions: [
+                    "How hospitable is your home or heart to strangers?",
+                    "When have you experienced Christ through someone's hospitality?",
+                    "What barriers prevent you from offering more generous welcome?"
+                ],
+                activity: "Practice hospitality this week by inviting someone to share a meal or offering coffee to a neighbor. Speak a silent blessing over your guest."
+            },
+            {
+                day: 14,
+                theme: "Seasons and Cycles",
+                poems: [
+                    { title: "Spring Blessing", link: "https://sacred-texts.com/neu/celt/cg1/cg1297.htm" },
+                    { title: "Harvest Thanksgiving", link: "https://sacred-texts.com/neu/celt/cg1/cg1294.htm" },
+                    { title: "Winter Protection", link: "https://sacred-texts.com/neu/celt/cg1/cg1101.htm" }
+                ],
+                discussion: "Celtic spirituality honors seasonal rhythms as reflections of spiritual truths. Each season brings unique blessings and challenges, with corresponding prayers marking transitions. This attunement to natural cycles grounds faith in the tangible world while recognizing spiritual significance in temporal patterns.\n\nSpring prayers celebrate renewal and resurrection, connecting Christ's victory over death with nature's awakening. Harvest prayers express gratitude and recognize human dependence on divine blessing. Winter prayers seek protection and trust God's provision through scarcity, acknowledging life's difficult seasons.\n\nThe cyclical nature of seasons teaches about death and resurrection, scarcity and abundance, darkness and light. Celtic prayers embrace these cycles rather than resisting them, finding spiritual lessons in nature's patterns. This seasonal spirituality cultivates patience, gratitude, and trust in divine timing.",
+                resources: [
+                    { title: "Celtic Seasonal Prayers", link: "https://www.iona.org.uk/worship.php" },
+                    { title: "Celtic Calendar", link: "https://www.electricscotland.com/history/other/calendar.htm" },
+                    { title: "Liturgical Seasons", link: "https://www.churchofscotland.org.uk/" }
+                ],
+                video: "https://www.youtube.com/watch?v=xJoq8AVSxP0",
+                questions: [
+                    "What 'season' are you in spiritually right now?",
+                    "How do natural seasons affect your spiritual life?",
+                    "What lessons can you draw from nature's cycles?"
+                ],
+                activity: "Create a simple seasonal altar or prayer corner reflecting the current season. Include natural elements (leaves, flowers, stones) and speak seasonal prayers there."
+            },
+            {
+                day: 15,
+                theme: "Animals and Creatures",
+                poems: [
+                    { title: "Blessing of the Herds", link: "https://sacred-texts.com/neu/celt/cg1/cg1268.htm" },
+                    { title: "Milking Songs", link: "https://sacred-texts.com/neu/celt/cg1/cg1274.htm" },
+                    { title: "Sheepfold Blessing", link: "https://sacred-texts.com/neu/celt/cg1/cg1270.htm" }
+                ],
+                discussion: "Celtic prayers extend blessing to animals, recognizing them as fellow creatures under God's care. These prayers reflect practical dependence on livestock while acknowledging animals' intrinsic value beyond their utility. The gentle, respectful tone shows reverence for all life.\n\nSongs and prayers for animals served practical purposes—calming nervous livestock, maintaining rhythm during milking, creating peaceful atmospheres. Yet they also express theological conviction that God cares for all creatures. The prayers often invoke divine protection over animals, treating them as part of the spiritual household.\n\nCeltic saint stories frequently feature miraculous relationships with animals, reinforcing the idea that sanctity restores harmony between humans and creation. Prayers for animals participate in this vision of reconciled creation where all creatures fulfill their God-given purposes.",
+                resources: [
+                    { title: "Animals in Celtic Culture", link: "https://www.museum.scot/collections-research" },
+                    { title: "Celtic Christianity and Creation", link: "https://www.iona.org.uk/" },
+                    { title: "St. Francis and Celtic Spirituality", link: "https://www.franciscanmedia.org/" }
+                ],
+                video: "https://www.youtube.com/watch?v=VSkFlQeGmaI",
+                questions: [
+                    "How do you view your relationship with animals and nature?",
+                    "What might it mean to bless animals in your care or encounter?",
+                    "How does caring for creation reflect God's image?"
+                ],
+                activity: "If you have pets or encounter animals, practice blessing them this week. Speak words of gratitude for their presence and God's care for all creatures."
+            },
+            {
+                day: 16,
+                theme: "Community and Fellowship",
+                poems: [
+                    { title: "Community Blessing", link: "https://sacred-texts.com/neu/celt/cg1/cg1044.htm" },
+                    { title: "Family Blessing", link: "https://sacred-texts.com/neu/celt/cg1/cg1098.htm" },
+                    { title: "Friendship Prayer", link: "https://sacred-texts.com/neu/celt/cg1/cg1046.htm" }
+                ],
+                discussion: "Celtic Christianity emphasizes community over individualism, reflected in prayers that consistently invoke blessing for family, neighbors, and wider community. The concept of clan and kinship deeply influenced Celtic Christian practice, creating spiritual families alongside biological ones.\n\nMonastic communities became models of Christian fellowship, with prayers regulating communal life and fostering mutual care. The Celtic monastic tradition emphasized relationship with spiritual mentors ('soul friends') and communal worship. Individual spirituality was always understood within communal context.\n\nFamily blessing prayers recognize the domestic church as primary community. These prayers seek harmony, protection, and mutual love among family members. The extension of family imagery to wider community reflects the Celtic understanding that all Christians are family in Christ.",
+                resources: [
+                    { title: "Celtic Monasticism", link: "https://www.iona.org.uk/community.php" },
+                    { title: "Christian Community", link: "https://www.northumbriacommunity.org/who-we-are/" },
+                    { title: "Celtic Kinship", link: "https://www.electricscotland.com/history/scotland/clanship.htm" }
+                ],
+                video: "https://www.youtube.com/watch?v=oA33-gBl31M",
+                questions: [
+                    "Who forms your spiritual community or family?",
+                    "How do you currently pray for your community?",
+                    "What would strengthen fellowship in your circles?"
+                ],
+                activity: "Write down names of your spiritual community (family, friends, church). Pray for one person specifically each day this week, asking for God's blessing on them."
+            },
+            {
+                day: 17,
+                theme: "Pilgrimage and Sacred Places",
+                poems: [
+                    { title: "Pilgrimage Prayer", link: "https://sacred-texts.com/neu/celt/cg1/cg1091.htm" },
+                    { title: "Iona Blessing", link: "https://sacred-texts.com/neu/celt/cg1/cg1092.htm" },
+                    { title: "Well Blessing", link: "https://sacred-texts.com/neu/celt/cg1/cg1201.htm" }
+                ],
+                discussion: "Celtic Christians developed rich pilgrimage traditions, visiting holy wells, monastic sites, and places associated with saints. These journeys combined physical travel with spiritual seeking, embodying faith as movement toward God. Iona, site of Columba's monastery, remains a pilgrimage destination today.\n\nThe concept of 'thin places'—locations where heaven and earth seem close—characterizes Celtic sacred geography. These might be dramatic natural sites, holy wells, or modest chapels. Pilgrimage prayers acknowledge these locations' spiritual significance while recognizing that God dwells everywhere.\n\nPilgrimage serves both penance and seeking, offering opportunity for extended prayer, reflection, and transformation. The journey itself becomes as significant as the destination, with travel prayers marking each stage. Modern spiritual pilgrimage continues these ancient practices.",
+                resources: [
+                    { title: "Iona Community", link: "https://www.iona.org.uk/" },
+                    { title: "Celtic Pilgrimage Routes", link: "https://www.pilgrimageininscotland.com/" },
+                    { title: "Holy Wells of Scotland", link: "https://www.undiscoveredscotland.co.uk/usfeatures/holywells/" }
+                ],
+                video: "https://www.youtube.com/watch?v=efJ95s1Qxlk",
+                questions: [
+                    "Where are the 'thin places' in your spiritual geography?",
+                    "How might pilgrimage (literal or metaphorical) deepen your faith?",
+                    "What sacred site draws you, and why?"
+                ],
+                activity: "Plan a mini-pilgrimage to a meaningful spiritual site nearby (church, nature spot, cemetery). Walk it prayerfully, being present to what God might reveal."
+            },
+            {
+                day: 18,
+                theme: "Death and Eternal Life",
+                poems: [
+                    { title: "Death Blessing", link: "https://sacred-texts.com/neu/celt/cg1/cg1109.htm" },
+                    { title: "Soul Peace", link: "https://sacred-texts.com/neu/celt/cg1/cg1111.htm" },
+                    { title: "Journey Prayer", link: "https://sacred-texts.com/neu/celt/cg1/cg1110.htm" }
+                ],
+                discussion: "Celtic death prayers combine sorrow with hope, acknowledging grief while affirming faith in resurrection. These prayers accompany the dying person's final journey, commending their soul to God's care. The imagery of death as journey reflects Celtic pilgrimage spirituality applied to the ultimate transition.\n\nUnlike some Christian traditions that focus heavily on judgment, Celtic prayers emphasize God's mercy and the soul's safe passage. The prayers invoke angels, saints, and the Trinity to guide and protect the departing soul. This reflects confidence in God's loving reception rather than fear of condemnation.\n\nCeltic prayers for the dead continue after death, asking for the soul's peace and comfort for the bereaved. The communion of saints means relationship continues beyond death, with prayers bridging the divide. This provides comfort while maintaining honest grief.",
+                resources: [
+                    { title: "Celtic Views on Death", link: "https://www.iona.org.uk/" },
+                    { title: "Christian Hope", link: "https://www.churchofscotland.org.uk/" },
+                    { title: "Celtic Soul Journey", link: "https://www.celticchristianity.org/" }
+                ],
+                video: "https://www.youtube.com/watch?v=Yo4_YD5fD-8",
+                questions: [
+                    "How do you approach thoughts of mortality and eternal life?",
+                    "What comfort do Celtic prayers for the dying offer?",
+                    "How might you prepare spiritually for life's final journey?"
+                ],
+                activity: "Visit a cemetery or memorial site this week. Pray for those who have died and reflect on your own mortality and hope of resurrection."
+            },
+            {
+                day: 19,
+                theme: "Courage and Perseverance",
+                poems: [
+                    { title: "Battle Blessing", link: "https://sacred-texts.com/neu/celt/cg1/cg1057.htm" },
+                    { title: "Prayer for Strength", link: "https://sacred-texts.com/neu/celt/cg1/cg1058.htm" },
+                    { title: "Warrior's Shield", link: "https://sacred-texts.com/neu/celt/cg1/cg1059.htm" }
+                ],
+                discussion: "Celtic prayers for courage reflect the warrior culture that preceded Christianization while transforming martial imagery into spiritual warfare. These prayers invoke divine strength for facing life's battles—both literal conflicts and spiritual struggles. The shield imagery becomes particularly potent as symbol of God's protection.\n\nThe prayers don't glorify violence but recognize that life requires courage. Whether facing physical danger, difficult decisions, or spiritual darkness, these prayers ask for fortitude to stand firm. The warrior tradition merges with Christian teaching about spiritual armor and fighting the good fight of faith.\n\nCeltic saints like Patrick and Columba demonstrated courage in missionary work, facing hostility and hardship. Their examples inspire prayers asking for similar boldness in contemporary challenges. The prayers acknowledge fear while asking for courage to act despite it.",
+                resources: [
+                    { title: "Celtic Warriors and Christianity", link: "https://www.historicenvironment.scot/" },
+                    { title: "Spiritual Warfare", link: "https://www.christianitytoday.com/ct/topics/s/spiritual-warfare/" },
+                    { title: "St. Patrick's Breastplate", link: "https://www.ourcatholicprayers.com/st-patricks-breastplate.html" }
+                ],
+                video: "https://www.youtube.com/watch?v=51z7LiVVuUw",
+                questions: [
+                    "What battles or challenges currently require your courage?",
+                    "How does faith provide strength for difficult situations?",
+                    "What spiritual 'armor' do you need to put on?"
+                ],
+                activity: "Identify one situation requiring courage. Each morning this week, pray for strength before facing it. Journal about how prayer affects your courage."
+            },
+            {
+                day: 20,
+                theme: "Forgiveness and Reconciliation",
+                poems: [
+                    { title: "Peace Blessing", link: "https://sacred-texts.com/neu/celt/cg1/cg1047.htm" },
+                    { title: "Reconciliation Prayer", link: "https://sacred-texts.com/neu/celt/cg1/cg1048.htm" },
+                    { title: "Confession Prayer", link: "https://sacred-texts.com/neu/celt/cg1/cg1043.htm" }
+                ],
+                discussion: "Celtic Christianity practiced soul friendship (anam cara) where believers confessed sins and received spiritual guidance from trusted companions. This practice emphasized reconciliation as ongoing process rather than occasional sacrament. The prayers reflect understanding that brokenness requires healing at personal and communal levels.\n\nForgiveness prayers acknowledge both the need to receive forgiveness and the calling to extend it to others. The prayers don't minimize wrongdoing but ask for grace to move beyond resentment toward restoration. This reflects Gospel teaching about unlimited forgiveness and reconciliation.\n\nCeltic monastic rules included detailed procedures for reconciliation after conflicts. The prayers supporting these practices seek divine help in the difficult work of forgiving and being forgiven. They recognize that true peace requires addressing wrongs rather than ignoring them.",
+                resources: [
+                    { title: "Anam Cara Practice", link: "https://www.anamcarabooks.com/" },
+                    { title: "Celtic Confession", link: "https://www.iona.org.uk/" },
+                    { title: "Christian Forgiveness", link: "https://www.christianitytoday.com/ct/topics/f/forgiveness/" }
+                ],
+                video: "https://www.youtube.com/watch?v=HQ0DHenlv1A",
+                questions: [
+                    "Who do you need to forgive, or from whom do you need forgiveness?",
+                    "What makes forgiveness difficult for you?",
+                    "How might having a 'soul friend' aid your spiritual growth?"
+                ],
+                activity: "Write a letter of forgiveness (to send or not) to someone who hurt you, or write asking forgiveness from someone you wronged. Pray over it."
+            },
+            {
+                day: 21,
+                theme: "Wisdom and Learning",
+                poems: [
+                    { title: "Scholar's Prayer", link: "https://sacred-texts.com/neu/celt/cg1/cg1345.htm" },
+                    { title: "Blessing of the Mind", link: "https://sacred-texts.com/neu/celt/cg1/cg1346.htm" },
+                    { title: "Prayer for Understanding", link: "https://sacred-texts.com/neu/celt/cg1/cg1347.htm" }
+                ],
+                discussion: "Celtic monasteries became centers of learning, preserving classical knowledge through dark ages while developing distinctive artistic and scholarly traditions. Prayers for wisdom reflect the value placed on education and the belief that intellectual pursuit honors God. The illuminated manuscripts like the Book of Kells demonstrate this integration of beauty, learning, and faith.\n\nCeltic prayers for students and scholars ask not just for intellectual capacity but for wisdom—the ability to apply knowledge rightly. This distinction shows awareness that education must serve virtue and faith. The prayers invoke the Holy Spirit as teacher and illuminator of truth.\n\nThe Celtic approach to learning emphasized memorization of Scripture and theological texts alongside practical skills. Prayers accompanied study, making learning itself a spiritual discipline. This tradition continues in Celtic-influenced educational institutions today.",
+                resources: [
+                    { title: "Celtic Monasticism and Learning", link: "https://www.christianitytoday.com/history/issues/issue-60/irish-scholars.html" },
+                    { title: "Book of Kells", link: "https://www.tcd.ie/library/manuscripts/book-of-kells.php" },
+                    { title: "Celtic Scholarship", link: "https://www.scottishgaelicstudies.ed.ac.uk/" }
+                ],
+                video: "https://www.youtube.com/watch?v=jXSGxQhF7-4",
+                questions: [
+                    "How do you pursue wisdom in your life?",
+                    "What's the relationship between knowledge and spiritual growth?",
+                    "How might prayer enhance your learning?"
+                ],
+                activity: "Choose a spiritual topic to study this week. Begin each study session with prayer for wisdom and understanding. Take notes on what you learn."
+            },
+            {
+                day: 22,
+                theme: "Gratitude and Thanksgiving",
+                poems: [
+                    { title: "Thanksgiving Prayer", link: "https://sacred-texts.com/neu/celt/cg1/cg1033.htm" },
+                    { title: "Harvest Blessing", link: "https://sacred-texts.com/neu/celt/cg1/cg1294.htm" },
+                    { title: "Daily Gratitude", link: "https://sacred-texts.com/neu/celt/cg1/cg1035.htm" }
+                ],
+                discussion: "Gratitude permeates Celtic prayers, with thanksgiving woven into blessings for all occasions. This reflects theological conviction that every good gift comes from God and deserves acknowledgment. The prayers cultivate an attitude of appreciation rather than entitlement, recognizing human dependence on divine provision.\n\nHarvest prayers offer the most explicit thanksgiving, celebrating the year's bounty. Yet Celtic tradition extends gratitude to everyday provisions—daily bread, health, family, shelter. This consistent thankfulness guards against taking blessings for granted and fosters contentment.\n\nCeltic prayers often combine petition with thanksgiving, acknowledging past blessings while requesting future ones. This balance shows trust that the God who provided before will provide again. The practice of gratitude becomes foundation for faith and resilience.",
+                resources: [
+                    { title: "Celtic Thanksgiving", link: "https://www.iona.org.uk/" },
+                    { title: "Gratitude Practice", link: "https://www.churchofscotland.org.uk/" },
+                    { title: "Harvest Traditions", link: "https://www.tobarandualchais.co.uk/" }
+                ],
+                video: "https://www.youtube.com/watch?v=KRm-79R1Q80",
+                questions: [
+                    "What are you most grateful for today?",
+                    "How does gratitude affect your spiritual life?",
+                    "What practices help you maintain a thankful heart?"
+                ],
+                activity: "Keep a gratitude journal this week. Each evening, write three things you're thankful for and pray thanks to God for them."
+            },
+            {
+                day: 23,
+                theme: "Water and Baptism",
+                poems: [
+                    { title: "Water Blessing", link: "https://sacred-texts.com/neu/celt/cg1/cg1200.htm" },
+                    { title: "Baptism Prayer", link: "https://sacred-texts.com/neu/celt/cg1/cg1116.htm" },
+                    { title: "Well Blessing", link: "https://sacred-texts.com/neu/celt/cg1/cg1201.htm" }
+                ],
+                discussion: "Water holds profound significance in Celtic spirituality, both practically and symbolically. Holy wells became pilgrimage sites and places of healing, with prayers blessing the water and those who drink it. The abundance of water in Celtic lands—seas, rivers, wells—provided constant reminders of baptismal symbolism.\n\nBaptism prayers emphasize new birth and incorporation into Christ's body. Celtic practice sometimes included emergency baptism by midwives, showing the importance placed on this sacrament. The prayers invoke the Trinity and ask for the child's protection and faith throughout life.\n\nWater blessings extend beyond baptism to everyday use—blessing household water, praying at wells, or consecrating water for healing. This sacramental approach treats water as mediator of divine grace and blessing, honoring its life-giving properties as gift from God.",
+                resources: [
+                    { title: "Holy Wells", link: "https://www.pilgrimageininscotland.com/holy-wells" },
+                    { title: "Celtic Baptism", link: "https://www.churchofscotland.org.uk/" },
+                    { title: "Water in Celtic Tradition", link: "https://www.iona.org.uk/" }
+                ],
+                video: "https://www.youtube.com/watch?v=5ig8Bb0l8_E",
+                questions: [
+                    "What does your baptism mean to you?",
+                    "How does water symbolize spiritual cleansing and renewal?",
+                    "What 'wells' in your life provide spiritual refreshment?"
+                ],
+                activity: "Visit a body of water (ocean, river, lake) this week. Pray for renewal and reflect on your baptism. If possible, touch the water and make the sign of the cross."
+            },
+            {
+                day: 24,
+                theme: "Music and Song",
+                poems: [
+                    { title: "Song of Praise", link: "https://sacred-texts.com/neu/celt/cg1/cg1036.htm" },
+                    { title: "Milking Croon", link: "https://sacred-texts.com/neu/celt/cg1/cg1274.htm" },
+                    { title: "Working Song", link: "https://sacred-texts.com/neu/celt/cg1/cg1333.htm" }
+                ],
+                discussion: "Many Carmina Gadelica prayers were originally songs or chants, reflecting Celtic culture's rich musical tradition. These work songs sanctified labor while providing rhythm and entertainment. The melodies, passed down orally, are largely lost, but the texts reveal their lyrical, repetitive structure suited for singing.\n\nCeltic Christian worship emphasized sung prayer and psalm-singing. Monasteries developed distinctive chant traditions, and the common people sang prayers while working. This integration of music and prayer engaged the whole person—mind, voice, and body—in worship.\n\nThe term 'croon' appears frequently in Carmina Gadelica, describing gentle songs sung to animals or while performing tasks. These crooning prayers demonstrate how music can soothe, focus attention, and elevate mundane activities into meditative practices. The beauty of the prayers themselves suggests their original musical setting.",
+                resources: [
+                    { title: "Celtic Music Tradition", link: "https://www.ceolas.org/ceolas.html" },
+                    { title: "Gaelic Psalms", link: "https://www.tobarandualchais.co.uk/" },
+                    { title: "Sacred Music", link: "https://www.iona.org.uk/worship.php" }
+                ],
+                video: "https://www.youtube.com/watch?v=J_sd1hPjBE0",
+                questions: [
+                    "How does music affect your spiritual life?",
+                    "What songs or hymns most deeply move you?",
+                    "How might singing prayers change your devotional practice?"
+                ],
+                activity: "Try singing your prayers this week, even if just to yourself. Choose a simple melody and set a prayer or blessing to it. Notice how singing affects your prayer."
+            },
+            {
+                day: 25,
+                theme: "Silence and Solitude",
+                poems: [
+                    { title: "Hermit's Prayer", link: "https://sacred-texts.com/neu/celt/cg1/cg1094.htm" },
+                    { title: "Meditation Blessing", link: "https://sacred-texts.com/neu/celt/cg1/cg1095.htm" },
+                    { title: "Desert Prayer", link: "https://sacred-texts.com/neu/celt/cg1/cg1093.htm" }
+                ],
+                discussion: "Celtic monasticism included both communal and solitary expressions. Some monks sought remote hermitages for contemplative prayer, following the tradition of desert fathers. These hermit prayers reflect the spiritual fruits of silence—deeper listening to God, self-knowledge, and freedom from distraction.\n\nThe Celtic concept of 'green martyrdom' described monastic renunciation as spiritual death to worldly attachments. Seeking solitude wasn't escapism but intensive spiritual training. The prayers from these traditions emphasize inner silence, contemplation, and encounter with God in stillness.\n\nEven within active monastic communities, Celtic Christians valued periods of silence. The prayers acknowledge that sometimes words fail and silent presence before God becomes the truest prayer. This balance of speech and silence, community and solitude, characterized mature Celtic spirituality.",
+                resources: [
+                    { title: "Celtic Monasticism", link: "https://www.christianitytoday.com/history/issues/issue-60/celtic-monasticism.html" },
+                    { title: "Contemplative Prayer", link: "https://www.contemplativeoutreach.org/" },
+                    { title: "Hermit Tradition", link: "https://www.iona.org.uk/" }
+                ],
+                video: "https://www.youtube.com/watch?v=KDANWbDl95k",
+                questions: [
+                    "How comfortable are you with silence?",
+                    "What might you hear if you listened more deeply?",
+                    "How can you incorporate more contemplative silence into your life?"
+                ],
+                activity: "Practice 15 minutes of silent prayer daily this week. Simply sit in God's presence without words. Notice what emerges in the silence."
+            },
+            {
+                day: 26,
+                theme: "Love and Compassion",
+                poems: [
+                    { title: "Love Prayer", link: "https://sacred-texts.com/neu/celt/cg1/cg1045.htm" },
+                    { title: "Compassion Blessing", link: "https://sacred-texts.com/neu/celt/cg1/cg1046.htm" },
+                    { title: "Heart Opening", link: "https://sacred-texts.com/neu/celt/cg1/cg1044.htm" }
+                ],
+                discussion: "Celtic prayers for love often invoke the Trinity as model of perfect love—unity in diversity, self-giving relationship. The prayers ask for capacity to love God, neighbor, and enemy, recognizing that human love requires divine grace. The intimate tone of many prayers reflects personal relationship with God as loving parent and friend.\n\nCompassion prayers seek to extend Christ's mercy to others, particularly the suffering and marginalized. Celtic saints demonstrated radical hospitality and care for the poor, with their prayers supporting this ministry. The prayers acknowledge that compassion often requires sacrifice and overcoming natural self-centeredness.\n\nThe prayers distinguish between sentimental feeling and volitional love—choosing to act for others' good regardless of emotion. This mature understanding of love prepares believers for the difficult work of loving difficult people and situations. The prayers ask for God's love to flow through us to others.",
+                resources: [
+                    { title: "Celtic Love Mysticism", link: "https://www.iona.org.uk/" },
+                    { title: "Christian Compassion", link: "https://www.churchofscotland.org.uk/" },
+                    { title: "Trinity and Love", link: "https://www.christianitytoday.com/ct/topics/t/trinity/" }
+                ],
+                video: "https://www.youtube.com/watch?v=UyP2up2Xueo",
+                questions: [
+                    "Who challenges your capacity to love?",
+                    "How do you experience God's love for you?",
+                    "What blocks your ability to show compassion?"
+                ],
+                activity: "Perform one anonymous act of kindness this week. Pray for the person before and after, asking God to bless them abundantly."
+            },
+            {
+                day: 27,
+                theme: "Hope and Future",
+                poems: [
+                    { title: "Hope Prayer", link: "https://sacred-texts.com/neu/celt/cg1/cg1050.htm" },
+                    { title: "Future Blessing", link: "https://sacred-texts.com/neu/celt/cg1/cg1051.htm" },
+                    { title: "Promise Prayer", link: "https://sacred-texts.com/neu/celt/cg1/cg1052.htm" }
+                ],
+                discussion: "Celtic prayers for the future balance trust in God's sovereignty with honest acknowledgment of life's uncertainties. Hope, in these prayers, isn't naive optimism but confident faith that God accompanies us into unknown tomorrows. The prayers seek guidance for decisions while expressing willingness to accept God's will.\n\nEschatological hope—expectation of Christ's return and fulfillment of God's kingdom—appears throughout Celtic prayers. This future orientation provides perspective on present struggles, seeing them as temporary afflictions light compared to eternal glory. Yet Celtic prayers remain grounded in present reality, asking for daily provision and immediate guidance.\n\nThe prayers often invoke God's past faithfulness as foundation for future hope. Remembering how God provided before strengthens confidence that God will continue to provide. This historical memory grounds hope in experience rather than wishful thinking.",
+                resources: [
+                    { title: "Christian Hope", link: "https://www.christianitytoday.com/ct/topics/h/hope/" },
+                    { title: "Celtic Eschatology", link: "https://www.iona.org.uk/" },
+                    { title: "Living in Hope", link: "https://www.northumbriacommunity.org/" }
+                ],
+                video: "https://www.youtube.com/watch?v=o6c4XzhAPhU",
+                questions: [
+                    "What are your hopes and fears for the future?",
+                    "How does faith affect your perspective on tomorrow?",
+                    "What 'past faithfulness' can you remember to strengthen hope?"
+                ],
+                activity: "Write a prayer expressing your hopes for the next year. Place it somewhere you'll find it in a year, then pray for trust in God's guidance."
+            },
+            {
+                day: 28,
+                theme: "Blessing and Benediction",
+                poems: [
+                    { title: "General Blessing", link: "https://sacred-texts.com/neu/celt/cg1/cg1054.htm" },
+                    { title: "Farewell Blessing", link: "https://sacred-texts.com/neu/celt/cg1/cg1097.htm" },
+                    { title: "Daily Benediction", link: "https://sacred-texts.com/neu/celt/cg1/cg1100.htm" }
+                ],
+                discussion: "The practice of blessing others characterizes Celtic Christianity, reflecting belief that words carry spiritual power to invoke God's favor. Blessings aren't magical formulas but prayers asking God to bestow grace on the blessed person or thing. The prayers demonstrate that ordinary Christians, not just clergy, can pronounce blessings.\n\nCeltic blessings often use triadic structure, invoking Father, Son, and Holy Spirit. This Trinitarian formula ensures the blessing draws on full divine power. The blessings may be elaborate or simple, formal or spontaneous, but all share the intent to channel God's goodness toward the recipient.\n\nFarewell blessings hold special poignancy, spoken when parting (perhaps permanently in dangerous times). These prayers commend the traveler to God's protection and express hope for reunion. The tradition continues today in Celtic liturgies and blessing ceremonies.",
+                resources: [
+                    { title: "Celtic Blessings", link: "https://www.iona.org.uk/" },
+                    { title: "Power of Blessing", link: "https://www.churchofscotland.org.uk/" },
+                    { title: "Benediction Tradition", link: "https://www.northumbriacommunity.org/" }
+                ],
+                video: "https://www.youtube.com/watch?v=pN0XhA17e2Q",
+                questions: [
+                    "Who in your life needs your blessing?",
+                    "How might speaking blessings over others change your relationships?",
+                    "What blessing do you most need to receive?"
+                ],
+                activity: "Practice blessing people you encounter this week—family, friends, strangers. Speak blessings silently or aloud, invoking God's goodness on them."
+            },
+            {
+                day: 29,
+                theme: "Joy and Celebration",
+                poems: [
+                    { title: "Joy Prayer", link: "https://sacred-texts.com/neu/celt/cg1/cg1037.htm" },
+                    { title: "Celebration Blessing", link: "https://sacred-texts.com/neu/celt/cg1/cg1038.htm" },
+                    { title: "Feast Day Prayer", link: "https://sacred-texts.com/neu/celt/cg1/cg1107.htm" }
+                ],
+                discussion: "Celtic Christianity embraces joy as spiritual gift and duty. The prayers celebrate God's goodness, creation's beauty, and the gift of life itself. This joyful spirit counters misconceptions of Christianity as somber or life-denying, showing that faith enhances appreciation for God's gifts.\n\nCeltic feast days combined religious observance with communal celebration, including food, music, and fellowship. The prayers blessing these celebrations sanctify enjoyment, treating pleasure as God-given capacity to be used gratefully. This integrated spirituality sees no conflict between worship and festivity.\n\nThe prayers acknowledge that joy coexists with sorrow in fallen world. Yet they affirm that underlying joy in God remains even through trials, grounded in resurrection hope. This deep joy differs from mere happiness, persisting when circumstances don't warrant cheerfulness because it rests on eternal realities.",
+                resources: [
+                    { title: "Celtic Celebrations", link: "https://www.scotland.org/about-scotland/scottish-culture" },
+                    { title: "Christian Joy", link: "https://www.christianitytoday.com/ct/topics/j/joy/" },
+                    { title: "Celtic Festivals", link: "https://www.tobarandualchais.co.uk/" }
+                ],
+                video: "https://www.youtube.com/watch?v=zer8KvccsWE",
+                questions: [
+                    "What brings you deepest joy?",
+                    "How do you celebrate God's goodness?",
+                    "What's the difference between happiness and spiritual joy?"
+                ],
+                activity: "Plan a small celebration this week—a special meal, gathering with friends, or personal treat. Begin with prayer thanking God for the gift of joy."
+            },
+            {
+                day: 30,
+                theme: "Integration and Continuation",
+                poems: [
+                    { title: "Continuing Prayer", link: "https://sacred-texts.com/neu/celt/cg1/cg1032.htm" },
+                    { title: "Life Blessing", link: "https://sacred-texts.com/neu/celt/cg1/cg1042.htm" },
+                    { title: "The Path", link: "https://sacred-texts.com/neu/celt/cg1/cg1099.htm" }
+                ],
+                discussion: "The final day invites reflection on integrating Celtic prayer into ongoing life. The prayers aren't museum pieces but living traditions adaptable to contemporary contexts. The challenge is making these practices genuinely our own while respecting their historical and cultural origins.\n\nCeltic spirituality offers modern Christians a way to re-enchant daily life, seeing the sacred in ordinary moments. The prayers provide language and patterns for developing robust devotional life that encompasses all aspects of living. They remind us that holiness isn't separate from daily experience but discovered within it.\n\nThe journey through Carmina Gadelica concludes not with ending but continuation. The prayers invite lifelong practice, deeper exploration, and creative adaptation. Like the Celtic Christians who preserved and transmitted these prayers across generations, we're called to receive this inheritance gratefully and pass it forward.",
+                resources: [
+                    { title: "Living Celtic Spirituality", link: "https://www.iona.org.uk/" },
+                    { title: "Contemporary Celtic Christianity", link: "https://www.northumbriacommunity.org/" },
+                    { title: "Further Study Resources", link: "https://sacred-texts.com/neu/celt/cg1/index.htm" }
+                ],
+                video: "https://www.youtube.com/watch?v=EPRoO9a6I_U",
+                questions: [
+                    "Which themes from this study most resonated with you?",
+                    "What practices will you continue after completing this guide?",
+                    "How has your understanding of Celtic spirituality deepened?"
+                ],
+                activity: "Review your journal entries from the past 30 days. Write a summary reflection on what you've learned and commit to three specific practices you'll continue."
+            }
+        ];
+
+        // Initialize the study guide when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeStudyGuide();
+            loadAllData();
+        });
+
+        // Function to initialize the study guide interface
+        function initializeStudyGuide() {
+            const contentDiv = document.getElementById('studyContent');
+            
+            studyPlan.forEach(day => {
+                const dayElement = createDayElement(day);
+                contentDiv.appendChild(dayElement);
+            });
+        }
+
+        // Function to create HTML element for each day
+        function createDayElement(day) {
+            const dayDiv = document.createElement('div');
+            dayDiv.className = 'day-item';
+            dayDiv.innerHTML = `
+                <div class="day-header" onclick="toggleDay(${day.day})" tabindex="0" 
+                     onkeypress="handleKeyPress(event, ${day.day})" role="button" aria-expanded="false">
+                    <h2>Day ${day.day}: ${day.theme}</h2>
+                    <span class="chevron" id="chevron-${day.day}">▼</span>
+                </div>
+                <div class="day-content" id="day-${day.day}">
+                    <!-- Poems Section -->
+                    <section class="section">
+                        <h3>📖 Curated Poems</h3>
+                        <ul class="poems-list">
+                            ${day.poems.map(poem => `
+                                <li><a href="${poem.link}" target="_blank" rel="noopener noreferrer">${poem.title}</a></li>
+                            `).join('')}
+                        </ul>
+                        <div class="discussion">
+                            ${day.discussion.split('\n\n').map(para => `<p>${para}</p>`).join('')}
+                        </div>
+                    </section>
+
+                    <!-- Resources Section -->
+                    <section class="section">
+                        <h3>🔗 Celtic Perspectives & Resources</h3>
+                        <ul class="resources-list">
+                            ${day.resources.map(resource => `
+                                <li><a href="${resource.link}" target="_blank" rel="noopener noreferrer">${resource.title}</a></li>
+                            `).join('')}
+                        </ul>
+                    </section>
+
+                    <!-- Video Section -->
+                    ${day.video ? `
+                    <section class="section">
+                        <h3>🎥 Video Resource</h3>
+                        <div class="video-link-box">
+                            <p>Watch the companion video for Day ${day.day}:</p>
+                            <a href="${day.video}" 
+                               target="_blank" 
+                               rel="noopener noreferrer"
+                               class="video-btn">
+                               ▶️ Watch Video on YouTube
+                            </a>
+                        </div>
+                    </section>
+                    ` : ''}
+
+                    <!-- Reflection Questions Section -->
+                    <section class="section">
+                        <h3>💭 Reflection Questions</h3>
+                        ${day.questions.map((question, index) => `
+                            <div class="reflection-item">
+                                <label for="day${day.day}-q${index + 1}">${index + 1}. ${question}</label>
+                                <textarea id="day${day.day}-q${index + 1}" 
+                                          placeholder="Write your reflection here..."
+                                          aria-label="Reflection for question ${index + 1}"
+                                          ></textarea>
+                            </div>
+                        `).join('')}
+                    </section>
+
+                    <!-- Activity Section -->
+                    <section class="section">
+                        <h3>✨ Actionable Activity</h3>
+                        <div class="activity-box">
+                            <h4>Today's Practice:</h4>
+                            <p>${day.activity}</p>
+                        </div>
+                        <div class="reflection-item" style="margin-top: 20px;">
+                            <label for="day${day.day}-activity">Document your experience:</label>
+                            <textarea id="day${day.day}-activity" 
+                                      placeholder="How did you engage with this activity? What did you learn or experience?"
+                                      aria-label="Activity reflection"
+                                      ></textarea>
+                        </div>
+                    </section>
+                </div>
+            `;
+            return dayDiv;
+        }
+
+        // Function to toggle day visibility
+        function toggleDay(dayNumber) {
+            const content = document.getElementById(`day-${dayNumber}`);
+            const chevron = document.getElementById(`chevron-${dayNumber}`);
+            const header = chevron.parentElement;
+            
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+                chevron.classList.remove('active');
+                header.setAttribute('aria-expanded', 'false');
+            } else {
+                content.classList.add('active');
+                chevron.classList.add('active');
+                header.setAttribute('aria-expanded', 'true');
+            }
+        }
+
+        // Function to handle keyboard navigation
+        function handleKeyPress(event, dayNumber) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                toggleDay(dayNumber);
+            }
+        }
+
+        // Function to expand all days
+        function expandAll() {
+            studyPlan.forEach(day => {
+                const content = document.getElementById(`day-${day.day}`);
+                const chevron = document.getElementById(`chevron-${day.day}`);
+                const header = chevron.parentElement;
+                content.classList.add('active');
+                chevron.classList.add('active');
+                header.setAttribute('aria-expanded', 'true');
+            });
+            showToast('All days expanded!');
+        }
+
+        // Function to collapse all days
+        function collapseAll() {
+            studyPlan.forEach(day => {
+                const content = document.getElementById(`day-${day.day}`);
+                const chevron = document.getElementById(`chevron-${day.day}`);
+                const header = chevron.parentElement;
+                content.classList.remove('active');
+                chevron.classList.remove('active');
+                header.setAttribute('aria-expanded', 'false');
+            });
+            showToast('All days collapsed!');
+        }
+
+        // Data persistence functions
+        const data = {};
+        
+        function saveAllData() {
+            studyPlan.forEach(day => {
+                const dayData = { questions: [], activity: '' };
+                
+                day.questions.forEach((_, index) => {
+                    const questionId = `day${day.day}-q${index + 1}`;
+                    const textarea = document.getElementById(questionId);
+                    if (textarea) dayData.questions.push(textarea.value);
+                });
+                
+                const activityId = `day${day.day}-activity`;
+                const activityTextarea = document.getElementById(activityId);
+                if (activityTextarea) dayData.activity = activityTextarea.value;
+                
+                data[`day${day.day}`] = dayData;
+            });
+            
+            showToast('All responses saved successfully!');
+        }
+
+        function loadAllData() {
+            // Data would be loaded here if stored
+        }
+
+        function resetAllData() {
+            if (!confirm('Are you sure you want to reset all your responses? This action cannot be undone.')) {
+                return;
+            }
+            
+            studyPlan.forEach(day => {
+                day.questions.forEach((_, index) => {
+                    const questionId = `day${day.day}-q${index + 1}`;
+                    const textarea = document.getElementById(questionId);
+                    if (textarea) textarea.value = '';
+                });
+                
+                const activityId = `day${day.day}-activity`;
+                const activityTextarea = document.getElementById(activityId);
+                if (activityTextarea) activityTextarea.value = '';
+            });
+            
+            showToast('All data reset successfully!');
+        }
+
+        // Function to show temporary notification toast
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Auto-save functionality
+        let saveTimeout;
+        document.addEventListener('input', function(event) {
+            if (event.target.tagName === 'TEXTAREA') {
+                clearTimeout(saveTimeout);
+                saveTimeout = setTimeout(() => {
+                    saveAllData();
+                }, 2000);
+            }
+        });
+    </script>
+</body>
+</html>
